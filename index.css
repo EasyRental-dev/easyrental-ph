@@ -84,7 +84,15 @@ nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,.94);
 .fc { animation: float 5.5s ease-in-out infinite .5s; }
 
 @media (max-width: 768px) {
-  .lg-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
-  .phone { width: 160px; }
-  .phone::before { width: 58px; height: 16px; }
+  .lg-grid { grid-template-columns: 1fr !important; gap: 32px !important; }
+  .phone { width: 130px; }
+  .phone::before { width: 46px; height: 13px; }
+
+  /* Tighten section padding site-wide on mobile */
+  section { padding-top: 52px !important; padding-bottom: 52px !important; }
+
+  /* Phone mockup: shrink container and pull side phones inward */
+  .phone-stage { height: 340px !important; }
+  .phone-left  { left: 8px !important; top: 20px !important; }
+  .phone-right { right: 8px !important; top: 36px !important; }
 }
