@@ -91,16 +91,16 @@ nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,.94);
   /* Tighten section padding site-wide on mobile */
   section { padding-top: 52px !important; padding-bottom: 52px !important; }
 
-  /* Phone mockup: shrink container and pull side phones inward */
+  /* Phone mockup: shrink container and pull side phones closer to center */
   .phone-stage { height: 280px !important; }
-  .phone-left  { left: 8px !important; top: 20px !important; }
-  .phone-right { right: 8px !important; top: 36px !important; }
+  .phone-left  { left: 20px !important; top: 20px !important; }
+  .phone-right { right: 20px !important; top: 36px !important; }
 }
 
 @media (max-width: 480px) {
   /* Further reduce phone stage on very small screens */
   .phone-stage { height: 240px !important; }
   .phone { width: 110px; }
-  .phone-left { left: 4px !important; }
-  .phone-right { right: 4px !important; }
+  .phone-left { left: 10px !important; }
+  .phone-right { right: 10px !important; }
 }
