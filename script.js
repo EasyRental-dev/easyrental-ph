@@ -33,4 +33,40 @@ const observer = new IntersectionObserver((entries) => {
 document.addEventListener('DOMContentLoaded', () => {
   const revealElements = document.querySelectorAll('.reveal');
   revealElements.forEach(el => observer.observe(el));
+  
+  // Add Toast element if not present
+  if (!document.getElementById('toast')) {
+    const toast = document.createElement('div');
+    toast.id = 'toast';
+    document.body.appendChild(toast);
+  }
 });
+
+// Book Package Helper (Copy to Clipboard & Redirect)
+function bookPackage(setName) {
+  const message = `Hi! I would like to book ${setName} for my event.`;
+  
+  // Copy to clipboard
+  navigator.clipboard.writeText(message).then(() => {
+    showToast(`"Message copied! Opening Messenger..."`);
+    
+    // Redirect after a short delay
+    setTimeout(() => {
+      window.open('https://m.me/EasyRental.ngani', '_blank');
+    }, 1200);
+  }).catch(err => {
+    // Fallback if clipboard fails
+    window.open(`https://m.me/EasyRental.ngani?text=${encodeURIComponent(message)}`, '_blank');
+  });
+}
+
+function showToast(text) {
+  const toast = document.getElementById('toast');
+  if (toast) {
+    toast.innerText = text;
+    toast.classList.add('show');
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 3000);
+  }
+}

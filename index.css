@@ -268,6 +268,16 @@ section { position: relative; z-index: 1; }
 .reveal { opacity: 0; }
 .reveal.visible { animation: reveal 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
+/* Toast Notification */
+#toast {
+  position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(100px);
+  background: var(--ink); color: #fff; padding: 12px 24px; border-radius: 12px;
+  font-size: 0.9rem; font-weight: 500; z-index: 10000; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2); pointer-events: none;
+}
+#toast.show { transform: translateX(-50%) translateY(0); }
+
+
 @media (max-width: 768px) {
   .lg-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
 

@@ -99,7 +99,8 @@ build_page(
     </ul>'''
 )
 
-# Page 3
+# Page 3 - DEPRECATED in script, moved to bespoke manual file for :target support
+"""
 build_page(
     'wedding-event-package-lipa.html',
     'Event Package Rental Lipa Batangas | Wedding & Party Setups',
@@ -113,9 +114,11 @@ build_page(
     <div style="display:grid;gap:16px;margin-top:24px;">
       <div style="padding:16px;border:1px solid #E2E8F0;border-radius:12px;"><strong>Set A (20 Pax) - ₱1,479:</strong> 20 Chairs, 3 Tables, 1 Tent</div>
       <div style="padding:16px;border:1px solid #E2E8F0;border-radius:12px;"><strong>Set B (30 Pax) - ₱1,999:</strong> 30 Chairs, 5 Tables, 1 Tent</div>
-      <div style="padding:16px;border:1px solid #E2E8F0;border-radius:12px;background:var(--green-l);border-color:var(--green);"><strong>Set C (50 Pax) - ₱2,879 (Best Value):</strong> 50 Chairs, 8 Tables, 1 Tent</div>
+      <div style="padding:16px;border:1px solid #E2E8F0;border-radius:12px;background:var(--brand-light);border-color:var(--brand);"><strong>Set C (50 Pax) - ₱2,879 (Best Value):</strong> 50 Chairs, 8 Tables, 1 Tent</div>
     </div>'''
 )
+"""
+
 
 # Page 4 (Contact)
 build_page(
