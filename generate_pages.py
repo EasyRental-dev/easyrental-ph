@@ -1,14 +1,18 @@
-﻿import re
+import re
 
 with open('index.html', 'r', encoding='utf-8') as f:
     content = f.read()
 
 # Extract parts
-head_match = re.search(r'(<!DOCTYPE html>.*?<title>).*?(</title>.*?</head>\s*<body>.*?<nav>.*?</nav>.*?<div id="mobile-menu".*?</div>\s*</div>)', content, re.DOTALL)
+# We want to capture from <!DOCTYPE up to </nav>
+head_match = re.search(r'(<!DOCTYPE html>.*?<title>).*?(</title>.*?</head>\s*<body>.*?<nav>.*?</nav>)', content, re.DOTALL)
 footer_match = re.search(r'(<!-- ═══ FOOTER ════════════════════════════════════════════════════════ -->.*</html>)', content, re.DOTALL)
 
 if not head_match or not footer_match:
     print("Could not parse index.html template.")
+    # Debug: see what failed
+    if not head_match: print("Head match failed")
+    if not footer_match: print("Footer match failed")
     exit(1)
 
 head_part1 = head_match.group(1)
