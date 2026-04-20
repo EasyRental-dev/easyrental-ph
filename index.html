@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Easy Rental Lipa – Tables, Chairs & Tent Rental in Batangas. Fast delivery, professional setup, and reliable service for any event.">
+  <title>Easy Rental • Tables, Chairs & Tents | Lipa City, Batangas</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+<div id="progress"></div>
+
+<!-- ═══ NAVBAR ══════════════════════════════════════════════════════ -->
+<nav>
+  <div style="max-width:1200px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;">
+
+    <a href="#" style="display:flex;align-items:center;gap:12px;">
+      <img src="assets/easyrental_logo.png" alt="Easy Rental Logo" style="height:44px;width:auto;">
+      <span class="display" style="font-size:1.3rem;font-weight:700;color:var(--ink);letter-spacing:-.02em;">Easy Rental</span>
+    </a>
+
+    <div class="hidden md:flex items-center gap-8">
+      <a href="#services" class="nav-link">Services</a>
+      <a href="#app" class="nav-link">Booking App</a>
+      <a href="#units" class="nav-link">Units</a>
+      <a href="#testimonials" class="nav-link">Reviews</a>
+      <a href="#contact" class="nav-link">Contact</a>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:10px;">
+      <a href="https://m.me/EasyRental.ngani" target="_blank" class="pill hidden md:inline-flex">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.145 2 11.243c0 2.908 1.452 5.506 3.732 7.205V22l3.405-1.869C10.012 20.371 10.992 20.5 12 20.5c5.523 0 10-4.145 10-9.257S17.523 2 12 2zm1.09 12.467-2.545-2.72-4.97 2.72 5.464-5.8 2.609 2.72 4.906-2.72-5.464 5.8z"/></svg>
+        Message on Messenger
+      </a>
+      <button onclick="toggleMenu()" class="md:hidden" style="padding:8px;border-radius:10px;border:1px solid #E2E8F0;background:#fff;cursor:pointer;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div id="mobile-menu" style="padding:0 24px 20px;border-top:1px solid #F1F5F9;">
+    <div style="display:flex;flex-direction:column;gap:4px;padding-top:12px;">
+      <a href="#services" onclick="toggleMenu()" class="nav-link" style="padding:10px 0;border-bottom:1px solid #F1F5F9;">Services</a>
+      <a href="#app" onclick="toggleMenu()" class="nav-link" style="padding:10px 0;border-bottom:1px solid #F1F5F9;">Booking App</a>
+      <a href="#units" onclick="toggleMenu()" class="nav-link" style="padding:10px 0;border-bottom:1px solid #F1F5F9;">Units</a>
+      <a href="#testimonials" onclick="toggleMenu()" class="nav-link" style="padding:10px 0;border-bottom:1px solid #F1F5F9;">Reviews</a>
+      <a href="#contact" onclick="toggleMenu()" class="nav-link" style="padding:10px 0;border-bottom:1px solid #F1F5F9;">Contact</a>
+      <a href="https://m.me/EasyRental.ngani" target="_blank" class="pill" style="margin-top:12px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.145 2 11.243c0 2.908 1.452 5.506 3.732 7.205V22l3.405-1.869C10.012 20.371 10.992 20.5 12 20.5c5.523 0 10-4.145 10-9.257S17.523 2 12 2zm1.09 12.467-2.545-2.72-4.97 2.72 5.464-5.8 2.609 2.72 4.906-2.72-5.464 5.8z"/></svg>
+        Message on Messenger
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═════════════════════════════════════════════════════════ -->
+<section class="hero" id="home">
+  <div style="max-width:1200px;margin:0 auto;padding:0 24px;width:100%;">
+    <div style="max-width:640px;">
+
+      <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.15);backdrop-filter:blur(12px);padding:7px 16px;border-radius:99px;margin-bottom:24px;font-size:.8rem;color:#fff;font-weight:500;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="#6EE7B7"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+        Lipa City, Batangas · Serving all of Batangas Province
+      </div>
+
+      <h1 class="display" style="font-size:clamp(2.6rem,6vw,4rem);font-weight:700;color:#fff;line-height:1.06;letter-spacing:-.03em;margin-bottom:20px;">
+        Make Your Event<br>Perfectly <span style="color:#6EE7B7;">Easy.</span>
+      </h1>
+
+      <p style="font-size:1.05rem;color:rgba(255,255,255,.82);line-height:1.7;margin-bottom:36px;">
+        Premium tables, chairs, tents &amp; canopies for any occasion.<br>
+        Fast delivery · Professional setup · Reliable service.
+      </p>
+
+      <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:48px;">
+        <a href="https://m.me/EasyRental.ngani" target="_blank" class="pill pill-lg">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.145 2 11.243c0 2.908 1.452 5.506 3.732 7.205V22l3.405-1.869C10.012 20.371 10.992 20.5 12 20.5c5.523 0 10-4.145 10-9.257S17.523 2 12 2zm1.09 12.467-2.545-2.72-4.97 2.72 5.464-5.8 2.609 2.72 4.906-2.72-5.464 5.8z"/></svg>
+          Book via Messenger
+        </a>
+        <a href="#units" class="pill pill-lg pill-outline">
+          Browse Equipment
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:20px;">
+        <div class="trust-chip">
+          <div class="trust-dot">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="#6EE7B7"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          Same-day Delivery
+        </div>
+        <div class="trust-chip">
+          <div class="trust-dot">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="#6EE7B7"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+          </div>
+          Equipment Setup
+        </div>
+        <div class="trust-chip">
+          <div class="trust-dot">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="#6EE7B7"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          Well-maintained Units
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SERVICES ══════════════════════════════════════════════════════ -->
+<section id="services" style="padding:96px 24px;background:#fff;">
+  <div style="max-width:1200px;margin:0 auto;">
+
+    <div style="text-align:center;margin-bottom:56px;">
+      <div class="label">What We Offer</div>
+      <h2 class="display" style="font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;letter-spacing:-.03em;margin-bottom:12px;">Premium Event Equipment</h2>
+      <p style="color:var(--muted);font-size:1rem;max-width:460px;margin:0 auto;">Everything you need for weddings, debuts, corporate events, and any celebration in Batangas.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">
+
+      <!-- Tables & Chairs -->
+      <div class="card">
+        <div class="icon-box" style="background:#ECFDF5;margin-bottom:20px;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 9V5h14v4"/><rect x="3" y="9" width="18" height="3" rx="1"/><path d="M6 12v7"/><path d="M18 12v7"/><path d="M4 19h4"/><path d="M16 19h4"/>
+          </svg>
+        </div>
+        <h3 class="display" style="font-size:1.15rem;font-weight:700;margin-bottom:6px;">Tables &amp; Chairs</h3>
+        <p style="font-size:.84rem;color:var(--muted);margin-bottom:18px;">Quality seating and tables for your event needs.</p>
+        <div class="check-row"><div class="check-dot"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>Cofta Marble White Monobloc</div>
+        <div class="check-row"><div class="check-dot"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>6ft Rectangular Foldable Tables</div>
+        <div class="check-row"><div class="check-dot"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>Well-maintained &amp; Cleaned</div>
+      </div>
+
+      <!-- Tents -->
+      <div class="card" style="border-color:#6EE7B7;box-shadow:0 16px 40px -8px rgba(16,185,129,.12);">
+        <div style="position:absolute;top:-12px;right:22px;background:var(--green);color:#fff;font-size:.7rem;font-weight:700;padding:4px 12px;border-radius:99px;letter-spacing:.04em;">MOST POPULAR</div>
+        <div class="icon-box" style="background:#ECFDF5;margin-bottom:20px;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3.5 21 12 3l8.5 18"/><path d="M12 3v18"/><path d="M5 14h14"/>
+          </svg>
+        </div>
+        <h3 class="display" style="font-size:1.15rem;font-weight:700;margin-bottom:6px;">Tents &amp; Canopies</h3>
+        <p style="font-size:.84rem;color:var(--muted);margin-bottom:18px;">Heavy-duty shelter for outdoor events, rain or shine.</p>
+        <div class="check-row"><div class="check-dot"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>3x4.5m Retractable Tents</div>
+        <div class="check-row"><div class="check-dot"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>Beige / Khaki Color</div>
+        <div class="check-row"><div class="check-dot"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>Fast &amp; Easy Setup</div>
+      </div>
+
+      <!-- Packages -->
+      <div class="card">
+        <div class="icon-box" style="background:#ECFDF5;margin-bottom:20px;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 7H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 3l-4 4-4-4"/><line x1="12" y1="12" x2="12" y2="17"/><line x1="9.5" y1="14.5" x2="14.5" y2="14.5"/>
+          </svg>
+        </div>
+        <h3 class="display" style="font-size:1.15rem;font-weight:700;margin-bottom:6px;">Package Deals</h3>
+        <p style="font-size:.84rem;color:var(--muted);margin-bottom:18px;">Discounted sets of tents, chairs, and tables.</p>
+        <div class="check-row"><div class="check-dot"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>Set A - 20 Pax capacity</div>
+        <div class="check-row"><div class="check-dot"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>Set B - 30 Pax capacity</div>
+        <div class="check-row"><div class="check-dot"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>Set C - 50 Pax capacity</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ WHY CHOOSE US ════════════════════════════════════════════════ -->
+<section id="why" style="padding:96px 24px;background:var(--surface);">
+  <div style="max-width:1200px;margin:0 auto;">
+
+    <div style="text-align:center;margin-bottom:52px;">
+      <div class="label">Why Choose Us</div>
+      <h2 class="display" style="font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;letter-spacing:-.03em;">The Easy Rental Difference</h2>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;">
+
+      <div class="why-card">
+        <div class="icon-box" style="background:#FEF3C7;margin-bottom:16px;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+          </svg>
+        </div>
+        <h4 class="display" style="font-weight:700;font-size:.95rem;margin-bottom:6px;">Well-maintained Units</h4>
+        <p style="font-size:.84rem;color:var(--muted);line-height:1.6;">Every item is cleaned, inspected, and ready before delivery.</p>
+      </div>
+
+      <div class="why-card">
+        <div class="icon-box" style="background:#DCFCE7;margin-bottom:16px;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><polyline points="9 16 11 18 15 14"/>
+          </svg>
+        </div>
+        <h4 class="display" style="font-weight:700;font-size:.95rem;margin-bottom:6px;">Flexible Rental Periods</h4>
+        <p style="font-size:.84rem;color:var(--muted);line-height:1.6;">Book by the day or extended periods — we work around your schedule.</p>
+      </div>
+
+      <div class="why-card">
+        <div class="icon-box" style="background:#DBEAFE;margin-bottom:16px;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+          </svg>
+        </div>
+        <h4 class="display" style="font-weight:700;font-size:.95rem;margin-bottom:6px;">Fast Delivery &amp; Setup</h4>
+        <p style="font-size:.84rem;color:var(--muted);line-height:1.6;">Our team delivers, sets up, and takes down — you don't lift a finger.</p>
+      </div>
+
+      <div class="why-card">
+        <div class="icon-box" style="background:#FCE7F3;margin-bottom:16px;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#BE185D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+          </svg>
+        </div>
+        <h4 class="display" style="font-weight:700;font-size:.95rem;margin-bottom:6px;">Transparent Pricing</h4>
+        <p style="font-size:.84rem;color:var(--muted);line-height:1.6;">No hidden charges. What you see is exactly what you pay.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ BOOKING APP ════════════════════════════════════════════════════ -->
+<section id="app" style="padding:96px 24px;background:#fff;overflow:hidden;">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;" class="lg-grid">
+
+      <div>
+        <div class="label">For Business Owners</div>
+        <h2 class="display" style="font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;letter-spacing:-.03em;margin-bottom:16px;line-height:1.15;">
+          Powerful Rental<br>Management App
+        </h2>
+        <p style="font-size:1rem;color:var(--muted);line-height:1.75;margin-bottom:36px;">
+          Track bookings, manage inventory, schedule deliveries, and monitor all rentals in one sleek interface — built for event rental businesses in the Philippines.
+        </p>
+
+        <div style="display:flex;flex-direction:column;gap:22px;">
+          <div style="display:flex;gap:16px;align-items:flex-start;">
+            <div class="icon-box" style="background:#ECFDF5;width:44px;height:44px;border-radius:14px;">
+              <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+            <div>
+              <div style="font-weight:600;font-size:.95rem;margin-bottom:2px;">Smart Calendar &amp; Scheduling</div>
+              <div style="font-size:.84rem;color:var(--muted);">Visual calendar to prevent double-booking across multiple events.</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:16px;align-items:flex-start;">
+            <div class="icon-box" style="background:#EFF6FF;width:44px;height:44px;border-radius:14px;">
+              <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            </div>
+            <div>
+              <div style="font-weight:600;font-size:.95rem;margin-bottom:2px;">Real-time Inventory</div>
+              <div style="font-size:.84rem;color:var(--muted);">Know exactly how many units are available, in use, or under maintenance.</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:16px;align-items:flex-start;">
+            <div class="icon-box" style="background:#FFF7ED;width:44px;height:44px;border-radius:14px;">
+              <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#EA580C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            </div>
+            <div>
+              <div style="font-weight:600;font-size:.95rem;margin-bottom:2px;">Delivery &amp; Setup Tracking</div>
+              <div style="font-size:.84rem;color:var(--muted);">Coordinate your team's routes and schedules from a single dashboard.</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:16px;align-items:flex-start;">
+            <div class="icon-box" style="background:#FDF4FF;width:44px;height:44px;border-radius:14px;">
+              <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#9333EA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            </div>
+            <div>
+              <div style="font-weight:600;font-size:.95rem;margin-bottom:2px;">Revenue &amp; Reports</div>
+              <div style="font-size:.84rem;color:var(--muted);">See daily and monthly earnings at a glance with visual summaries.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phone mockups -->
+      <div style="position:relative;height:520px;display:flex;justify-content:center;align-items:center;">
+
+        <div class="phone fc" style="position:absolute;left:0;top:30px;transform:rotate(-12deg);z-index:1;opacity:.88;">
+          <div class="phone-screen">
+            <img src="assets/app-screen-1.jpg" alt="Inventory Screen" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+        </div>
+
+        <div class="phone fa" style="position:absolute;z-index:3;transform:rotate(-2deg);">
+          <div class="phone-screen">
+            <img src="assets/app-screen-2.jpg" alt="Dashboard Screen" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+        </div>
+
+        <div class="phone fb" style="position:absolute;right:0;top:50px;transform:rotate(11deg);z-index:2;opacity:.88;">
+          <div class="phone-screen">
+            <img src="assets/app-screen-3.jpg" alt="Booking Screen" style="width:100%;height:100%;object-fit:cover;">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ UNITS ══════════════════════════════════════════════════════════ -->
+<section id="units" style="padding:96px 24px;background:var(--surface);">
+  <div style="max-width:1200px;margin:0 auto;">
+
+    <div style="text-align:center;margin-bottom:52px;">
+      <div class="label">Popular Rentals</div>
+      <h2 class="display" style="font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;letter-spacing:-.03em;margin-bottom:8px;">Our Equipment &amp; Packages</h2>
+      <p style="color:var(--muted);font-size:1rem;max-width:460px;margin:0 auto;">All delivery fees are location-based.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;">
+
+      <div class="unit-card">
+        <div style="overflow:hidden;height:190px;">
+          <img src="assets/easyrental_tent.jpg" alt="Tent" style="height:190px;width:100%;object-fit:cover;">
+        </div>
+        <div style="padding:18px;">
+          <div style="font-weight:700;font-size:.95rem;margin-bottom:4px;">3x4.5m Retractable Tent</div>
+          <div style="color:var(--muted);font-size:.8rem;margin-bottom:10px;">Beige / Khaki Color</div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:.75rem;color:var(--muted);">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+            Inquire for price
+          </div>
+        </div>
+      </div>
+
+      <div class="unit-card">
+        <div style="overflow:hidden;height:190px;background:#fff;">
+          <img src="assets/easyrental_chair.png" alt="Chairs" style="height:190px;width:100%;object-fit:contain;padding:20px;">
+        </div>
+        <div style="padding:18px;">
+          <div style="font-weight:700;font-size:.95rem;margin-bottom:4px;">Monobloc Chair</div>
+          <div style="color:var(--muted);font-size:.8rem;margin-bottom:10px;">Cofta Marble White</div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:.75rem;color:var(--muted);">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Inquire for price
+          </div>
+        </div>
+      </div>
+
+      <div class="unit-card">
+        <div style="overflow:hidden;height:190px;background:#fff;">
+          <img src="assets/easyrental_table.jpg" alt="Tables" style="height:190px;width:100%;object-fit:contain;padding:20px;">
+        </div>
+        <div style="padding:18px;">
+          <div style="font-weight:700;font-size:.95rem;margin-bottom:4px;">6ft Foldable Table</div>
+          <div style="color:var(--muted);font-size:.8rem;margin-bottom:10px;">Rectangular Shape</div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:.75rem;color:var(--muted);">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Inquire for price
+          </div>
+        </div>
+      </div>
+
+      <div class="unit-card" style="border-color:#6EE7B7; display:flex; flex-direction:column;">
+        <div style="background: linear-gradient(135deg, var(--green), #059669); padding: 22px 18px; color: #fff; position: relative;">
+          <div style="position:absolute;top:10px;right:10px;background:rgba(255,255,255,0.2);color:#fff;font-size:.7rem;font-weight:700;padding:4px 11px;border-radius:99px;">20 PAX</div>
+          <div style="font-weight:700;font-size:1.3rem;margin-bottom:2px;">Set A</div>
+          <div style="font-size:.85rem; opacity: 0.9;">Intimate Gathering</div>
+        </div>
+        <div style="padding:18px; flex-grow: 1; display:flex; flex-direction:column;">
+          <div style="color:var(--green-d);font-weight:700;font-size:1.4rem;margin-bottom:12px;">₱1,479</div>
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:.85rem;color:var(--muted); margin-bottom: 24px;">
+            <div style="display:flex;align-items:center;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 20 Chairs</div>
+            <div style="display:flex;align-items:center;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 3 pcs 6ft Tables</div>
+            <div style="display:flex;align-items:center;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 1 Tent</div>
+          </div>
+          <a href="https://m.me/EasyRental.ngani" target="_blank" style="margin-top:auto; background:var(--green-l); color:var(--green-d); text-align:center; padding: 12px; border-radius: 10px; font-weight: 700; font-size: .85rem; transition: background .2s;">Book Set A</a>
+        </div>
+      </div>
+
+      <div class="unit-card" style="border-color:#6EE7B7; display:flex; flex-direction:column;">
+        <div style="background: linear-gradient(135deg, var(--green), #059669); padding: 22px 18px; color: #fff; position: relative;">
+          <div style="position:absolute;top:10px;right:10px;background:rgba(255,255,255,0.2);color:#fff;font-size:.7rem;font-weight:700;padding:4px 11px;border-radius:99px;">30 PAX</div>
+          <div style="font-weight:700;font-size:1.3rem;margin-bottom:2px;">Set B</div>
+          <div style="font-size:.85rem; opacity: 0.9;">Medium Party</div>
+        </div>
+        <div style="padding:18px; flex-grow: 1; display:flex; flex-direction:column;">
+          <div style="color:var(--green-d);font-weight:700;font-size:1.4rem;margin-bottom:12px;">₱1,999</div>
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:.85rem;color:var(--muted); margin-bottom: 24px;">
+            <div style="display:flex;align-items:center;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 30 Chairs</div>
+            <div style="display:flex;align-items:center;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 5 pcs 6ft Tables</div>
+            <div style="display:flex;align-items:center;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 1 Tent</div>
+          </div>
+          <a href="https://m.me/EasyRental.ngani" target="_blank" style="margin-top:auto; background:var(--green-l); color:var(--green-d); text-align:center; padding: 12px; border-radius: 10px; font-weight: 700; font-size: .85rem; transition: background .2s;">Book Set B</a>
+        </div>
+      </div>
+
+      <div class="unit-card" style="border-color:#6EE7B7; display:flex; flex-direction:column; box-shadow: 0 16px 40px -8px rgba(16,185,129,.15); transform: translateY(-4px);">
+        <div style="background: linear-gradient(135deg, #0F172A, #1E293B); padding: 22px 18px; color: #fff; position: relative;">
+          <div style="position:absolute;top:10px;right:10px;background:var(--green);color:#fff;font-size:.7rem;font-weight:700;padding:4px 11px;border-radius:99px;">BEST VALUE • 50 PAX</div>
+          <div style="font-weight:700;font-size:1.3rem;margin-bottom:2px;">Set C</div>
+          <div style="font-size:.85rem; opacity: 0.9;">Large Celebration</div>
+        </div>
+        <div style="padding:18px; flex-grow: 1; display:flex; flex-direction:column;">
+          <div style="color:var(--green-d);font-weight:700;font-size:1.4rem;margin-bottom:12px;">₱2,879</div>
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:.85rem;color:var(--muted); margin-bottom: 24px;">
+            <div style="display:flex;align-items:center;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 50 Chairs</div>
+            <div style="display:flex;align-items:center;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 8 pcs 6ft Tables</div>
+            <div style="display:flex;align-items:center;gap:8px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> 1 Tent</div>
+          </div>
+          <a href="https://m.me/EasyRental.ngani" target="_blank" style="margin-top:auto; background:var(--green); color:#fff; text-align:center; padding: 12px; border-radius: 10px; font-weight: 700; font-size: .85rem; transition: filter .2s;">Book Set C</a>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="text-align:center;margin-top:32px;">
+      <a href="https://m.me/EasyRental.ngani" target="_blank" class="pill pill-lg">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.145 2 11.243c0 2.908 1.452 5.506 3.732 7.205V22l3.405-1.869C10.012 20.371 10.992 20.5 12 20.5c5.523 0 10-4.145 10-9.257S17.523 2 12 2zm1.09 12.467-2.545-2.72-4.97 2.72 5.464-5.8 2.609 2.72 4.906-2.72-5.464 5.8z"/></svg>
+        Inquire About Pricing
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ TESTIMONIALS ══════════════════════════════════════════════════ -->
+<section id="testimonials" style="padding:96px 24px;background:#fff;">
+  <div style="max-width:1200px;margin:0 auto;">
+
+    <div style="text-align:center;margin-bottom:52px;">
+      <div class="label">Customer Reviews</div>
+      <h2 class="display" style="font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;letter-spacing:-.03em;">What Our Clients Say</h2>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;">
+      <div class="testi">
+        <div class="stars">★★★★★</div>
+        <p style="font-size:.88rem;color:var(--muted);margin:14px 0;line-height:1.7;">"Grabe ang bilis ng delivery at ayos talaga ng setup ng team. Perpekto para sa debut ng anak ko. Walang hassle!"</p>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:36px;height:36px;border-radius:50%;background:var(--green-l);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--green-d);">M</div>
+          <div><div style="font-weight:600;font-size:.85rem;">Maria Santos</div><div style="font-size:.75rem;color:var(--muted);">Debut Party · Lipa City</div></div>
+        </div>
+      </div>
+      <div class="testi" style="border-color:#6EE7B7;">
+        <div class="stars">★★★★★</div>
+        <p style="font-size:.88rem;color:var(--muted);margin:14px 0;line-height:1.7;">"Sulit na sulit! Nag-rent kami ng tent, chairs, at tables para sa corporate event. Maayos at malinis lahat. Highly recommended!"</p>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:36px;height:36px;border-radius:50%;background:#DBEAFE;display:flex;align-items:center;justify-content:center;font-weight:700;color:#2563EB;">J</div>
+          <div><div style="font-weight:600;font-size:.85rem;">Jose Reyes</div><div style="font-size:.75rem;color:var(--muted);">Corporate Event · Batangas City</div></div>
+        </div>
+      </div>
+      <div class="testi">
+        <div class="stars">★★★★★</div>
+        <p style="font-size:.88rem;color:var(--muted);margin:14px 0;line-height:1.7;">"Napakabilis sumagot at accommodating ng staff. Pati takedown, smooth. Gagamitin ulit namin para sa kasal namin next year!"</p>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:36px;height:36px;border-radius:50%;background:#FDF4FF;display:flex;align-items:center;justify-content:center;font-weight:700;color:#9333EA;">A</div>
+          <div><div style="font-weight:600;font-size:.85rem;">Ana dela Cruz</div><div style="font-size:.75rem;color:var(--muted);">Wedding · Sto. Tomas</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CONTACT ════════════════════════════════════════════════════════ -->
+<section id="contact" class="contact-section" style="padding:96px 24px;">
+  <div style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;" class="lg-grid">
+
+    <div>
+      <div class="label" style="background:rgba(16,185,129,.2);color:#6EE7B7;">Get in Touch</div>
+      <h2 class="display" style="font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;letter-spacing:-.03em;color:#fff;margin:16px 0 12px;line-height:1.15;">
+        Let's make your<br>event easy.
+      </h2>
+      <p style="color:#94A3B8;font-size:.95rem;line-height:1.75;margin-bottom:36px;">
+        Based in Lipa City, Batangas. Serving all of Batangas Province and nearby areas. Message us on Messenger to get a quote, check availability, or ask anything — we reply fast!
+      </p>
+
+      <a href="https://m.me/EasyRental.ngani" target="_blank" class="messenger-big">
+        <div style="width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="#fff"><path d="M12 2C6.477 2 2 6.145 2 11.243c0 2.908 1.452 5.506 3.732 7.205V22l3.405-1.869C10.012 20.371 10.992 20.5 12 20.5c5.523 0 10-4.145 10-9.257S17.523 2 12 2zm1.09 12.467-2.545-2.72-4.97 2.72 5.464-5.8 2.609 2.72 4.906-2.72-5.464 5.8z"/></svg>
+        </div>
+        <div>
+          <div>Chat on Facebook Messenger</div>
+          <div style="font-size:.78rem;font-weight:400;opacity:.8;margin-top:2px;">fb.com/EasyRental.ngani</div>
+        </div>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:24px;">
+        <div style="display:flex;align-items:center;gap:12px;color:#94A3B8;font-size:.88rem;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="#6EE7B7"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          Lipa City, Batangas (serves all of Batangas Province)
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;color:#94A3B8;font-size:.88rem;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6EE7B7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+          0948 512 1132
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;color:#94A3B8;font-size:.88rem;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6EE7B7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Available 7 days a week · Reply within the hour
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-card">
+      <div style="text-align:center;margin-bottom:24px;">
+        <div style="width:64px;height:64px;background:#0084FF;border-radius:20px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="#fff"><path d="M12 2C6.477 2 2 6.145 2 11.243c0 2.908 1.452 5.506 3.732 7.205V22l3.405-1.869C10.012 20.371 10.992 20.5 12 20.5c5.523 0 10-4.145 10-9.257S17.523 2 12 2zm1.09 12.467-2.545-2.72-4.97 2.72 5.464-5.8 2.609 2.72 4.906-2.72-5.464 5.8z"/></svg>
+        </div>
+        <h3 class="display" style="color:#fff;font-size:1.2rem;font-weight:700;margin-bottom:8px;">Send us a message</h3>
+        <p style="color:#94A3B8;font-size:.85rem;line-height:1.6;">Tell us your event date, location, and equipment needed — we'll reply with availability and pricing right away.</p>
+      </div>
+
+      <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:18px;margin-bottom:20px;">
+        <div style="font-size:.7rem;font-weight:700;color:#64748B;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;">Include in your message:</div>
+        <div style="display:flex;flex-direction:column;gap:10px;font-size:.85rem;color:#CBD5E1;">
+          <div style="display:flex;gap:10px;align-items:center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6EE7B7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Event date &amp; time
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#6EE7B7"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+            Venue / location
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6EE7B7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            Equipment needed (e.g. 100 chairs, 6×6 tent)
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6EE7B7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+            Estimated number of guests
+          </div>
+        </div>
+      </div>
+
+      <a href="https://m.me/EasyRental.ngani" target="_blank" class="pill pill-blue" style="width:100%;font-size:.95rem;padding:16px 28px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.145 2 11.243c0 2.908 1.452 5.506 3.732 7.205V22l3.405-1.869C10.012 20.371 10.992 20.5 12 20.5c5.523 0 10-4.145 10-9.257S17.523 2 12 2zm1.09 12.467-2.545-2.72-4.97 2.72 5.464-5.8 2.609 2.72 4.906-2.72-5.464 5.8z"/></svg>
+        Open Messenger
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ FOOTER ════════════════════════════════════════════════════════ -->
+<footer style="background:#000;padding:36px 24px;">
+  <div style="max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <img src="assets/easyrental_logo.png" alt="Easy Rental Logo" style="height:36px;width:auto;border-radius:8px;">
+      <span class="display" style="font-size:1.2rem;font-weight:700;color:#fff;letter-spacing:-.02em;">Easy Rental</span>
+    </div>
+    <div style="color:#475569;font-size:.84rem;">Lipa City, Batangas · Serving Batangas Province</div>
+    <div style="color:#334155;font-size:.75rem;">© 2026 Easy Rental. All Rights Reserved.</div>
+  </div>
+</footer>
+
+<!-- ═══ FAB ═══════════════════════════════════════════════════════════ -->
+<a href="https://m.me/EasyRental.ngani" target="_blank" class="fab" title="Chat on Messenger">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><path d="M12 2C6.477 2 2 6.145 2 11.243c0 2.908 1.452 5.506 3.732 7.205V22l3.405-1.869C10.012 20.371 10.992 20.5 12 20.5c5.523 0 10-4.145 10-9.257S17.523 2 12 2zm1.09 12.467-2.545-2.72-4.97 2.72 5.464-5.8 2.609 2.72 4.906-2.72-5.464 5.8z"/></svg>
+</a>
+
+<script src="script.js"></script>
+
+</body>
+</html>
