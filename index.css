@@ -90,7 +90,9 @@ nav {
 
 /* Hero */
 .hero { 
-  min-height: 100svh; 
+  min-height: min(100svh, 900px); 
+  padding-top: 80px;
+  padding-bottom: 80px;
   background: var(--hero-gradient); 
   display: flex; align-items: center; position: relative; 
   overflow: hidden;
@@ -160,6 +162,7 @@ section { position: relative; z-index: 1; }
 /* Phone mockups - Enhanced */
 .phone-stage { perspective: 1200px; }
 .phone { 
+  /* border-radius is ~20% of width so it scales proportionally */
   width: 220px; aspect-ratio: 9/19.5; 
   background: #0F172A; border-radius: 44px; padding: 10px; 
   box-shadow: 
@@ -267,18 +270,32 @@ section { position: relative; z-index: 1; }
 
 @media (max-width: 768px) {
   .lg-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
-  .phone { width: 180px; }
-  .phone::before { width: 64px; height: 20px; }
+
+  /* Hero: stop it ballooning on narrow desktop-mode viewports */
+  .hero { min-height: 0 !important; padding-top: 100px !important; padding-bottom: 80px !important; }
+
   section { padding-top: 64px !important; padding-bottom: 64px !important; }
+
+  /* Phone 180px → border-radius ≈ 36px (20% of width) */
+  .phone { width: 180px; border-radius: 36px; }
+  .phone-screen { border-radius: 27px; }
+  .phone::before { top: 14px; width: 60px; height: 18px; }
+  .phone::after  { bottom: 7px; width: 32px; height: 3px; }
+
   .phone-stage { height: 420px !important; }
   .phone-left  { left: 10px !important; top: 30px !important; }
   .phone-right { right: 10px !important; top: 60px !important; }
 }
 
 @media (max-width: 480px) {
-  .phone-stage { height: 360px !important; }
-  .phone { width: 150px; }
-  .phone-left { left: 0px !important; }
+  /* Phone 150px → border-radius ≈ 30px (20% of width) */
+  .phone { width: 150px; border-radius: 30px; }
+  .phone-screen { border-radius: 22px; }
+  .phone::before { top: 12px; width: 50px; height: 15px; }
+  .phone::after  { bottom: 6px; width: 28px; height: 3px; }
+
+  .phone-stage { height: 340px !important; }
+  .phone-left  { left: 0px !important; }
   .phone-right { right: 0px !important; }
 }
 
