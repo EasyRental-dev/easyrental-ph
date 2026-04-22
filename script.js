@@ -21,6 +21,17 @@ document.addEventListener('DOMContentLoaded', () => {
   if (navToggle) {
     navToggle.addEventListener('click', toggleMenu);
   }
+  
+  // Close mobile menu when links are clicked
+  const mobileMenuLinks = document.querySelectorAll('.mobile-menu ul li a');
+  mobileMenuLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      const menu = document.querySelector('.mobile-menu');
+      if (menu) {
+        menu.classList.remove('open');
+      }
+    });
+  });
 });
 
 // Reveal on Scroll (Intersection Observer)
