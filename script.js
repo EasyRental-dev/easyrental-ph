@@ -9,11 +9,19 @@ window.addEventListener('scroll', () => {
 
 // Mobile Menu
 function toggleMenu() {
-  const menu = document.getElementById('mobile-menu');
+  const menu = document.getElementById('mobile-menu') || document.querySelector('.mobile-menu');
   if (menu) {
     menu.classList.toggle('open');
   }
 }
+
+// Nav toggle button (refactored pages)
+document.addEventListener('DOMContentLoaded', () => {
+  const navToggle = document.querySelector('.nav-toggle');
+  if (navToggle) {
+    navToggle.addEventListener('click', toggleMenu);
+  }
+});
 
 // Reveal on Scroll (Intersection Observer)
 const observerOptions = {
