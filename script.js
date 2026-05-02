@@ -15,6 +15,19 @@ function toggleMenu() {
   }
 }
 
+// Same-page section jumps without changing the URL hash (static site / SEO)
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('a[data-inpage-scroll]');
+  if (!link) return;
+  const id = link.getAttribute('data-inpage-scroll');
+  if (!id) return;
+  const target = document.getElementById(id);
+  if (target) {
+    e.preventDefault();
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+});
+
 // Nav toggle button (refactored pages)
 document.addEventListener('DOMContentLoaded', () => {
   const navToggle = document.querySelector('.nav-toggle');

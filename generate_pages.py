@@ -5,7 +5,11 @@ with open('index.html', 'r', encoding='utf-8') as f:
 
 # Extract parts
 # We want to capture from <!DOCTYPE up to </nav>
-head_match = re.search(r'(<!DOCTYPE html>.*?<title>).*?(</title>.*?</head>\s*<body>.*?<nav>.*?</nav>)', content, re.DOTALL)
+head_match = re.search(
+    r'(<!DOCTYPE html>.*?<title>).*?(</title>.*?</head>\s*<body>.*?<nav\b[^>]*>.*?</nav>)',
+    content,
+    re.DOTALL,
+)
 footer_match = re.search(r'(<!-- ═══ FOOTER ════════════════════════════════════════════════════════ -->.*</html>)', content, re.DOTALL)
 
 if not head_match or not footer_match:
@@ -19,8 +23,7 @@ head_part1 = head_match.group(1)
 head_part2 = head_match.group(2)
 footer = footer_match.group(1)
 
-# Fix links in head_part2 (navbar) to point back to index.html sections
-nav_fixed = head_part2.replace('href="#', 'href="index.html#')
+nav_fixed = head_part2
 
 def build_page(filename, title, description, h1, keyword, img_src, img_alt, content_html):
     # Fix description
@@ -56,7 +59,14 @@ def build_page(filename, title, description, h1, keyword, img_src, img_alt, cont
     
     # We must also inject the description before the title in head_part1. Wait, head_part1 has the description. Let's fix that.
     html = re.sub(r'<meta name="description" content=".*?">', f'<meta name="description" content="{description}">', html)
-    
+    page_canonical = f'https://easyrental-dev.github.io/easyrental-ph/{filename}'
+    html = re.sub(
+        r'<link rel="canonical" href="[^"]*"\s*>',
+        f'<link rel="canonical" href="{page_canonical}">',
+        html,
+        count=1,
+    )
+
     with open(filename, 'w', encoding='utf-8') as out:
         out.write(html)
     print(f"Generated {filename}")
