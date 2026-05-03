@@ -36,6 +36,8 @@
 
     gtag('config', 'G-ESVPGJL66K');
   </script>
+
+  <!-- Structured data: LocalBusiness + Products + WebSite + FAQ (JSON-LD for search engines including Bing) -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -44,10 +46,15 @@
         "@type": "LocalBusiness",
         "@id": "https://easyrental-dev.github.io/easyrental-ph/#business",
         "name": "Easy Rental - Tables, Chairs & Tent Rentals Lipa",
-        "alternateName": "Easy Rental Lipa",
-        "description": "Event rental service in Lipa City, Batangas, Philippines: tables rental, chairs rental, tent rental, event packages, and videoke rental as an add-on. Delivery and setup available; contact via Messenger or phone.",
+        "alternateName": ["Easy Rental Lipa", "Easy Rental Lipa Batangas"],
+        "description": "Tables, chairs, tents and event package rentals serving Lipa City and Batangas Province. Delivery and setup; videoke available as an add-on. Contact via Facebook Messenger or phone.",
         "url": "https://easyrental-dev.github.io/easyrental-ph/",
-        "telephone": "+63-948-512-1132",
+        "telephone": "+639485121132",
+        "image": "https://easyrental-dev.github.io/easyrental-ph/assets/easyrental_tent_showcase.png",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://easyrental-dev.github.io/easyrental-ph/assets/easyrental_logo.png"
+        },
         "address": {
           "@type": "PostalAddress",
           "addressLocality": "Lipa City",
@@ -58,6 +65,23 @@
           { "@type": "City", "name": "Lipa City" },
           { "@type": "AdministrativeArea", "name": "Batangas" }
         ],
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+            "opens": "07:00",
+            "closes": "21:00"
+          }
+        ],
+        "contactPoint": [
+          {
+            "@type": "ContactPoint",
+            "telephone": "+639485121132",
+            "contactType": "customer service",
+            "areaServed": "PH",
+            "availableLanguage": ["English", "Filipino"]
+          }
+        ],
         "sameAs": [
           "https://www.facebook.com/easyrental.tableschairstentrentalslipa",
           "https://m.me/easyrental.tableschairstentrentalslipa"
@@ -65,19 +89,19 @@
         "priceRange": "₱₱",
         "hasOfferCatalog": {
           "@type": "OfferCatalog",
-          "name": "Event rentals — Lipa & Batangas",
+          "name": "Easy Rental — event equipment Lipa and Batangas",
           "itemListElement": [
-            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Tables rental", "areaServed": "Lipa City, Batangas" } },
-            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Chairs rental", "areaServed": "Lipa City, Batangas" } },
-            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Tent rental", "areaServed": "Lipa City, Batangas" } },
-            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Event packages (Set A, B, C)", "areaServed": "Lipa City, Batangas" } },
-            { "@type": "Offer", "url": "https://easyrental-dev.github.io/easyrental-ph/videoke-rental-lipa-batangas.html", "itemOffered": { "@type": "Service", "name": "Videoke rental (add-on)", "areaServed": "Lipa City, Batangas" } }
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Foldable table rental", "areaServed": "Lipa City, Batangas" } },
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Monobloc chair rental", "areaServed": "Lipa City, Batangas" } },
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Retractable tent rental", "areaServed": "Lipa City, Batangas" } },
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Wedding and party package rental (Set A, B, C)", "areaServed": "Lipa City, Batangas" } },
+            { "@type": "Offer", "url": "https://easyrental-dev.github.io/easyrental-ph/videoke-rental-lipa-batangas.html", "itemOffered": { "@type": "Service", "name": "Videoke rental add-on", "areaServed": "Lipa City, Batangas" } }
           ]
         },
         "makesOffer": [
           {
             "@type": "Offer",
-            "name": "Set A — 20 pax event package",
+            "itemOffered": { "@id": "https://easyrental-dev.github.io/easyrental-ph/#product-set-a" },
             "price": "1479",
             "priceCurrency": "PHP",
             "url": "https://easyrental-dev.github.io/easyrental-ph/wedding-package-set-a-lipa-batangas.html",
@@ -86,7 +110,7 @@
           },
           {
             "@type": "Offer",
-            "name": "Set B — 30 pax event package",
+            "itemOffered": { "@id": "https://easyrental-dev.github.io/easyrental-ph/#product-set-b" },
             "price": "1999",
             "priceCurrency": "PHP",
             "url": "https://easyrental-dev.github.io/easyrental-ph/wedding-package-set-b-lipa-batangas.html",
@@ -95,7 +119,7 @@
           },
           {
             "@type": "Offer",
-            "name": "Set C — 50 pax event package",
+            "itemOffered": { "@id": "https://easyrental-dev.github.io/easyrental-ph/#product-set-c" },
             "price": "2879",
             "priceCurrency": "PHP",
             "url": "https://easyrental-dev.github.io/easyrental-ph/wedding-package-set-c-lipa-batangas.html",
@@ -104,7 +128,7 @@
           },
           {
             "@type": "Offer",
-            "name": "Videoke rental (add-on)",
+            "itemOffered": { "@id": "https://easyrental-dev.github.io/easyrental-ph/#product-videoke" },
             "url": "https://easyrental-dev.github.io/easyrental-ph/videoke-rental-lipa-batangas.html",
             "availability": "https://schema.org/InStock",
             "seller": { "@id": "https://easyrental-dev.github.io/easyrental-ph/#business" }
@@ -213,6 +237,57 @@
           "url": "https://easyrental-dev.github.io/easyrental-ph/table-rental-lipa-batangas.html",
           "availability": "https://schema.org/InStock",
           "priceCurrency": "PHP",
+          "seller": { "@id": "https://easyrental-dev.github.io/easyrental-ph/#business" }
+        }
+      },
+      {
+        "@type": "Product",
+        "@id": "https://easyrental-dev.github.io/easyrental-ph/#product-set-a",
+        "name": "Set A Event Package Rental Lipa Batangas (20 pax)",
+        "description": "Bundled event package: 20 monobloc chairs, 3 pcs 6ft tables, 1 pc 3x4.5m tent. Delivery quoted separately. Serving Lipa City and Batangas Province.",
+        "image": "https://easyrental-dev.github.io/easyrental-ph/assets/easyrental_package_a.jpg",
+        "brand": { "@type": "Brand", "name": "Easy Rental Lipa" },
+        "category": "Event package rental",
+        "offers": {
+          "@type": "Offer",
+          "price": "1479",
+          "priceCurrency": "PHP",
+          "url": "https://easyrental-dev.github.io/easyrental-ph/wedding-package-set-a-lipa-batangas.html",
+          "availability": "https://schema.org/InStock",
+          "seller": { "@id": "https://easyrental-dev.github.io/easyrental-ph/#business" }
+        }
+      },
+      {
+        "@type": "Product",
+        "@id": "https://easyrental-dev.github.io/easyrental-ph/#product-set-b",
+        "name": "Set B Event Package Rental Lipa Batangas (30 pax)",
+        "description": "Bundled event package: 30 monobloc chairs, 5 pcs 6ft tables, 1 pc 3x4.5m tent. Delivery quoted separately. Serving Lipa City and Batangas Province.",
+        "image": "https://easyrental-dev.github.io/easyrental-ph/assets/easyrental_package_a.jpg",
+        "brand": { "@type": "Brand", "name": "Easy Rental Lipa" },
+        "category": "Event package rental",
+        "offers": {
+          "@type": "Offer",
+          "price": "1999",
+          "priceCurrency": "PHP",
+          "url": "https://easyrental-dev.github.io/easyrental-ph/wedding-package-set-b-lipa-batangas.html",
+          "availability": "https://schema.org/InStock",
+          "seller": { "@id": "https://easyrental-dev.github.io/easyrental-ph/#business" }
+        }
+      },
+      {
+        "@type": "Product",
+        "@id": "https://easyrental-dev.github.io/easyrental-ph/#product-set-c",
+        "name": "Set C Event Package Rental Lipa Batangas (50 pax)",
+        "description": "Bundled event package: 50 monobloc chairs, 8 pcs 6ft tables, 1 pc 3x4.5m tent. Delivery quoted separately. Serving Lipa City and Batangas Province.",
+        "image": "https://easyrental-dev.github.io/easyrental-ph/assets/easyrental_tent_showcase.png",
+        "brand": { "@type": "Brand", "name": "Easy Rental Lipa" },
+        "category": "Event package rental",
+        "offers": {
+          "@type": "Offer",
+          "price": "2879",
+          "priceCurrency": "PHP",
+          "url": "https://easyrental-dev.github.io/easyrental-ph/wedding-package-set-c-lipa-batangas.html",
+          "availability": "https://schema.org/InStock",
           "seller": { "@id": "https://easyrental-dev.github.io/easyrental-ph/#business" }
         }
       },
