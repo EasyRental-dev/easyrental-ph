@@ -45,7 +45,7 @@ def build_page(filename, title, description, h1, keyword, img_src, img_alt, cont
       <div style="padding:40px;">
         {content_html}
         <div style="margin-top:30px;">
-          <a href="https://m.me/EasyRental.ngani" target="_blank" class="pill pill-lg">
+          <a href="https://m.me/easyrental.tableschairstentrentalslipa" target="_blank" class="pill pill-lg">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.145 2 11.243c0 2.908 1.452 5.506 3.732 7.205V22l3.405-1.869C10.012 20.371 10.992 20.5 12 20.5c5.523 0 10-4.145 10-9.257S17.523 2 12 2zm1.09 12.467-2.545-2.72-4.97 2.72 5.464-5.8 2.609 2.72 4.906-2.72-5.464 5.8z"/></svg>
             Inquire Now on Messenger
           </a>
@@ -74,40 +74,29 @@ def build_page(filename, title, description, h1, keyword, img_src, img_alt, cont
 # Page 1
 build_page(
     'tent-rental-lipa-batangas.html',
-    'Tent Rental Lipa Batangas | 3x4.5m Retractable Tents | Easy Rental',
-    'Looking for tent rental in Lipa Batangas? We offer high-quality 3x4.5m retractable tents in beige/khaki for weddings, parties, and events. Fast delivery.',
+    'Tent Rental Lipa Batangas | Black & Beige 3×4.5m Canopies | Easy Rental',
+    'Tent rental in Lipa Batangas: 3x4.5m retractable tents with black or beige/khaki canopy. Weddings, parties & events—delivery & setup. Message Easy Rental for availability.',
     'Tent Rental in Lipa Batangas',
     'Tent Rental Lipa Batangas',
     'assets/easyrental_tent.jpg',
     '3x4.5m Retractable Tent Rental in Lipa Batangas',
-    '''<h2 style="font-size:1.5rem;font-weight:700;margin-bottom:16px;">Premium 3x4.5m Retractable Tents</h2>
-    <p style="color:var(--muted);margin-bottom:16px;line-height:1.6;">Our heavy-duty retractable tents are perfect for outdoor gatherings, parties, and corporate events in Lipa and the surrounding Batangas area. The elegant Beige/Khaki color blends beautifully with any event theme, providing excellent shade and rain protection for your guests.</p>
+    '''<h2 style="font-size:1.5rem;font-weight:700;margin-bottom:16px;">Premium 3×4.5m Retractable Tents</h2>
+    <p style="color:var(--muted);margin-bottom:16px;line-height:1.6;">Our heavy-duty retractable tents are perfect for outdoor gatherings in Lipa and Batangas. Canopy colors: <strong>black</strong> or <strong>beige/khaki</strong>—mention your preference when you book (subject to availability).</p>
     <ul style="color:var(--muted);margin-bottom:16px;line-height:1.6;padding-left:20px;list-style-type:disc;">
-      <li>Size: 3 meters by 4.5 meters (Spacious enough for multiple tables)</li>
-      <li>Color: Premium Beige / Khaki</li>
+      <li>Size: 3 meters by 4.5 meters (spacious enough for multiple tables)</li>
+      <li>Canopy: <strong>Black</strong> or <strong>beige/khaki</strong></li>
       <li>Quick professional setup and takedown by our team</li>
       <li>Sturdy frame, perfect for Batangas weather</li>
     </ul>'''
 )
 
-# Page 2
+# Page 2 — bespoke manual file (matches table-rental-lipa-batangas.html layout; do not regenerate)
+"""
 build_page(
     'tables-chairs-rental-batangas.html',
-    'Tables & Chairs Rental Lipa Batangas | Easy Rental',
-    'Premium tables and chairs rental in Lipa Batangas. We provide Cofta monobloc chairs and 6ft foldable tables for all occasions. Professional setup.',
-    'Tables & Chairs Rental in Batangas',
-    'Tables & Chairs Rental Lipa Batangas',
-    'assets/easyrental_chair.png',
-    'Monobloc Chairs and Tables Rental in Lipa Batangas',
-    '''<h2 style="font-size:1.5rem;font-weight:700;margin-bottom:16px;">High-Quality Tables & Chairs for Any Occasion</h2>
-    <p style="color:var(--muted);margin-bottom:16px;line-height:1.6;">Whether you are hosting an intimate gathering of 20 people or a large party of 100+, Easy Rental provides clean, sturdy, and elegant seating solutions delivered right to your venue in Lipa City or anywhere in Batangas.</p>
-    <ul style="color:var(--muted);margin-bottom:16px;line-height:1.6;padding-left:20px;list-style-type:disc;">
-      <li><strong>Monobloc Chairs:</strong> Cofta Marble White (Clean, comfortable, and elegant)</li>
-      <li><strong>Foldable Tables:</strong> 6ft Rectangular tables (Spacious, fits 6-8 guests easily)</li>
-      <li>Perfect for weddings, birthdays, baptisms, and corporate events</li>
-      <li>Delivered and arranged by our professional setup team</li>
-    </ul>'''
+    ...
 )
+"""
 
 # Page 3 - DEPRECATED in script, moved to bespoke manual file for :target support
 """
@@ -143,7 +132,7 @@ build_page(
     <p style="color:var(--muted);margin-bottom:16px;line-height:1.6;">We are available 7 days a week to serve your event needs anywhere in Lipa City and Batangas Province. Contact us today for a free quote!</p>
     <ul style="color:var(--muted);margin-bottom:16px;line-height:1.6;padding-left:20px;list-style-type:none;margin-left:-20px;">
       <li style="margin-bottom:12px;">📞 <strong>Phone:</strong> 0948 512 1132</li>
-      <li style="margin-bottom:12px;">💬 <strong>Facebook Messenger:</strong> @EasyRental.ngani</li>
+      <li style="margin-bottom:12px;">💬 <strong>Facebook Messenger:</strong> @easyrental.tableschairstentrentalslipa</li>
       <li style="margin-bottom:12px;">📍 <strong>Location:</strong> Lipa City, Batangas</li>
     </ul>
     <p style="color:var(--muted);margin-top:24px;font-size:.9rem;"><em>Please include your event date, location, and equipment needed so we can provide an accurate quote right away!</em></p>'''

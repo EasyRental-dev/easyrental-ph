@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://easyrental-dev.github.io/easyrental-ph/sitemap.xml
+Sitemap: https://easyrental-dev.github.io/easyrental-ph/image-sitemap.xml

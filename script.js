@@ -84,11 +84,11 @@ function bookPackage(setName) {
     
     // Redirect after a short delay
     setTimeout(() => {
-      window.open('https://m.me/EasyRental.ngani', '_blank');
+      window.open('https://m.me/easyrental.tableschairstentrentalslipa', '_blank');
     }, 1200);
   }).catch(err => {
     // Fallback if clipboard fails
-    window.open(`https://m.me/EasyRental.ngani?text=${encodeURIComponent(message)}`, '_blank');
+    window.open(`https://m.me/easyrental.tableschairstentrentalslipa?text=${encodeURIComponent(message)}`, '_blank');
   });
 }
 
