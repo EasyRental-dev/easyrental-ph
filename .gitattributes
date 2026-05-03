@@ -1,0 +1,3 @@
+# Stable line endings for crawler-facing files (GitHub Pages serves from Linux).
+robots.txt text eol=lf
+sitemap.xml text eol=lf
