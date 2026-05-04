@@ -45,7 +45,7 @@ def build_page(filename, title, description, h1, keyword, img_src, img_alt, cont
       <div style="padding:40px;">
         {content_html}
         <div style="margin-top:30px;">
-          <a href="https://m.me/easyrental.tableschairstentrentalslipa" target="_blank" class="pill pill-lg">
+          <a href="https://m.me/EasyRental.ngani" target="_blank" class="pill pill-lg">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.145 2 11.243c0 2.908 1.452 5.506 3.732 7.205V22l3.405-1.869C10.012 20.371 10.992 20.5 12 20.5c5.523 0 10-4.145 10-9.257S17.523 2 12 2zm1.09 12.467-2.545-2.72-4.97 2.72 5.464-5.8 2.609 2.72 4.906-2.72-5.464 5.8z"/></svg>
             Inquire Now on Messenger
           </a>
@@ -132,7 +132,7 @@ build_page(
     <p style="color:var(--muted);margin-bottom:16px;line-height:1.6;">We are available 7 days a week to serve your event needs anywhere in Lipa City and Batangas Province. Contact us today for a free quote!</p>
     <ul style="color:var(--muted);margin-bottom:16px;line-height:1.6;padding-left:20px;list-style-type:none;margin-left:-20px;">
       <li style="margin-bottom:12px;">📞 <strong>Phone:</strong> 0948 512 1132</li>
-      <li style="margin-bottom:12px;">💬 <strong>Facebook Messenger:</strong> @easyrental.tableschairstentrentalslipa</li>
+      <li style="margin-bottom:12px;">💬 <strong>Facebook Messenger:</strong> @EasyRental.ngani</li>
       <li style="margin-bottom:12px;">📍 <strong>Location:</strong> Lipa City, Batangas</li>
     </ul>
     <p style="color:var(--muted);margin-top:24px;font-size:.9rem;"><em>Please include your event date, location, and equipment needed so we can provide an accurate quote right away!</em></p>'''
