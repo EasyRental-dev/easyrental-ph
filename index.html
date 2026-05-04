@@ -37,7 +37,7 @@
     gtag('config', 'G-ESVPGJL66K');
   </script>
 
-  <!-- Structured data: LocalBusiness + Products + WebSite + FAQ (JSON-LD for search engines including Bing) -->
+  <!-- Structured data: LocalBusiness + Products/Services + WebSite + FAQ (JSON-LD for search engines including Bing) -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -128,7 +128,7 @@
           },
           {
             "@type": "Offer",
-            "itemOffered": { "@id": "https://easyrental-dev.github.io/easyrental-ph/#product-videoke" },
+            "itemOffered": { "@id": "https://easyrental-dev.github.io/easyrental-ph/#service-videoke" },
             "url": "https://easyrental-dev.github.io/easyrental-ph/videoke-rental-lipa-batangas.html",
             "availability": "https://schema.org/InStock",
             "seller": { "@id": "https://easyrental-dev.github.io/easyrental-ph/#business" }
@@ -190,16 +190,20 @@
         ]
       },
       {
-        "@type": "Product",
-        "@id": "https://easyrental-dev.github.io/easyrental-ph/#product-retractable-tent",
+        "@type": "Service",
+        "@id": "https://easyrental-dev.github.io/easyrental-ph/#service-retractable-tent",
         "name": "3x4.5m Retractable Tent Rental Lipa Batangas",
         "description": "Outdoor retractable tent and canopy rental in Lipa City and Batangas for weddings, debuts, birthdays, and parties. Beige khaki or black canopy options.",
         "image": [
           "https://easyrental-dev.github.io/easyrental-ph/assets/easyrental_tent_showcase.png",
           "https://easyrental-dev.github.io/easyrental-ph/assets/easyrental_tent_black_showcase.png"
         ],
-        "brand": { "@type": "Brand", "name": "Easy Rental Lipa" },
-        "category": "Tent rental Batangas",
+        "serviceType": "Tent rental",
+        "provider": { "@id": "https://easyrental-dev.github.io/easyrental-ph/#business" },
+        "areaServed": [
+          { "@type": "City", "name": "Lipa City" },
+          { "@type": "AdministrativeArea", "name": "Batangas" }
+        ],
         "offers": {
           "@type": "Offer",
           "url": "https://easyrental-dev.github.io/easyrental-ph/tent-rental-lipa-batangas.html",
@@ -209,13 +213,17 @@
         }
       },
       {
-        "@type": "Product",
-        "@id": "https://easyrental-dev.github.io/easyrental-ph/#product-monobloc-chair",
+        "@type": "Service",
+        "@id": "https://easyrental-dev.github.io/easyrental-ph/#service-monobloc-chair",
         "name": "Cofta Marble White Monobloc Chair Rental Lipa Batangas",
         "description": "Plastic stackable monobloc chairs for rent in Lipa and Batangas. Cofta Marble White seating for weddings, parties, and corporate events.",
         "image": "https://easyrental-dev.github.io/easyrental-ph/assets/easyrental_chair_showcase.png",
-        "brand": { "@type": "Brand", "name": "Easy Rental Lipa" },
-        "category": "Monobloc chair rental",
+        "serviceType": "Chair rental",
+        "provider": { "@id": "https://easyrental-dev.github.io/easyrental-ph/#business" },
+        "areaServed": [
+          { "@type": "City", "name": "Lipa City" },
+          { "@type": "AdministrativeArea", "name": "Batangas" }
+        ],
         "offers": {
           "@type": "Offer",
           "url": "https://easyrental-dev.github.io/easyrental-ph/tables-chairs-rental-batangas.html",
@@ -225,13 +233,17 @@
         }
       },
       {
-        "@type": "Product",
-        "@id": "https://easyrental-dev.github.io/easyrental-ph/#product-6ft-table",
+        "@type": "Service",
+        "@id": "https://easyrental-dev.github.io/easyrental-ph/#service-6ft-table",
         "name": "6ft Rectangular Foldable Table Rental Lipa Batangas",
         "description": "6ft foldable event tables for rent in Lipa City and Batangas Province. Ideal for weddings, receptions, and catering setups.",
         "image": "https://easyrental-dev.github.io/easyrental-ph/assets/easyrental_table_showcase.png",
-        "brand": { "@type": "Brand", "name": "Easy Rental Lipa" },
-        "category": "Tables and chairs rental Lipa",
+        "serviceType": "Table rental",
+        "provider": { "@id": "https://easyrental-dev.github.io/easyrental-ph/#business" },
+        "areaServed": [
+          { "@type": "City", "name": "Lipa City" },
+          { "@type": "AdministrativeArea", "name": "Batangas" }
+        ],
         "offers": {
           "@type": "Offer",
           "url": "https://easyrental-dev.github.io/easyrental-ph/table-rental-lipa-batangas.html",
@@ -248,6 +260,33 @@
         "image": "https://easyrental-dev.github.io/easyrental-ph/assets/easyrental_package_a.jpg",
         "brand": { "@type": "Brand", "name": "Easy Rental Lipa" },
         "category": "Event package rental",
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "5",
+          "bestRating": "5",
+          "worstRating": "1",
+          "reviewCount": "3"
+        },
+        "review": [
+          {
+            "@type": "Review",
+            "author": { "@type": "Person", "name": "Maria Santos" },
+            "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+            "reviewBody": "Grabe ang bilis ng delivery at ayos talaga ng setup ng team. Perpekto para sa debut ng anak ko. Walang hassle!"
+          },
+          {
+            "@type": "Review",
+            "author": { "@type": "Person", "name": "Jacq Bello" },
+            "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+            "reviewBody": "The owner is very approachable and very considerate. Thank you so much po for helping us also with our business and sharing your knowledge and experience with us! Kudos!"
+          },
+          {
+            "@type": "Review",
+            "author": { "@type": "Person", "name": "Ana dela Cruz" },
+            "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+            "reviewBody": "Napakabilis sumagot at accommodating ng staff. Pati takedown, smooth. Gagamitin ulit namin para sa kasal namin next year!"
+          }
+        ],
         "offers": {
           "@type": "Offer",
           "price": "1479",
@@ -265,6 +304,33 @@
         "image": "https://easyrental-dev.github.io/easyrental-ph/assets/easyrental_package_a.jpg",
         "brand": { "@type": "Brand", "name": "Easy Rental Lipa" },
         "category": "Event package rental",
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "5",
+          "bestRating": "5",
+          "worstRating": "1",
+          "reviewCount": "3"
+        },
+        "review": [
+          {
+            "@type": "Review",
+            "author": { "@type": "Person", "name": "Maria Santos" },
+            "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+            "reviewBody": "Grabe ang bilis ng delivery at ayos talaga ng setup ng team. Perpekto para sa debut ng anak ko. Walang hassle!"
+          },
+          {
+            "@type": "Review",
+            "author": { "@type": "Person", "name": "Jacq Bello" },
+            "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+            "reviewBody": "The owner is very approachable and very considerate. Thank you so much po for helping us also with our business and sharing your knowledge and experience with us! Kudos!"
+          },
+          {
+            "@type": "Review",
+            "author": { "@type": "Person", "name": "Ana dela Cruz" },
+            "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+            "reviewBody": "Napakabilis sumagot at accommodating ng staff. Pati takedown, smooth. Gagamitin ulit namin para sa kasal namin next year!"
+          }
+        ],
         "offers": {
           "@type": "Offer",
           "price": "1999",
@@ -282,6 +348,33 @@
         "image": "https://easyrental-dev.github.io/easyrental-ph/assets/easyrental_tent_showcase.png",
         "brand": { "@type": "Brand", "name": "Easy Rental Lipa" },
         "category": "Event package rental",
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "5",
+          "bestRating": "5",
+          "worstRating": "1",
+          "reviewCount": "3"
+        },
+        "review": [
+          {
+            "@type": "Review",
+            "author": { "@type": "Person", "name": "Maria Santos" },
+            "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+            "reviewBody": "Grabe ang bilis ng delivery at ayos talaga ng setup ng team. Perpekto para sa debut ng anak ko. Walang hassle!"
+          },
+          {
+            "@type": "Review",
+            "author": { "@type": "Person", "name": "Jacq Bello" },
+            "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+            "reviewBody": "The owner is very approachable and very considerate. Thank you so much po for helping us also with our business and sharing your knowledge and experience with us! Kudos!"
+          },
+          {
+            "@type": "Review",
+            "author": { "@type": "Person", "name": "Ana dela Cruz" },
+            "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+            "reviewBody": "Napakabilis sumagot at accommodating ng staff. Pati takedown, smooth. Gagamitin ulit namin para sa kasal namin next year!"
+          }
+        ],
         "offers": {
           "@type": "Offer",
           "price": "2879",
@@ -292,13 +385,17 @@
         }
       },
       {
-        "@type": "Product",
-        "@id": "https://easyrental-dev.github.io/easyrental-ph/#product-videoke",
+        "@type": "Service",
+        "@id": "https://easyrental-dev.github.io/easyrental-ph/#service-videoke",
         "name": "Portable Videoke Karaoke Machine Rental Lipa Batangas",
         "description": "Videoke and karaoke system rental with wireless microphones in Lipa and Batangas. Add-on for parties, debuts, and weddings.",
         "image": "https://easyrental-dev.github.io/easyrental-ph/assets/easyrental_videoke_unit.png",
-        "brand": { "@type": "Brand", "name": "Easy Rental Lipa" },
-        "category": "Videoke rental",
+        "serviceType": "Videoke rental",
+        "provider": { "@id": "https://easyrental-dev.github.io/easyrental-ph/#business" },
+        "areaServed": [
+          { "@type": "City", "name": "Lipa City" },
+          { "@type": "AdministrativeArea", "name": "Batangas" }
+        ],
         "offers": {
           "@type": "Offer",
           "url": "https://easyrental-dev.github.io/easyrental-ph/videoke-rental-lipa-batangas.html",
