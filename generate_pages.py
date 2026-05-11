@@ -10,7 +10,7 @@ head_match = re.search(
     content,
     re.DOTALL,
 )
-footer_match = re.search(r'(<!-- ═══ FOOTER ════════════════════════════════════════════════════════ -->.*</html>)', content, re.DOTALL)
+footer_match = re.search(r'(<!-- â•â•â• FOOTER â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->.*</html>)', content, re.DOTALL)
 
 if not head_match or not footer_match:
     print("Could not parse index.html template.")
@@ -74,14 +74,14 @@ def build_page(filename, title, description, h1, keyword, img_src, img_alt, cont
 # Page 1
 build_page(
     'tent-rental-lipa-batangas.html',
-    'Tent Rental Lipa Batangas | Black & Beige 3×4.5m Canopies | Easy Rental',
-    'Tent rental in Lipa Batangas: 3x4.5m retractable tents with black or beige/khaki canopy. Weddings, parties & events—delivery & setup. Message Easy Rental for availability.',
+    'Tent Rental Lipa Batangas | Black & Beige 3Ã—4.5m Canopies | Easy Rental',
+    'Tent rental in Lipa Batangas: 3x4.5m retractable tents with black or beige/khaki canopy. Weddings, parties & eventsâ€”delivery & setup. Message Easy Rental for availability.',
     'Tent Rental in Lipa Batangas',
     'Tent Rental Lipa Batangas',
-    'assets/easyrental_tent.jpg',
+    'assets/easyrental_tent_showcase.png',
     '3x4.5m Retractable Tent Rental in Lipa Batangas',
-    '''<h2 style="font-size:1.5rem;font-weight:700;margin-bottom:16px;">Premium 3×4.5m Retractable Tents</h2>
-    <p style="color:var(--muted);margin-bottom:16px;line-height:1.6;">Our heavy-duty retractable tents are perfect for outdoor gatherings in Lipa and Batangas. Canopy colors: <strong>black</strong> or <strong>beige/khaki</strong>—mention your preference when you book (subject to availability).</p>
+    '''<h2 style="font-size:1.5rem;font-weight:700;margin-bottom:16px;">Premium 3Ã—4.5m Retractable Tents</h2>
+    <p style="color:var(--muted);margin-bottom:16px;line-height:1.6;">Our heavy-duty retractable tents are perfect for outdoor gatherings in Lipa and Batangas. Canopy colors: <strong>black</strong> or <strong>beige/khaki</strong>â€”mention your preference when you book (subject to availability).</p>
     <ul style="color:var(--muted);margin-bottom:16px;line-height:1.6;padding-left:20px;list-style-type:disc;">
       <li>Size: 3 meters by 4.5 meters (spacious enough for multiple tables)</li>
       <li>Canopy: <strong>Black</strong> or <strong>beige/khaki</strong></li>
@@ -90,7 +90,7 @@ build_page(
     </ul>'''
 )
 
-# Page 2 — bespoke manual file (matches table-rental-lipa-batangas.html layout; do not regenerate)
+# Page 2 â€” bespoke manual file (matches table-rental-lipa-batangas.html layout; do not regenerate)
 """
 build_page(
     'tables-chairs-rental-batangas.html',
@@ -106,14 +106,14 @@ build_page(
     'Complete event package rentals in Lipa Batangas for 20 to 50 pax. Includes tents, tables, and chairs. Perfect for weddings, birthdays, and parties.',
     'Complete Event Packages in Lipa',
     'Event Package Rental Lipa Batangas',
-    'assets/easyrental_tent.jpg',
+    'assets/easyrental_tent_showcase.png',
     'Event Package Rental Setup in Lipa Batangas',
     '''<h2 style="font-size:1.5rem;font-weight:700;margin-bottom:16px;">Hassle-Free Event Packages</h2>
     <p style="color:var(--muted);margin-bottom:16px;line-height:1.6;">Save time and money with our bundled event packages! We offer heavily discounted sets that include everything you need for a comfortable outdoor or indoor celebration in Batangas.</p>
     <div style="display:grid;gap:16px;margin-top:24px;">
-      <div style="padding:16px;border:1px solid #E2E8F0;border-radius:12px;"><strong>Set A (20 Pax) - ₱1,479:</strong> 20 Chairs, 3 Tables, 1 Tent</div>
-      <div style="padding:16px;border:1px solid #E2E8F0;border-radius:12px;"><strong>Set B (30 Pax) - ₱1,999:</strong> 30 Chairs, 5 Tables, 1 Tent</div>
-      <div style="padding:16px;border:1px solid #E2E8F0;border-radius:12px;background:var(--brand-light);border-color:var(--brand);"><strong>Set C (50 Pax) - ₱2,879 (Best Value):</strong> 50 Chairs, 8 Tables, 1 Tent</div>
+      <div style="padding:16px;border:1px solid #E2E8F0;border-radius:12px;"><strong>Set A (20 Pax) - â‚±1,479:</strong> 20 Chairs, 3 Tables, 1 Tent</div>
+      <div style="padding:16px;border:1px solid #E2E8F0;border-radius:12px;"><strong>Set B (30 Pax) - â‚±1,999:</strong> 30 Chairs, 5 Tables, 1 Tent</div>
+      <div style="padding:16px;border:1px solid #E2E8F0;border-radius:12px;background:var(--brand-light);border-color:var(--brand);"><strong>Set C (50 Pax) - â‚±2,879 (Best Value):</strong> 50 Chairs, 8 Tables, 1 Tent</div>
     </div>'''
 )
 """
@@ -131,10 +131,11 @@ build_page(
     '''<h2 style="font-size:1.5rem;font-weight:700;margin-bottom:16px;">Get in Touch for Bookings & Inquiries</h2>
     <p style="color:var(--muted);margin-bottom:16px;line-height:1.6;">We are available 7 days a week to serve your event needs anywhere in Lipa City and Batangas Province. Contact us today for a free quote!</p>
     <ul style="color:var(--muted);margin-bottom:16px;line-height:1.6;padding-left:20px;list-style-type:none;margin-left:-20px;">
-      <li style="margin-bottom:12px;">📞 <strong>Phone:</strong> 0948 512 1132</li>
-      <li style="margin-bottom:12px;">💬 <strong>Facebook Messenger:</strong> @EasyRental.ngani</li>
-      <li style="margin-bottom:12px;">📍 <strong>Location:</strong> Lipa City, Batangas</li>
+      <li style="margin-bottom:12px;">ðŸ“ž <strong>Phone:</strong> 0948 512 1132</li>
+      <li style="margin-bottom:12px;">ðŸ’¬ <strong>Facebook Messenger:</strong> @EasyRental.ngani</li>
+      <li style="margin-bottom:12px;">ðŸ“ <strong>Location:</strong> Lipa City, Batangas</li>
     </ul>
     <p style="color:var(--muted);margin-top:24px;font-size:.9rem;"><em>Please include your event date, location, and equipment needed so we can provide an accurate quote right away!</em></p>'''
 )
+
 
