@@ -102,3 +102,50 @@ function showToast(text) {
     }, 3000);
   }
 }
+
+function copyTextToClipboard(text) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    return navigator.clipboard.writeText(text);
+  }
+
+  return new Promise((resolve, reject) => {
+    const tempInput = document.createElement('textarea');
+    tempInput.value = text;
+    tempInput.setAttribute('readonly', '');
+    tempInput.style.position = 'absolute';
+    tempInput.style.left = '-9999px';
+    document.body.appendChild(tempInput);
+    tempInput.select();
+
+    try {
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
+      resolve();
+    } catch (error) {
+      document.body.removeChild(tempInput);
+      reject(error);
+    }
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const copyButtons = document.querySelectorAll('[data-copy-target]');
+
+  copyButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const targetId = button.getAttribute('data-copy-target');
+      if (!targetId) return;
+
+      const target = document.getElementById(targetId);
+      if (!target) return;
+
+      copyTextToClipboard(target.innerText.trim())
+        .then(() => {
+          showToast('Inquiry format copied. Paste it into Messenger.');
+        })
+        .catch(() => {
+          showToast('Could not copy automatically. You can still copy the message manually.');
+        });
+    });
+  });
+});
