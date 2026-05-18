@@ -111,9 +111,10 @@ build_page(
     '''<h2 style="font-size:1.5rem;font-weight:700;margin-bottom:16px;">Hassle-Free Event Packages</h2>
     <p style="color:var(--muted);margin-bottom:16px;line-height:1.6;">Save time and money with our bundled event packages! We offer heavily discounted sets that include everything you need for a comfortable outdoor or indoor celebration in Batangas.</p>
     <div style="display:grid;gap:16px;margin-top:24px;">
-      <div style="padding:16px;border:1px solid #E2E8F0;border-radius:12px;"><strong>Set A (20 Pax) - â‚±1,479:</strong> 20 Chairs, 3 Tables, 1 Tent</div>
-      <div style="padding:16px;border:1px solid #E2E8F0;border-radius:12px;"><strong>Set B (30 Pax) - â‚±1,999:</strong> 30 Chairs, 5 Tables, 1 Tent</div>
-      <div style="padding:16px;border:1px solid #E2E8F0;border-radius:12px;background:var(--brand-light);border-color:var(--brand);"><strong>Set C (50 Pax) - â‚±2,879 (Best Value):</strong> 50 Chairs, 8 Tables, 1 Tent</div>
+      <div style="padding:16px;border:1px solid #E2E8F0;border-radius:12px;"><strong>Basic - â‚±360:</strong> 1× 6ft Table, 10 Chairs</div>
+      <div style="padding:16px;border:1px solid #E2E8F0;border-radius:12px;"><strong>Standard - â‚±1,319:</strong> 2 Tables, 20 Chairs, 1 Tent (3×4.5m)</div>
+      <div style="padding:16px;border:1px solid #E2E8F0;border-radius:12px;"><strong>Premium - â‚±2,778:</strong> 3 Tables, 30 Chairs, 1 Tent, 1 Videoke</div>
+      <div style="padding:16px;border:1px solid #E2E8F0;border-radius:12px;background:var(--brand-light);border-color:var(--brand);"><strong>Combo - â‚±1,698:</strong> 1 Tent, 1 Videoke</div>
     </div>'''
 )
 """
