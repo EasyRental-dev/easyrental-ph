@@ -1,0 +1,21 @@
+{
+  "name": "easyrental-ph",
+  "version": "1.0.0",
+  "description": "Easy Rental - Tables, Chairs & Tent Rentals Lipa",
+  "type": "module",
+  "scripts": {
+    "dev": "python -m http.server 8000",
+    "test": "echo \"No tests specified\""
+  },
+  "keywords": [
+    "rental",
+    "event",
+    "lipa",
+    "batangas"
+  ],
+  "author": "Easy Rental",
+  "license": "ISC",
+  "dependencies": {
+    "@vercel/analytics": "^1.4.1"
+  }
+}
