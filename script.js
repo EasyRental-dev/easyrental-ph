@@ -179,6 +179,37 @@ function isQuoteCta(el) {
   return /quote|inquir|check date|booking details|send event/.test(text);
 }
 
+function normalizePhoneDigits(phone) {
+  return String(phone || '').replace(/\D/g, '');
+}
+
+function isValidPhilippineMobile(phone) {
+  const digits = normalizePhoneDigits(phone);
+  if (digits.length === 11 && digits.startsWith('09')) return true;
+  if (digits.length === 10 && digits.startsWith('9')) return true;
+  if (digits.length === 12 && digits.startsWith('639')) return true;
+  return false;
+}
+
+function validateContactFormFields({ name, phone, message }) {
+  if (!name || !phone || !message) {
+    return 'Please fill in name, mobile number, and event details.';
+  }
+  if (!isValidPhilippineMobile(phone)) {
+    return 'Please enter your full mobile number (e.g. 0948 512 1132).';
+  }
+  return null;
+}
+
+function formatRetryAfterMessage(response) {
+  const seconds = Number.parseInt(response.headers.get('Retry-After') || '', 10);
+  if (!Number.isFinite(seconds) || seconds <= 0) {
+    return 'You can try again in about an hour, or message us on Messenger anytime.';
+  }
+  const minutes = Math.max(1, Math.ceil(seconds / 60));
+  return `You can try again in about ${minutes} minute${minutes === 1 ? '' : 's'}, or message us on Messenger anytime.`;
+}
+
 function initLeadTracking() {
   document.addEventListener('click', (e) => {
     const messengerLink = e.target.closest('a[href*="m.me/"], a[href*="facebook.com"]');
@@ -210,17 +241,22 @@ function initLeadTracking() {
     contactForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const form = e.target;
+      if (form.dataset.submitting === '1') {
+        return;
+      }
       const submitBtn = form.querySelector('[type="submit"]');
       const name = form.querySelector('[name="name"]')?.value?.trim() || '';
       const phone = form.querySelector('[name="phone"]')?.value?.trim() || '';
       const message = form.querySelector('[name="message"]')?.value?.trim() || '';
       const website = form.querySelector('[name="website"]')?.value?.trim() || '';
 
-      if (!name || !phone || !message) {
-        showToast('Please fill in name, phone, and message.');
+      const validationError = validateContactFormFields({ name, phone, message });
+      if (validationError) {
+        showToast(validationError);
         return;
       }
 
+      form.dataset.submitting = '1';
       if (submitBtn) submitBtn.disabled = true;
 
       trackGaEvent('form_submit', {
@@ -243,19 +279,20 @@ function initLeadTracking() {
         const data = await response.json().catch(() => ({}));
 
         if (response.ok && data.ok) {
-          form.reset();
-          showToast('Message sent! We will reply on Messenger or phone soon.');
+          showContactFormSuccess(form, { name, phone, message });
+          showToast('Inquiry sent! Continue on Messenger for the fastest reply.');
           trackGaEvent('generate_lead', { form_name: 'contact' });
         } else if (response.status === 429) {
-          showToast('Too many attempts. Please message us on Messenger instead.');
-        } else if (data.error === 'message_too_short') {
-          showToast('Please add a bit more detail about your event.');
+          showToast(formatRetryAfterMessage(response));
+        } else if (data.error === 'phone_invalid') {
+          showToast('Please enter your full mobile number (e.g. 0948 512 1132).');
         } else {
           showToast('Could not send right now. Please message us on Messenger.');
         }
       } catch {
         showToast('Could not send right now. Please message us on Messenger.');
       } finally {
+        delete form.dataset.submitting;
         if (submitBtn) submitBtn.disabled = false;
       }
     });
@@ -294,6 +331,72 @@ function buildMessengerUrl(message) {
   const base = 'https://m.me/EasyRental.ngani';
   if (!message) return base;
   return `${base}?text=${encodeURIComponent(appendAttributionToMessage(message))}`;
+}
+
+function buildContactMessengerPrefill(name, phone, message) {
+  const lines = [
+    'Hi Easy Rental! I submitted an inquiry on your website.',
+    '',
+    `Name: ${name}`,
+    `Phone: ${phone}`,
+    '',
+    message,
+  ];
+  return lines.join('\n');
+}
+
+function showContactFormSuccess(form, { name, phone, message }) {
+  const wrap = form.parentElement;
+  if (!wrap) return;
+
+  let panel = wrap.querySelector('.contact-form-success');
+  if (!panel) {
+    panel = document.createElement('div');
+    panel.className = 'contact-form-success';
+    panel.setAttribute('role', 'status');
+    wrap.insertBefore(panel, form.nextSibling);
+  }
+
+  const prefill = buildContactMessengerPrefill(name, phone, message);
+  const messengerUrl = buildMessengerUrl(prefill);
+
+  panel.replaceChildren();
+  const title = document.createElement('p');
+  title.className = 'contact-form-success__title';
+  title.textContent = 'Inquiry sent';
+  const text = document.createElement('p');
+  text.className = 'contact-form-success__text';
+  text.textContent =
+    'Our team was notified. Continue on Messenger for the fastest quote—your details are pre-filled.';
+  const messengerBtn = document.createElement('a');
+  messengerBtn.className = 'contact-form-success__btn pill pill-lg';
+  messengerBtn.href = messengerUrl;
+  messengerBtn.target = '_blank';
+  messengerBtn.rel = 'noopener noreferrer';
+  messengerBtn.textContent = 'Continue on Messenger';
+  messengerBtn.addEventListener('click', () => {
+    trackGaEvent('messenger_click', {
+      link_text: 'Continue on Messenger (form success)',
+      page_path: location.pathname,
+    });
+    trackGaEvent('quote_click', {
+      link_text: 'Continue on Messenger (form success)',
+      page_path: location.pathname,
+    });
+  });
+  const againBtn = document.createElement('button');
+  againBtn.type = 'button';
+  againBtn.className = 'contact-form-success__again';
+  againBtn.textContent = 'Send another inquiry';
+  againBtn.addEventListener('click', () => {
+    panel.hidden = true;
+    form.hidden = false;
+    form.reset();
+  });
+  panel.append(title, text, messengerBtn, againBtn);
+
+  form.hidden = true;
+  panel.hidden = false;
 }
 
 function bindPrefillMessengerLink(link) {

@@ -22,6 +22,7 @@ async function sendTelegramMessage(text) {
     body: JSON.stringify({
       chat_id: config.chatId,
       text,
+      parse_mode: 'HTML',
       disable_web_page_preview: true,
     }),
   });
@@ -75,21 +76,53 @@ function clientMeta(req, payload = {}) {
   };
 }
 
+const MESSENGER_INBOX_URL = 'https://m.me/EasyRental.ngani';
+
+function escapeHtml(text) {
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+/** E.164 for Philippines mobiles (09xx → +639xx) for tel: links in Telegram HTML. */
+function phoneToTelHref(phone) {
+  let digits = String(phone || '').replace(/\D/g, '');
+  if (!digits) return '';
+  if (digits.startsWith('63')) {
+    digits = digits.slice(2);
+  } else if (digits.startsWith('0')) {
+    digits = digits.slice(1);
+  }
+  if (digits.length < 10) return '';
+  return `+63${digits}`;
+}
+
 function formatLead(title, fields, meta) {
   const lines = [`🔔 ${title}`, ''];
+  const phoneRaw = fields.Phone != null ? String(fields.Phone).trim() : '';
+  const telHref = phoneToTelHref(phoneRaw);
+
   Object.entries(fields).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && String(value).trim() !== '') {
-      lines.push(`${key}: ${value}`);
+    if (value === undefined || value === null || String(value).trim() === '') return;
+    if (key === 'Phone' && telHref) {
+      lines.push(`Phone: <a href="tel:${telHref}">${escapeHtml(String(value))}</a>`);
+      return;
     }
+    lines.push(`${key}: ${escapeHtml(String(value))}`);
   });
-  lines.push('', `Page: ${meta.page}`);
-  if (meta.referrer) lines.push(`Referrer: ${meta.referrer}`);
-  if (meta.channel) lines.push(`Channel: ${meta.channel}`);
-  if (meta.utmSource) lines.push(`UTM source: ${meta.utmSource}`);
-  if (meta.utmMedium) lines.push(`UTM medium: ${meta.utmMedium}`);
-  if (meta.utmCampaign) lines.push(`UTM campaign: ${meta.utmCampaign}`);
-  if (meta.refPartner) lines.push(`Partner ref: ${meta.refPartner}`);
+
+  lines.push('', `Page: ${escapeHtml(meta.page)}`);
+  if (meta.referrer) lines.push(`Referrer: ${escapeHtml(meta.referrer)}`);
+  if (meta.channel) lines.push(`Channel: ${escapeHtml(meta.channel)}`);
+  if (meta.utmSource) lines.push(`UTM source: ${escapeHtml(meta.utmSource)}`);
+  if (meta.utmMedium) lines.push(`UTM medium: ${escapeHtml(meta.utmMedium)}`);
+  if (meta.utmCampaign) lines.push(`UTM campaign: ${escapeHtml(meta.utmCampaign)}`);
+  if (meta.refPartner) lines.push(`Partner ref: ${escapeHtml(meta.refPartner)}`);
   lines.push(`Time: ${meta.at}`);
+  lines.push('');
+  lines.push('<b>ACTION:</b> Log as Inquiry in app within 15 min');
+  lines.push(`<a href="${MESSENGER_INBOX_URL}">Open Messenger inbox</a>`);
   return lines.join('\n');
 }
 

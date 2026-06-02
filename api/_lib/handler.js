@@ -7,14 +7,23 @@ const {
   formatLead,
 } = require('./telegram');
 
-const CONTACT_RATE_LIMIT_WINDOW_MS = 30 * 60 * 1000; // 30 minutes
-const CONTACT_RATE_LIMIT_MAX = 2;
+// Only successful Telegram sends count — typos and validation retries do not.
+const CONTACT_RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
+const CONTACT_RATE_LIMIT_MAX = 8;
 const CONTACT_DEDUPE_WINDOW_MS = 60 * 60 * 1000; // 1 hour per phone
 const contactRateLimitState = new Map();
 const contactDedupeState = new Map();
 
 function normalizePhone(phone) {
   return String(phone || '').replace(/\D/g, '');
+}
+
+function isValidPhilippineMobile(phone) {
+  const digits = normalizePhone(phone);
+  if (digits.length === 11 && digits.startsWith('09')) return true;
+  if (digits.length === 10 && digits.startsWith('9')) return true;
+  if (digits.length === 12 && digits.startsWith('639')) return true;
+  return false;
 }
 
 function getClientIp(req) {
@@ -30,24 +39,38 @@ function getClientIp(req) {
   );
 }
 
+function getContactRateLimitRecord(ip) {
+  const now = Date.now();
+  const record = contactRateLimitState.get(ip);
+  if (!record || now >= record.resetAt) {
+    return null;
+  }
+  return record;
+}
+
 function isContactRateLimited(req, res) {
+  const ip = getClientIp(req);
+  const record = getContactRateLimitRecord(ip);
+  if (!record || record.count < CONTACT_RATE_LIMIT_MAX) {
+    return false;
+  }
+
+  const retryAfterSeconds = Math.max(1, Math.ceil((record.resetAt - Date.now()) / 1000));
+  res.setHeader('Retry-After', String(retryAfterSeconds));
+  return true;
+}
+
+function recordSuccessfulContactSend(req) {
   const now = Date.now();
   const ip = getClientIp(req);
   const record = contactRateLimitState.get(ip);
 
   if (!record || now >= record.resetAt) {
     contactRateLimitState.set(ip, { count: 1, resetAt: now + CONTACT_RATE_LIMIT_WINDOW_MS });
-    return false;
-  }
-
-  if (record.count >= CONTACT_RATE_LIMIT_MAX) {
-    const retryAfterSeconds = Math.max(1, Math.ceil((record.resetAt - now) / 1000));
-    res.setHeader('Retry-After', String(retryAfterSeconds));
-    return true;
+    return;
   }
 
   record.count += 1;
-  return false;
 }
 
 // Clicks stay in GA4 only — no Telegram (avoids flooding on every CTA tap).
@@ -92,10 +115,6 @@ async function contactHandler(req, res) {
     return jsonResponse(res, 405, { ok: false, error: 'method_not_allowed' });
   }
 
-  if (isContactRateLimited(req, res)) {
-    return jsonResponse(res, 429, { ok: false, error: 'rate_limited' });
-  }
-
   try {
     const payload = parseBody(req);
     const name = String(payload.name || '').trim();
@@ -112,12 +131,16 @@ async function contactHandler(req, res) {
       return jsonResponse(res, 400, { ok: false, error: 'missing_fields' });
     }
 
-    if (message.length < 12) {
-      return jsonResponse(res, 400, { ok: false, error: 'message_too_short' });
+    if (!isValidPhilippineMobile(phone)) {
+      return jsonResponse(res, 400, { ok: false, error: 'phone_invalid' });
     }
 
     if (isDuplicateContact(phone)) {
       return jsonResponse(res, 200, { ok: true, notified: false, duplicate: true });
+    }
+
+    if (isContactRateLimited(req, res)) {
+      return jsonResponse(res, 429, { ok: false, error: 'rate_limited' });
     }
 
     const meta = clientMeta(req, payload);
@@ -133,6 +156,9 @@ async function contactHandler(req, res) {
     );
 
     const result = await sendTelegramMessage(text);
+    if (!result.skipped) {
+      recordSuccessfulContactSend(req);
+    }
     return jsonResponse(res, 200, { ok: true, notified: !result.skipped });
   } catch (error) {
     console.error('[contact]', error);

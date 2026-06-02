@@ -47,3 +47,7 @@ Then add `<picture>` elements with `source type="image/webp"` for large photos w
 ## 6. Cost
 
 Vercel Hobby + GA4 + Telegram = **$0** at typical landing-page traffic.
+
+## 7. Team operations
+
+Lead-to-booking SOP (Messenger, app Inquiry log, Telegram alerts, weekly KPIs): **[OPERATIONS.md](OPERATIONS.md)**.

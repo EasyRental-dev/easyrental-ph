@@ -1839,6 +1839,72 @@ img.brand-logo-footer {
 }
 #toast.show { transform: translateX(-50%) translateY(0); }
 
+/* Contact form success → Messenger CTA */
+.contact-form-success {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid #D1FAE5;
+  background: linear-gradient(135deg, #F0FDF4, #ECFDF5);
+}
+.contact-form-success[hidden],
+#contact-form[hidden] {
+  display: none !important;
+}
+.contact-form-success__title {
+  font-family: 'Sora', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--ink);
+  margin: 0;
+}
+.contact-form-success__text {
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 0;
+}
+.contact-form-success__btn {
+  width: 100%;
+  justify-content: center;
+  text-decoration: none;
+  background: #0084FF !important;
+  color: #fff !important;
+  border: none;
+}
+.contact-form-success__again {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 4px 0;
+  align-self: flex-start;
+}
+.contact-form-success__again:hover {
+  color: var(--ink);
+}
+.contact-mini-form-wrap .contact-form-success {
+  border-color: rgba(110, 231, 183, 0.35);
+  background: rgba(15, 23, 42, 0.55);
+}
+.contact-mini-form-wrap .contact-form-success__title {
+  color: #F8FAFC;
+}
+.contact-mini-form-wrap .contact-form-success__text {
+  color: #94A3B8;
+}
+.contact-mini-form-wrap .contact-form-success__again {
+  color: #94A3B8;
+}
+.contact-mini-form-wrap .contact-form-success__again:hover {
+  color: #E2E8F0;
+}
+
 
 @media (min-width: 769px) {
   .mobile-menu { display: none !important; }
