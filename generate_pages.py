@@ -59,7 +59,7 @@ def build_page(filename, title, description, h1, keyword, img_src, img_alt, cont
     
     # We must also inject the description before the title in head_part1. Wait, head_part1 has the description. Let's fix that.
     html = re.sub(r'<meta name="description" content=".*?">', f'<meta name="description" content="{description}">', html)
-    page_canonical = f'https://easyrental-dev.github.io/easyrental-ph/{filename}'
+    page_canonical = f'https://easyrentalph.vercel.app/{filename}'
     html = re.sub(
         r'<link rel="canonical" href="[^"]*"\s*>',
         f'<link rel="canonical" href="{page_canonical}">',

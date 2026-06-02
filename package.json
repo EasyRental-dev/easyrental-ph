@@ -1,0 +1,10 @@
+{
+  "name": "easyrental-ph",
+  "private": true,
+  "description": "Easy Rental Lipa — static landing site with Vercel serverless notifications",
+  "scripts": {
+    "convert:webp": "python scripts/convert_webp.py",
+    "sync:urls": "python scripts/sync_site.py",
+    "cleanup:images": "python scripts/cleanup_images.py"
+  }
+}

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://easyrental-dev.github.io/easyrental-ph/sitemap-index.xml
+Sitemap: https://easyrentalph.vercel.app/sitemap-index.xml

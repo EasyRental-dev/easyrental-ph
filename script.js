@@ -34,8 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (navToggle) {
     navToggle.addEventListener('click', toggleMenu);
   }
-  
-  // Close mobile menu when links are clicked
+
   const mobileMenuLinks = document.querySelectorAll('.mobile-menu ul li a');
   mobileMenuLinks.forEach(link => {
     link.addEventListener('click', () => {
@@ -65,29 +64,148 @@ const observer = new IntersectionObserver((entries) => {
 document.addEventListener('DOMContentLoaded', () => {
   const revealElements = document.querySelectorAll('.reveal');
   revealElements.forEach(el => observer.observe(el));
-  
-  // Add Toast element if not present
+
   if (!document.getElementById('toast')) {
     const toast = document.createElement('div');
     toast.id = 'toast';
     document.body.appendChild(toast);
   }
+
+  initLeadTracking();
 });
+
+// --- GA4 + Telegram lead tracking ---
+const GA_MEASUREMENT_ID = 'G-ESVPGJL66K';
+
+function trackGaEvent(eventName, params = {}) {
+  if (typeof gtag === 'function') {
+    gtag('event', eventName, params);
+  }
+}
+
+function notifyLead(endpoint, payload = {}) {
+  const body = JSON.stringify({
+    page: window.location.pathname,
+    referrer: document.referrer || '',
+    ...payload
+  });
+
+  const url = `/api/${endpoint}`;
+  if (navigator.sendBeacon) {
+    const blob = new Blob([body], { type: 'application/json' });
+    navigator.sendBeacon(url, blob);
+    return;
+  }
+
+  fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body,
+    keepalive: true
+  }).catch(() => {});
+}
+
+function linkLabel(el) {
+  return (el.getAttribute('aria-label') || el.textContent || el.title || 'cta').trim().replace(/\s+/g, ' ').slice(0, 120);
+}
+
+function isQuoteCta(el) {
+  if (!el) return false;
+  if (el.matches('[data-track="quote"], .copy-template-btn')) return true;
+  const text = (el.textContent || '').toLowerCase();
+  return /quote|inquir|check date|booking details|send event/.test(text);
+}
+
+function initLeadTracking() {
+  document.addEventListener('click', (e) => {
+    const messengerLink = e.target.closest('a[href*="m.me/"], a[href*="facebook.com"]');
+    if (messengerLink && messengerLink.href.includes('m.me')) {
+      const label = linkLabel(messengerLink);
+      trackGaEvent('messenger_click', { link_text: label, page_path: location.pathname });
+      notifyLead('messenger-click', { label, cta: label });
+      if (isQuoteCta(messengerLink)) {
+        trackGaEvent('quote_click', { link_text: label, page_path: location.pathname });
+        notifyLead('quote-click', { label, cta: label });
+      }
+      return;
+    }
+
+    const callLink = e.target.closest('a[href^="tel:"]');
+    if (callLink) {
+      const label = linkLabel(callLink);
+      trackGaEvent('call_click', { link_text: label, page_path: location.pathname });
+      notifyLead('call-click', { label, cta: label });
+      return;
+    }
+
+    const quoteBtn = e.target.closest('[data-track="quote"], .copy-template-btn');
+    if (quoteBtn) {
+      const label = linkLabel(quoteBtn);
+      trackGaEvent('quote_click', { link_text: label, page_path: location.pathname });
+      notifyLead('quote-click', { label, cta: label });
+    }
+  });
+
+  const contactForm = document.getElementById('contact-form');
+  if (contactForm) {
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const submitBtn = form.querySelector('[type="submit"]');
+      const name = form.name?.value?.trim() || '';
+      const phone = form.phone?.value?.trim() || '';
+      const message = form.message?.value?.trim() || '';
+
+      if (!name || !phone || !message) {
+        showToast('Please fill in name, phone, and message.');
+        return;
+      }
+
+      if (submitBtn) submitBtn.disabled = true;
+
+      trackGaEvent('form_submit', {
+        form_name: 'contact',
+        page_path: location.pathname
+      });
+
+      try {
+        const response = await fetch('/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, phone, message, page: location.pathname })
+        });
+        const data = await response.json().catch(() => ({}));
+
+        if (response.ok && data.ok) {
+          form.reset();
+          showToast('Message sent! We will reply on Messenger or phone soon.');
+          trackGaEvent('generate_lead', { form_name: 'contact' });
+        } else {
+          showToast('Could not send right now. Please message us on Messenger.');
+        }
+      } catch {
+        showToast('Could not send right now. Please message us on Messenger.');
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+      }
+    });
+  }
+}
 
 // Book Package Helper (Copy to Clipboard & Redirect)
 function bookPackage(setName) {
   const message = `Hi! I would like to book ${setName} for my event.`;
-  
-  // Copy to clipboard
+
+  trackGaEvent('quote_click', { package_name: setName, page_path: location.pathname });
+  notifyLead('quote-click', { package: setName, label: `book_package:${setName}` });
+
   navigator.clipboard.writeText(message).then(() => {
     showToast(`"Message copied! Opening Messenger..."`);
-    
-    // Redirect after a short delay
+
     setTimeout(() => {
       window.open('https://m.me/EasyRental.ngani', '_blank');
     }, 1200);
-  }).catch(err => {
-    // Fallback if clipboard fails
+  }).catch(() => {
     window.open(`https://m.me/EasyRental.ngani?text=${encodeURIComponent(message)}`, '_blank');
   });
 }
