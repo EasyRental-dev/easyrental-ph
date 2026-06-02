@@ -7,9 +7,15 @@ const {
   formatLead,
 } = require('./telegram');
 
-const CONTACT_RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
-const CONTACT_RATE_LIMIT_MAX = 5;
+const CONTACT_RATE_LIMIT_WINDOW_MS = 30 * 60 * 1000; // 30 minutes
+const CONTACT_RATE_LIMIT_MAX = 2;
+const CONTACT_DEDUPE_WINDOW_MS = 60 * 60 * 1000; // 1 hour per phone
 const contactRateLimitState = new Map();
+const contactDedupeState = new Map();
+
+function normalizePhone(phone) {
+  return String(phone || '').replace(/\D/g, '');
+}
 
 function getClientIp(req) {
   const xff = req.headers['x-forwarded-for'];
@@ -44,7 +50,8 @@ function isContactRateLimited(req, res) {
   return false;
 }
 
-function createClickHandler(eventName, title) {
+// Clicks stay in GA4 only — no Telegram (avoids flooding on every CTA tap).
+function createClickHandler() {
   return async function handler(req, res) {
     corsHeaders(req, res);
 
@@ -56,28 +63,22 @@ function createClickHandler(eventName, title) {
       return jsonResponse(res, 405, { ok: false, error: 'method_not_allowed' });
     }
 
-    try {
-      const payload = parseBody(req);
-      const meta = clientMeta(req, payload);
-      const text = formatLead(
-        title,
-        {
-          Event: eventName,
-          Label: payload.label || payload.cta || '',
-          Package: payload.package || '',
-          Phone: payload.phone || '',
-          'Upsell offer': payload.offer_id || '',
-        },
-        meta
-      );
-
-      const result = await sendTelegramMessage(text);
-      return jsonResponse(res, 200, { ok: true, notified: !result.skipped });
-    } catch (error) {
-      console.error(`[${eventName}]`, error);
-      return jsonResponse(res, 500, { ok: false, error: 'notification_failed' });
-    }
+    return jsonResponse(res, 200, { ok: true, notified: false });
   };
+}
+
+function isDuplicateContact(phone) {
+  const key = normalizePhone(phone);
+  if (key.length < 10) return false;
+
+  const now = Date.now();
+  const lastNotified = contactDedupeState.get(key);
+  if (lastNotified && now - lastNotified < CONTACT_DEDUPE_WINDOW_MS) {
+    return true;
+  }
+
+  contactDedupeState.set(key, now);
+  return false;
 }
 
 async function contactHandler(req, res) {
@@ -109,6 +110,14 @@ async function contactHandler(req, res) {
 
     if (!name || !phone || !message) {
       return jsonResponse(res, 400, { ok: false, error: 'missing_fields' });
+    }
+
+    if (message.length < 12) {
+      return jsonResponse(res, 400, { ok: false, error: 'message_too_short' });
+    }
+
+    if (isDuplicateContact(phone)) {
+      return jsonResponse(res, 200, { ok: true, notified: false, duplicate: true });
     }
 
     const meta = clientMeta(req, payload);

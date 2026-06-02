@@ -706,6 +706,17 @@ section[id] { scroll-margin-top: 96px; }
   content: ''; position: absolute; bottom: -10%; left: -5%; 
   width: 40%; height: 40%; 
   background: radial-gradient(circle, rgba(16, 185, 129, 0.1), transparent 70%);
+  pointer-events: none;
+}
+.contact-section > .lg-grid,
+.contact-mini-form-wrap {
+  position: relative;
+  z-index: 1;
+}
+.contact-mini-form-wrap input,
+.contact-mini-form-wrap textarea,
+.contact-mini-form-wrap button {
+  pointer-events: auto;
 }
 .contact-card { 
   background: rgba(255, 255, 255, 0.06); 
@@ -875,6 +886,18 @@ section[id] { scroll-margin-top: 96px; }
 .contact-mini-form-wrap input::placeholder,
 .contact-mini-form-wrap textarea::placeholder {
   color: #94A3B8;
+}
+.contact-honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+#contact-form {
+  position: relative;
 }
 
 /* Container */

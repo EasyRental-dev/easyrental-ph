@@ -21,8 +21,8 @@
 
 5. Deploy. Test:
 
-   - `POST /api/contact` via the contact form on `/contact.html`
-   - Click Messenger / Call / Copy quote template on the homepage
+   - Submit the contact form on `/contact.html` or the homepage — you should get **one** Telegram message with name, phone, and event details.
+   - Messenger / call / CTA clicks are tracked in **GA4 only** (no Telegram), so browsing the site does not flood your bot.
 
 ## 3. Custom domain (when ready)
 

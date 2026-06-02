@@ -168,28 +168,6 @@ function trackGaEvent(eventName, params = {}) {
   }
 }
 
-function notifyLead(endpoint, payload = {}) {
-  const body = JSON.stringify(withAttribution({
-    page: window.location.pathname,
-    referrer: document.referrer || '',
-    ...payload,
-  }));
-
-  const url = `/api/${endpoint}`;
-  if (navigator.sendBeacon) {
-    const blob = new Blob([body], { type: 'application/json' });
-    navigator.sendBeacon(url, blob);
-    return;
-  }
-
-  fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body,
-    keepalive: true
-  }).catch(() => {});
-}
-
 function linkLabel(el) {
   return (el.getAttribute('aria-label') || el.textContent || el.title || 'cta').trim().replace(/\s+/g, ' ').slice(0, 120);
 }
@@ -207,10 +185,8 @@ function initLeadTracking() {
     if (messengerLink && messengerLink.href.includes('m.me')) {
       const label = linkLabel(messengerLink);
       trackGaEvent('messenger_click', { link_text: label, page_path: location.pathname });
-      notifyLead('messenger-click', { label, cta: label });
       if (isQuoteCta(messengerLink)) {
         trackGaEvent('quote_click', { link_text: label, page_path: location.pathname });
-        notifyLead('quote-click', { label, cta: label });
       }
       return;
     }
@@ -219,7 +195,6 @@ function initLeadTracking() {
     if (callLink) {
       const label = linkLabel(callLink);
       trackGaEvent('call_click', { link_text: label, page_path: location.pathname });
-      notifyLead('call-click', { label, cta: label });
       return;
     }
 
@@ -227,7 +202,6 @@ function initLeadTracking() {
     if (quoteBtn) {
       const label = linkLabel(quoteBtn);
       trackGaEvent('quote_click', { link_text: label, page_path: location.pathname });
-      notifyLead('quote-click', { label, cta: label });
     }
   });
 
@@ -237,10 +211,10 @@ function initLeadTracking() {
       e.preventDefault();
       const form = e.target;
       const submitBtn = form.querySelector('[type="submit"]');
-      const name = form.name?.value?.trim() || '';
-      const phone = form.phone?.value?.trim() || '';
-      const message = form.message?.value?.trim() || '';
-      const website = form.website?.value?.trim() || '';
+      const name = form.querySelector('[name="name"]')?.value?.trim() || '';
+      const phone = form.querySelector('[name="phone"]')?.value?.trim() || '';
+      const message = form.querySelector('[name="message"]')?.value?.trim() || '';
+      const website = form.querySelector('[name="website"]')?.value?.trim() || '';
 
       if (!name || !phone || !message) {
         showToast('Please fill in name, phone, and message.');
@@ -272,6 +246,10 @@ function initLeadTracking() {
           form.reset();
           showToast('Message sent! We will reply on Messenger or phone soon.');
           trackGaEvent('generate_lead', { form_name: 'contact' });
+        } else if (response.status === 429) {
+          showToast('Too many attempts. Please message us on Messenger instead.');
+        } else if (data.error === 'message_too_short') {
+          showToast('Please add a bit more detail about your event.');
         } else {
           showToast('Could not send right now. Please message us on Messenger.');
         }
@@ -289,7 +267,6 @@ function bookPackage(setName) {
   const message = `Hi! I would like to book ${setName} for my event.`;
 
   trackGaEvent('quote_click', { package_name: setName, page_path: location.pathname });
-  notifyLead('quote-click', { package: setName, label: `book_package:${setName}` });
 
   navigator.clipboard.writeText(message).then(() => {
     showToast(`"Message copied! Opening Messenger..."`);
@@ -501,11 +478,6 @@ function initUpsellBar() {
         offer_id: offer.offer_id,
         upsell_action: el.getAttribute('data-upsell-action'),
         page_path: location.pathname,
-      });
-      notifyLead('quote-click', {
-        label: `upsell:${offer.offer_id}`,
-        offer_id: offer.offer_id,
-        cta: el.getAttribute('data-upsell-action'),
       });
     });
   });
