@@ -66,6 +66,11 @@ function clientMeta(req, payload = {}) {
     page: payload.page || payload.path || 'unknown',
     referrer: payload.referrer || req.headers.referer || '',
     userAgent: (req.headers['user-agent'] || '').slice(0, 200),
+    utmSource: payload.utm_source || payload.utmSource || '',
+    utmMedium: payload.utm_medium || payload.utmMedium || '',
+    utmCampaign: payload.utm_campaign || payload.utmCampaign || '',
+    refPartner: payload.ref || payload.ref_partner || '',
+    channel: payload.channel || '',
     at: new Date().toISOString(),
   };
 }
@@ -79,6 +84,11 @@ function formatLead(title, fields, meta) {
   });
   lines.push('', `Page: ${meta.page}`);
   if (meta.referrer) lines.push(`Referrer: ${meta.referrer}`);
+  if (meta.channel) lines.push(`Channel: ${meta.channel}`);
+  if (meta.utmSource) lines.push(`UTM source: ${meta.utmSource}`);
+  if (meta.utmMedium) lines.push(`UTM medium: ${meta.utmMedium}`);
+  if (meta.utmCampaign) lines.push(`UTM campaign: ${meta.utmCampaign}`);
+  if (meta.refPartner) lines.push(`Partner ref: ${meta.refPartner}`);
   lines.push(`Time: ${meta.at}`);
   return lines.join('\n');
 }

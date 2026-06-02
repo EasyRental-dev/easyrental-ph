@@ -1966,6 +1966,247 @@ img.brand-logo-footer {
   }
 }
 
+/* Phase 5 — revenue engineering UI */
+.pill-sm {
+  font-size: 0.8rem;
+  padding: 10px 20px;
+}
+
+.upsell-bar {
+  padding: 48px 24px 0;
+  background: var(--surface);
+}
+
+.upsell-bar__inner {
+  max-width: 920px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 24px 28px;
+  border-radius: 18px;
+  border: 2px solid var(--brand);
+  background: linear-gradient(135deg, #ecfdf5 0%, #fff 55%);
+  box-shadow: var(--card-shadow);
+}
+
+.upsell-bar__eyebrow {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--brand-dark);
+  margin-bottom: 6px;
+}
+
+.upsell-bar__title {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.upsell-bar__body {
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.65;
+  max-width: 520px;
+}
+
+.upsell-bar__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.offer-ladder {
+  padding: 0 24px 80px;
+  background: var(--surface);
+}
+
+.offer-ladder__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.offer-ladder__head {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.offer-ladder__title {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  margin: 8px 0 10px;
+}
+
+.offer-ladder__sub {
+  color: var(--muted);
+  font-size: 0.95rem;
+  max-width: 640px;
+  margin: 0 auto;
+  line-height: 1.65;
+}
+
+.offer-ladder__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+.offer-ladder__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 20px 18px;
+  border-radius: 16px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: #fff;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.offer-ladder__card:hover {
+  border-color: var(--brand);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px -12px rgba(16, 185, 129, 0.2);
+}
+
+.offer-ladder__card--featured {
+  border-color: var(--brand);
+  background: linear-gradient(180deg, #ecfdf5 0%, #fff 100%);
+  box-shadow: 0 16px 40px -12px rgba(16, 185, 129, 0.18);
+}
+
+.offer-ladder__badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 4px 8px;
+  border-radius: 99px;
+  background: var(--brand);
+  color: #fff;
+}
+
+.offer-ladder__tier-label {
+  font-size: 0.78rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.offer-ladder__package {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.offer-ladder__price {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--brand-dark);
+}
+
+.offer-ladder__note {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.partner-page {
+  padding: 56px 24px 100px;
+  background: var(--surface);
+}
+
+.partner-page__inner {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.partner-card {
+  background: #fff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 18px;
+  padding: 28px;
+  margin-top: 24px;
+  box-shadow: var(--card-shadow);
+}
+
+.partner-card h2 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.partner-card p,
+.partner-card li {
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+
+.partner-card ul {
+  margin: 12px 0 0 20px;
+}
+
+.partner-tool label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 14px;
+}
+
+.partner-tool input {
+  padding: 12px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  font: inherit;
+}
+
+.partner-link-output {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: stretch;
+  margin-top: 8px;
+}
+
+.partner-link-output input {
+  flex: 1 1 220px;
+  min-width: 0;
+  font-size: 0.82rem;
+}
+
+@media (max-width: 640px) {
+  .upsell-bar__inner {
+    padding: 20px;
+  }
+
+  .upsell-bar__actions {
+    width: 100%;
+  }
+
+  .upsell-bar__actions .pill {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+}
+
 @media (max-width: 480px) {
   /* Phone 150px → border-radius ≈ 30px (20% of width) */
   .phone { width: 150px; border-radius: 30px; }

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en-PH">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Easy Rental Lipa partner and referral program for event coordinators, hosts, and suppliers. Share tracked links and earn referral credit on confirmed bookings.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://easyrentalph.vercel.app/partner-referral.html">
+  <title>Partner &amp; Referral Program | Easy Rental Lipa Batangas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="index.css">
+  <link rel="icon" type="image/png" href="assets/easyrental_logo.png">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ESVPGJL66K"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-ESVPGJL66K');
+  </script>
+
+<!-- er:breadcrumb-schema -->
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://easyrentalph.vercel.app"},{"@type":"ListItem","position":2,"name":"Partner & referral program","item":"https://easyrentalph.vercel.app/partner-referral.html"}]}
+  </script>
+<!-- /er:breadcrumb-schema -->
+</head>
+
+<body>
+
+  <div id="progress"></div>
+
+  <nav class="navbar">
+    <a href="index.html" class="nav-logo">
+      <img src="assets/easyrental_logo.png"
+        srcset="assets/easyrental_logo_192.webp 192w, assets/easyrental_logo_512.webp 512w"
+        sizes="(max-width: 768px) 120px, 220px" alt="Easy Rental Lipa Batangas logo" width="1024" height="1024"
+        loading="lazy" decoding="async">
+      Easy Rental
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html#services">Services</a></li>
+      <li><a href="wedding-event-package-lipa-batangas.html">Packages</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <a href="https://m.me/EasyRental.ngani" class="btn btn-primary nav-cta" target="_blank" rel="noopener noreferrer"
+      data-prefill-msg="Hi Easy Rental! I want to join the partner/referral program. My name/business: ____. Typical events I refer: ____.">Message on Messenger</a>
+    <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+  </nav>
+
+  <main class="partner-page">
+    <div class="partner-page__inner">
+      <div class="label">Partner program</div>
+      <h1 class="display" style="font-size:clamp(1.8rem,4vw,2.4rem);font-weight:800;letter-spacing:-.03em;margin:10px 0 14px;">
+        Refer clients. Get credit on confirmed bookings.
+      </h1>
+      <p style="color:var(--muted);font-size:1rem;line-height:1.75;max-width:640px;">
+        For event coordinators, hosts, photographers, and suppliers in Lipa &amp; Batangas. Share your tracked link — when a referred customer books and completes an event, you earn referral credit we apply to future rentals or agreed payouts.
+      </p>
+
+      <div class="partner-card">
+        <h2>How it works</h2>
+        <ul>
+          <li>Request your partner code on Messenger (we assign a short code like <code>maria-events</code>).</li>
+          <li>Share your link on Facebook, Viber, or in proposals — clicks and inquiries are tagged automatically.</li>
+          <li>When the booking is confirmed and the event is completed, referral credit is recorded to your partner account.</li>
+        </ul>
+      </div>
+
+      <div class="partner-card partner-tool" id="partner-link-tool">
+        <h2>Build your referral link</h2>
+        <p style="margin-bottom:16px;">Enter the partner code we gave you. Share the homepage link — attribution stays for the whole session.</p>
+        <label for="partner-code">
+          Partner code
+          <input type="text" id="partner-code" name="partner-code" placeholder="e.g. maria-events" autocomplete="off"
+            maxlength="32" pattern="[a-zA-Z0-9_-]+">
+        </label>
+        <div class="partner-link-output">
+          <input type="text" id="partner-link-output" readonly aria-label="Generated referral link"
+            placeholder="Your link will appear here">
+          <button type="button" class="pill pill-sm" id="partner-copy-link" style="border:none;cursor:pointer;">Copy link</button>
+        </div>
+        <p style="margin-top:14px;font-size:.82rem;">Sample: <code>https://easyrentalph.vercel.app/?ref=your-code&amp;utm_source=partner&amp;utm_medium=referral</code></p>
+      </div>
+
+      <div class="partner-card">
+        <h2>Apply or ask questions</h2>
+        <p>Message us with your name, business type, and typical event sizes. We reply on Messenger with your code and program terms.</p>
+        <div style="margin-top:18px;">
+          <a href="https://m.me/EasyRental.ngani" target="_blank" rel="noopener noreferrer" class="pill pill-lg"
+            data-prefill-msg="Hi Easy Rental! I want to join the partner/referral program. My name/business: ____. Typical events I refer: ____. Preferred payout: credit on future rentals / other: ____."
+            data-track="quote">
+            Apply on Messenger
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer style="background:#000;padding:36px 24px;">
+    <div style="max-width:1200px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px;">
+      <div style="color:#475569;font-size:.84rem;">Easy Rental Lipa · Partner program</div>
+      <a href="index.html" style="color:#94A3B8;font-size:.82rem;text-decoration:none;">Back to homepage</a>
+    </div>
+  </footer>
+
+  <a href="https://m.me/EasyRental.ngani" target="_blank" rel="noopener noreferrer" class="fab" title="Chat on Messenger"
+    data-prefill-msg="Hi Easy Rental! I want to join the partner/referral program. My name/business: ____.">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff">
+      <path
+        d="M12 2C6.477 2 2 6.145 2 11.243c0 2.908 1.452 5.506 3.732 7.205V22l3.405-1.869C10.012 20.371 10.992 20.5 12 20.5c5.523 0 10-4.145 10-9.257S17.523 2 12 2zm1.09 12.467-2.545-2.72-4.97 2.72 5.464-5.8 2.609 2.72 4.906-2.72-5.464 5.8z" />
+    </svg>
+  </a>
+
+  <script src="script.js"></script>
+  <script>
+    (function initPartnerLinkTool() {
+      const codeInput = document.getElementById('partner-code');
+      const linkOutput = document.getElementById('partner-link-output');
+      const copyBtn = document.getElementById('partner-copy-link');
+      if (!codeInput || !linkOutput || !copyBtn) return;
+
+      const baseUrl = 'https://easyrentalph.vercel.app/';
+
+      function sanitizeCode(value) {
+        return String(value || '').trim().toLowerCase().replace(/[^a-z0-9_-]/g, '').slice(0, 32);
+      }
+
+      function buildLink(code) {
+        if (!code) return '';
+        const params = new URLSearchParams({
+          ref: code,
+          utm_source: 'partner',
+          utm_medium: 'referral',
+          utm_campaign: code,
+        });
+        return `${baseUrl}?${params.toString()}`;
+      }
+
+      function updateLink() {
+        const code = sanitizeCode(codeInput.value);
+        linkOutput.value = buildLink(code);
+      }
+
+      codeInput.addEventListener('input', updateLink);
+
+      const params = new URLSearchParams(window.location.search);
+      const preset = sanitizeCode(params.get('ref'));
+      if (preset) {
+        codeInput.value = preset;
+        updateLink();
+      }
+
+      copyBtn.addEventListener('click', () => {
+        if (!linkOutput.value) {
+          if (typeof showToast === 'function') showToast('Enter your partner code first.');
+          return;
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(linkOutput.value).then(() => {
+            if (typeof showToast === 'function') showToast('Referral link copied.');
+            if (typeof trackGaEvent === 'function') {
+              trackGaEvent('partner_link_copied', { partner_code: sanitizeCode(codeInput.value) });
+            }
+          });
+        }
+      });
+    })();
+  </script>
+
+</body>
+
+</html>

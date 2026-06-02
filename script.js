@@ -72,23 +72,108 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   initLeadTracking();
+  initRevenueEngineering();
 });
 
 // --- GA4 + Telegram lead tracking ---
 const GA_MEASUREMENT_ID = 'G-ESVPGJL66K';
+const ATTRIBUTION_STORAGE_KEY = 'er_attribution_v1';
+
+function sanitizePartnerRef(value) {
+  return String(value || '')
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9_-]/g, '')
+    .slice(0, 32);
+}
+
+function sanitizeUtm(value) {
+  return String(value || '').trim().slice(0, 80);
+}
+
+function readStoredAttribution() {
+  try {
+    const raw = sessionStorage.getItem(ATTRIBUTION_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function saveAttribution(data) {
+  try {
+    sessionStorage.setItem(ATTRIBUTION_STORAGE_KEY, JSON.stringify(data));
+  } catch {
+    /* ignore quota errors */
+  }
+}
+
+function getAttributionFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const ref = sanitizePartnerRef(params.get('ref'));
+  const utmSource = sanitizeUtm(params.get('utm_source'));
+  const utmMedium = sanitizeUtm(params.get('utm_medium'));
+  const utmCampaign = sanitizeUtm(params.get('utm_campaign'));
+
+  if (!ref && !utmSource && !utmMedium && !utmCampaign) {
+    return null;
+  }
+
+  return {
+    ref: ref || '',
+    utm_source: utmSource,
+    utm_medium: utmMedium,
+    utm_campaign: utmCampaign,
+    channel: ref
+      ? `partner:${ref}`
+      : [utmSource, utmMedium].filter(Boolean).join('/') || 'campaign',
+    landing_page: window.location.pathname,
+    captured_at: new Date().toISOString(),
+  };
+}
+
+function getAttribution() {
+  const fromUrl = getAttributionFromUrl();
+  if (fromUrl) {
+    saveAttribution(fromUrl);
+    return fromUrl;
+  }
+  return readStoredAttribution() || {};
+}
+
+function withAttribution(payload = {}) {
+  const attr = getAttribution();
+  return {
+    ...payload,
+    ...(attr.ref ? { ref: attr.ref } : {}),
+    ...(attr.utm_source ? { utm_source: attr.utm_source } : {}),
+    ...(attr.utm_medium ? { utm_medium: attr.utm_medium } : {}),
+    ...(attr.utm_campaign ? { utm_campaign: attr.utm_campaign } : {}),
+    ...(attr.channel ? { channel: attr.channel } : {}),
+  };
+}
+
+function appendAttributionToMessage(message) {
+  const attr = getAttribution();
+  const parts = [];
+  if (attr.ref) parts.push(`Referral code: ${attr.ref}`);
+  if (attr.utm_source) parts.push(`Source: ${attr.utm_source}`);
+  if (!parts.length) return message;
+  return `${message}\n\n(${parts.join(' · ')})`;
+}
 
 function trackGaEvent(eventName, params = {}) {
   if (typeof gtag === 'function') {
-    gtag('event', eventName, params);
+    gtag('event', eventName, withAttribution(params));
   }
 }
 
 function notifyLead(endpoint, payload = {}) {
-  const body = JSON.stringify({
+  const body = JSON.stringify(withAttribution({
     page: window.location.pathname,
     referrer: document.referrer || '',
-    ...payload
-  });
+    ...payload,
+  }));
 
   const url = `/api/${endpoint}`;
   if (navigator.sendBeacon) {
@@ -155,6 +240,7 @@ function initLeadTracking() {
       const name = form.name?.value?.trim() || '';
       const phone = form.phone?.value?.trim() || '';
       const message = form.message?.value?.trim() || '';
+      const website = form.website?.value?.trim() || '';
 
       if (!name || !phone || !message) {
         showToast('Please fill in name, phone, and message.');
@@ -172,7 +258,13 @@ function initLeadTracking() {
         const response = await fetch('/api/contact', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, phone, message, page: location.pathname })
+          body: JSON.stringify(withAttribution({
+            name,
+            phone,
+            message,
+            website,
+            page: location.pathname,
+          })),
         });
         const data = await response.json().catch(() => ({}));
 
@@ -224,7 +316,258 @@ function showToast(text) {
 function buildMessengerUrl(message) {
   const base = 'https://m.me/EasyRental.ngani';
   if (!message) return base;
-  return `${base}?text=${encodeURIComponent(message)}`;
+  return `${base}?text=${encodeURIComponent(appendAttributionToMessage(message))}`;
+}
+
+function bindPrefillMessengerLink(link) {
+  if (!link || link.dataset.prefillBound === '1') return;
+  link.dataset.prefillBound = '1';
+  link.addEventListener('click', (e) => {
+    const msg = link.getAttribute('data-prefill-msg');
+    if (!msg) return;
+    e.preventDefault();
+    window.open(buildMessengerUrl(msg), '_blank', 'noopener');
+  });
+}
+
+function attributionQueryString() {
+  const attr = getAttribution();
+  const params = new URLSearchParams();
+  if (attr.ref) params.set('ref', attr.ref);
+  if (attr.utm_source) params.set('utm_source', attr.utm_source);
+  if (attr.utm_medium) params.set('utm_medium', attr.utm_medium);
+  if (attr.utm_campaign) params.set('utm_campaign', attr.utm_campaign);
+  const qs = params.toString();
+  return qs ? `?${qs}` : '';
+}
+
+function decorateInternalLinks() {
+  const qs = attributionQueryString();
+  if (!qs) return;
+
+  document.querySelectorAll('a[href]').forEach((link) => {
+    const href = link.getAttribute('href');
+    if (!href || href.startsWith('#') || href.startsWith('tel:') || href.startsWith('mailto:')) return;
+    if (/^https?:\/\//i.test(href) && !href.includes(window.location.host)) return;
+    if (!/\.html($|[?#])/.test(href) && !href.endsWith('.html')) return;
+    if (href.includes('utm_') || href.includes('ref=')) return;
+
+    const separator = href.includes('?') ? '&' : '?';
+    link.setAttribute('href', `${href}${separator}${qs.slice(1)}`);
+  });
+}
+
+function initAttributionTracking() {
+  const attr = getAttribution();
+  if (!attr.channel) return;
+
+  if (typeof gtag === 'function') {
+    gtag('set', 'user_properties', {
+      traffic_channel: attr.channel,
+      partner_ref: attr.ref || '(none)',
+    });
+  }
+
+  if (!sessionStorage.getItem('er_channel_session_fired')) {
+    trackGaEvent('channel_session', {
+      landing_page: attr.landing_page || location.pathname,
+    });
+    sessionStorage.setItem('er_channel_session_fired', '1');
+  }
+}
+
+const UPSELL_OFFERS = {
+  '/wedding-package-basic-lipa-batangas.html': {
+    offer_id: 'basic_to_standard',
+    eyebrow: 'Recommended upgrade',
+    title: 'Need shade for your guests?',
+    body: 'Standard adds a 3×4.5m tent, 2 tables, and 20 chairs for ₱1,319 — one delivery, one booking.',
+    href: 'wedding-package-set-a-lipa-batangas.html',
+    cta: 'View Standard package',
+    prefill: 'Hi Easy Rental! I am on the Basic package page but want the Standard package (₱1,319). Event date: ____. Venue/barangay: ____. Preferred delivery time: ____.',
+  },
+  '/wedding-package-set-a-lipa-batangas.html': {
+    offer_id: 'standard_to_combo',
+    eyebrow: 'Popular add-on',
+    title: 'Add videoke for your program',
+    body: 'Combo bundle: tent + videoke for ₱1,698. Need full seating too? Premium is ₱2,778.',
+    href: 'wedding-package-combo-lipa-batangas.html',
+    cta: 'View Combo package',
+    prefill: 'Hi Easy Rental! I am considering Standard but want the Combo package (tent + videoke, ₱1,698). Event date: ____. Venue/barangay: ____.',
+  },
+  '/wedding-package-combo-lipa-batangas.html': {
+    offer_id: 'combo_to_premium',
+    eyebrow: 'Full party setup',
+    title: 'Need tables and chairs too?',
+    body: 'Premium includes tent, videoke, 3 tables, and 30 chairs for ₱2,778 — best for larger guest counts.',
+    href: 'wedding-package-set-b-lipa-batangas.html',
+    cta: 'View Premium package',
+    prefill: 'Hi Easy Rental! I am on the Combo page but want the Premium package (₱2,778). Event date: ____. Venue/barangay: ____. Guest count: ____.',
+  },
+  '/tent-rental-lipa-batangas.html': {
+    offer_id: 'tent_to_standard',
+    eyebrow: 'Bundle & save coordination',
+    title: 'Book tent + tables + chairs together',
+    body: 'Standard package (₱1,319) includes your tent plus seating for ~20 guests in one Messenger thread.',
+    href: 'wedding-package-set-a-lipa-batangas.html',
+    cta: 'See Standard bundle',
+    prefill: 'Hi Easy Rental! I was looking at tent-only rental but want the Standard package (₱1,319). Event date: ____. Venue/barangay: ____.',
+  },
+  '/table-rental-lipa-batangas.html': {
+    offer_id: 'table_to_basic',
+    eyebrow: 'Starter bundle',
+    title: 'Pair your table with chairs',
+    body: 'Basic package: 1× 6ft table + 10 chairs for ₱360 — faster quote than renting separately.',
+    href: 'wedding-package-basic-lipa-batangas.html',
+    cta: 'View Basic package',
+    prefill: 'Hi Easy Rental! I need the Basic package (table + 10 chairs, ₱360). Event date: ____. Venue/barangay: ____.',
+  },
+  '/tables-chairs-rental-batangas.html': {
+    offer_id: 'chairs_to_standard',
+    eyebrow: 'Complete outdoor setup',
+    title: 'Add a tent in one booking',
+    body: 'Standard package bundles tent, 2 tables, and 20 chairs for ₱1,319 with one delivery fee quote.',
+    href: 'wedding-package-set-a-lipa-batangas.html',
+    cta: 'View Standard package',
+    prefill: 'Hi Easy Rental! I was browsing tables & chairs but want the Standard package (₱1,319). Event date: ____. Venue/barangay: ____.',
+  },
+  '/videoke-rental-lipa-batangas.html': {
+    offer_id: 'videoke_to_combo',
+    eyebrow: 'Bundle pricing',
+    title: 'Book videoke + tent together',
+    body: 'Combo package: tent + videoke for ₱1,698 — one vendor, one schedule on event day.',
+    href: 'wedding-package-combo-lipa-batangas.html',
+    cta: 'View Combo package',
+    prefill: 'Hi Easy Rental! I want the Combo package (tent + videoke, ₱1,698). Event date: ____. Venue/barangay: ____.',
+  },
+  '/wedding-event-package-lipa-batangas.html': {
+    offer_id: 'hub_to_standard',
+    eyebrow: 'Most booked',
+    title: 'Not sure which package?',
+    body: 'Standard (₱1,319) fits most ~20-guest weddings and debuts — tent, 2 tables, and 20 chairs in one booking.',
+    href: 'wedding-package-set-a-lipa-batangas.html',
+    cta: 'View Standard package',
+    prefill: 'Hi Easy Rental! I am comparing packages and want the Standard package (₱1,319). Event date: ____. Venue/barangay: ____. Guest count: ____.',
+  },
+};
+
+const OFFER_LADDER = [
+  { label: 'Small gathering', package: 'Basic', price: '₱360', href: 'wedding-package-basic-lipa-batangas.html', note: 'Table + 10 chairs' },
+  { label: '~20 guests · Most booked', package: 'Standard', price: '₱1,319', href: 'wedding-package-set-a-lipa-batangas.html', note: 'Tent + tables + chairs', featured: true },
+  { label: 'Tent + videoke', package: 'Combo', price: '₱1,698', href: 'wedding-package-combo-lipa-batangas.html', note: 'Entertainment bundle' },
+  { label: 'Full party setup', package: 'Premium', price: '₱2,778', href: 'wedding-package-set-b-lipa-batangas.html', note: 'Tent, videoke, 30 chairs' },
+];
+
+function initUpsellBar() {
+  const offer = UPSELL_OFFERS[location.pathname];
+  if (!offer || document.getElementById('upsell-bar')) return;
+
+  const footer = document.querySelector('footer');
+  if (!footer) return;
+
+  const qs = attributionQueryString();
+  const packageHref = `${offer.href}${qs}`;
+
+  const bar = document.createElement('aside');
+  bar.id = 'upsell-bar';
+  bar.className = 'upsell-bar reveal';
+  bar.setAttribute('role', 'complementary');
+  bar.setAttribute('aria-label', 'Recommended package upgrade');
+  bar.innerHTML = `
+    <div class="upsell-bar__inner">
+      <div class="upsell-bar__copy">
+        <span class="upsell-bar__eyebrow">${offer.eyebrow}</span>
+        <h3 class="upsell-bar__title">${offer.title}</h3>
+        <p class="upsell-bar__body">${offer.body}</p>
+      </div>
+      <div class="upsell-bar__actions">
+        <a href="${packageHref}" class="pill pill-sm" data-upsell-id="${offer.offer_id}" data-upsell-action="view_package">${offer.cta}</a>
+        <a href="https://m.me/EasyRental.ngani" target="_blank" rel="noopener noreferrer" class="pill pill-outline-dark pill-sm" data-upsell-id="${offer.offer_id}" data-upsell-action="messenger">Ask on Messenger</a>
+      </div>
+    </div>
+  `;
+
+  const messengerCta = bar.querySelector('[data-upsell-action="messenger"]');
+  if (messengerCta) {
+    messengerCta.setAttribute('data-prefill-msg', offer.prefill);
+    bindPrefillMessengerLink(messengerCta);
+  }
+
+  footer.parentNode.insertBefore(bar, footer);
+
+  bar.querySelectorAll('[data-upsell-id]').forEach((el) => {
+    el.addEventListener('click', () => {
+      trackGaEvent('upsell_click', {
+        offer_id: offer.offer_id,
+        upsell_action: el.getAttribute('data-upsell-action'),
+        page_path: location.pathname,
+      });
+      notifyLead('quote-click', {
+        label: `upsell:${offer.offer_id}`,
+        offer_id: offer.offer_id,
+        cta: el.getAttribute('data-upsell-action'),
+      });
+    });
+  });
+
+  const observerTarget = bar;
+  if (observerTarget.classList.contains('reveal')) {
+    observer.observe(observerTarget);
+  }
+}
+
+function initOfferLadder() {
+  const path = location.pathname;
+  if (path !== '/' && path !== '/index.html') return;
+  if (document.getElementById('offer-ladder')) return;
+
+  const anchor = document.getElementById('package-value');
+  if (!anchor) return;
+
+  const qs = attributionQueryString();
+  const ladder = document.createElement('section');
+  ladder.id = 'offer-ladder';
+  ladder.className = 'offer-ladder reveal';
+  ladder.setAttribute('aria-labelledby', 'offer-ladder-heading');
+  ladder.innerHTML = `
+    <div class="offer-ladder__inner">
+      <div class="offer-ladder__head">
+        <div class="label">Which package fits?</div>
+        <h2 id="offer-ladder-heading" class="display offer-ladder__title">Pick your bundle by guest count</h2>
+        <p class="offer-ladder__sub">Published equipment rates — delivery auto-calculated in our app after you send your venue on Messenger.</p>
+      </div>
+      <div class="offer-ladder__grid">
+        ${OFFER_LADDER.map((row) => `
+          <a href="${row.href}${qs}" class="offer-ladder__card${row.featured ? ' offer-ladder__card--featured' : ''}" data-offer-tier="${row.package.toLowerCase()}">
+            ${row.featured ? '<span class="offer-ladder__badge">Most booked</span>' : ''}
+            <span class="offer-ladder__tier-label">${row.label}</span>
+            <span class="offer-ladder__package">${row.package}</span>
+            <span class="offer-ladder__price">${row.price}</span>
+            <span class="offer-ladder__note">${row.note}</span>
+          </a>
+        `).join('')}
+      </div>
+    </div>
+  `;
+
+  anchor.insertAdjacentElement('afterend', ladder);
+  observer.observe(ladder);
+
+  ladder.querySelectorAll('.offer-ladder__card').forEach((card) => {
+    card.addEventListener('click', () => {
+      trackGaEvent('offer_ladder_click', {
+        offer_tier: card.getAttribute('data-offer-tier'),
+        page_path: location.pathname,
+      });
+    });
+  });
+}
+
+function initRevenueEngineering() {
+  initAttributionTracking();
+  decorateInternalLinks();
+  initOfferLadder();
+  initUpsellBar();
 }
 
 function getCtaVariant() {
@@ -280,15 +623,7 @@ function copyTextToClipboard(text) {
 document.addEventListener('DOMContentLoaded', () => {
   applyCtaVariant();
 
-  const prefillLinks = document.querySelectorAll('[data-prefill-msg]');
-  prefillLinks.forEach((link) => {
-    link.addEventListener('click', (e) => {
-      const msg = link.getAttribute('data-prefill-msg');
-      if (!msg) return;
-      e.preventDefault();
-      window.open(buildMessengerUrl(msg), '_blank', 'noopener');
-    });
-  });
+  document.querySelectorAll('[data-prefill-msg]').forEach(bindPrefillMessengerLink);
 
   const copyButtons = document.querySelectorAll('[data-copy-target]');
 

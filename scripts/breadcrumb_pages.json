@@ -1,0 +1,72 @@
+{
+  "tent-rental-lipa-batangas.html": {
+    "items": [
+      { "name": "Home", "path": "/" },
+      { "name": "Tent rental Lipa Batangas", "path": "/tent-rental-lipa-batangas.html" }
+    ]
+  },
+  "table-rental-lipa-batangas.html": {
+    "items": [
+      { "name": "Home", "path": "/" },
+      { "name": "6ft table rental Lipa", "path": "/table-rental-lipa-batangas.html" }
+    ]
+  },
+  "tables-chairs-rental-batangas.html": {
+    "items": [
+      { "name": "Home", "path": "/" },
+      { "name": "Tables and chairs rental Batangas", "path": "/tables-chairs-rental-batangas.html" }
+    ]
+  },
+  "videoke-rental-lipa-batangas.html": {
+    "items": [
+      { "name": "Home", "path": "/" },
+      { "name": "Videoke rental Lipa Batangas", "path": "/videoke-rental-lipa-batangas.html" }
+    ]
+  },
+  "wedding-event-package-lipa-batangas.html": {
+    "items": [
+      { "name": "Home", "path": "/" },
+      { "name": "Event packages Lipa Batangas", "path": "/wedding-event-package-lipa-batangas.html" }
+    ]
+  },
+  "wedding-package-basic-lipa-batangas.html": {
+    "items": [
+      { "name": "Home", "path": "/" },
+      { "name": "Packages", "path": "/wedding-event-package-lipa-batangas.html" },
+      { "name": "Basic package", "path": "/wedding-package-basic-lipa-batangas.html" }
+    ]
+  },
+  "wedding-package-set-a-lipa-batangas.html": {
+    "items": [
+      { "name": "Home", "path": "/" },
+      { "name": "Packages", "path": "/wedding-event-package-lipa-batangas.html" },
+      { "name": "Standard package", "path": "/wedding-package-set-a-lipa-batangas.html" }
+    ]
+  },
+  "wedding-package-set-b-lipa-batangas.html": {
+    "items": [
+      { "name": "Home", "path": "/" },
+      { "name": "Packages", "path": "/wedding-event-package-lipa-batangas.html" },
+      { "name": "Premium package", "path": "/wedding-package-set-b-lipa-batangas.html" }
+    ]
+  },
+  "wedding-package-combo-lipa-batangas.html": {
+    "items": [
+      { "name": "Home", "path": "/" },
+      { "name": "Packages", "path": "/wedding-event-package-lipa-batangas.html" },
+      { "name": "Combo package", "path": "/wedding-package-combo-lipa-batangas.html" }
+    ]
+  },
+  "contact.html": {
+    "items": [
+      { "name": "Home", "path": "/" },
+      { "name": "Contact", "path": "/contact.html" }
+    ]
+  },
+  "partner-referral.html": {
+    "items": [
+      { "name": "Home", "path": "/" },
+      { "name": "Partner & referral program", "path": "/partner-referral.html" }
+    ]
+  }
+}
