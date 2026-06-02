@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
 
+Host: https://easyrentalph.vercel.app
 Sitemap: https://easyrentalph.vercel.app/sitemap-index.xml

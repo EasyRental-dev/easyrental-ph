@@ -221,6 +221,37 @@ function showToast(text) {
   }
 }
 
+function buildMessengerUrl(message) {
+  const base = 'https://m.me/EasyRental.ngani';
+  if (!message) return base;
+  return `${base}?text=${encodeURIComponent(message)}`;
+}
+
+function getCtaVariant() {
+  const params = new URLSearchParams(window.location.search);
+  const qsVariant = params.get('cta_variant');
+  if (qsVariant === 'a' || qsVariant === 'b') return qsVariant;
+  return Math.random() < 0.5 ? 'a' : 'b';
+}
+
+function applyCtaVariant() {
+  const variant = getCtaVariant();
+  document.documentElement.setAttribute('data-cta-variant', variant);
+
+  const variantTargets = document.querySelectorAll('[data-cta-a][data-cta-b]');
+  variantTargets.forEach((el) => {
+    const text = variant === 'b'
+      ? el.getAttribute('data-cta-b')
+      : el.getAttribute('data-cta-a');
+    if (text) el.textContent = text;
+  });
+
+  trackGaEvent('cta_variant_assigned', {
+    variant,
+    page_path: location.pathname
+  });
+}
+
 function copyTextToClipboard(text) {
   if (navigator.clipboard && navigator.clipboard.writeText) {
     return navigator.clipboard.writeText(text);
@@ -247,6 +278,18 @@ function copyTextToClipboard(text) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  applyCtaVariant();
+
+  const prefillLinks = document.querySelectorAll('[data-prefill-msg]');
+  prefillLinks.forEach((link) => {
+    link.addEventListener('click', (e) => {
+      const msg = link.getAttribute('data-prefill-msg');
+      if (!msg) return;
+      e.preventDefault();
+      window.open(buildMessengerUrl(msg), '_blank', 'noopener');
+    });
+  });
+
   const copyButtons = document.querySelectorAll('[data-copy-target]');
 
   copyButtons.forEach((button) => {
@@ -259,6 +302,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
       copyTextToClipboard(target.innerText.trim())
         .then(() => {
+          const openMessenger = button.getAttribute('data-open-messenger') === 'true';
+          if (openMessenger) {
+            showToast('Inquiry format copied. Opening Messenger...');
+            setTimeout(() => {
+              window.open(buildMessengerUrl(target.innerText.trim()), '_blank', 'noopener');
+            }, 500);
+            return;
+          }
           showToast('Inquiry format copied. Paste it into Messenger.');
         })
         .catch(() => {
