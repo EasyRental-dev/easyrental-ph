@@ -18,10 +18,15 @@
    |------|--------|
    | `TELEGRAM_BOT_TOKEN` | From BotFather |
    | `TELEGRAM_CHAT_ID` | Your numeric chat id |
+   | `GAS_URL` | Tenant GAS Web App URL (same as Flutter app) |
+   | `API_SECRET` | HMAC secret (same as Flutter app) |
+
+   Optional: `GAS_DEVICE_ID` (default `WEB-FORM-BOT`).
 
 5. Deploy. Test:
 
    - Submit the contact form on `/contact.html` or the homepage — you should get **one** Telegram message with name, phone, and event details.
+   - If `GAS_URL` + `API_SECRET` are set, the inquiry is also appended to the **Inquiries** tab (see [INTEGRATION.md](INTEGRATION.md)).
    - Messenger / call / CTA clicks are tracked in **GA4 only** (no Telegram), so browsing the site does not flood your bot.
 
 ## 3. Custom domain (when ready)
@@ -51,3 +56,5 @@ Vercel Hobby + GA4 + Telegram = **$0** at typical landing-page traffic.
 ## 7. Team operations
 
 Lead-to-booking SOP (Messenger, app Inquiry log, Telegram alerts, weekly KPIs): **[OPERATIONS.md](OPERATIONS.md)**.
+
+GAS ↔ app sheet alignment and auto-inquiry setup: **[INTEGRATION.md](INTEGRATION.md)**.

@@ -6,6 +6,7 @@ const {
   clientMeta,
   formatLead,
 } = require('./telegram');
+const { logWebsiteInquiry, getGasConfig } = require('./gas');
 
 // Only successful Telegram sends count — typos and validation retries do not.
 const CONTACT_RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
@@ -159,7 +160,34 @@ async function contactHandler(req, res) {
     if (!result.skipped) {
       recordSuccessfulContactSend(req);
     }
-    return jsonResponse(res, 200, { ok: true, notified: !result.skipped });
+
+    let inquiryLogged = false;
+    let inquiryId = null;
+    let inquiryError = null;
+
+    if (getGasConfig()) {
+      try {
+        const gasResult = await logWebsiteInquiry({ name, phone, message, meta });
+        if (gasResult.ok) {
+          inquiryLogged = true;
+          inquiryId = gasResult.data?.inquiryId || null;
+        } else if (!gasResult.skipped) {
+          inquiryError = gasResult.error || 'log_inquiry_failed';
+          console.error('[contact] GAS logInquiry failed:', inquiryError, gasResult.data || '');
+        }
+      } catch (gasErr) {
+        inquiryError = gasErr.message || 'log_inquiry_failed';
+        console.error('[contact] GAS logInquiry error:', gasErr);
+      }
+    }
+
+    return jsonResponse(res, 200, {
+      ok: true,
+      notified: !result.skipped,
+      inquiryLogged,
+      inquiryId,
+      ...(inquiryError ? { inquiryError } : {}),
+    });
   } catch (error) {
     console.error('[contact]', error);
     return jsonResponse(res, 500, { ok: false, error: 'notification_failed' });

@@ -121,7 +121,11 @@ function formatLead(title, fields, meta) {
   if (meta.refPartner) lines.push(`Partner ref: ${escapeHtml(meta.refPartner)}`);
   lines.push(`Time: ${meta.at}`);
   lines.push('');
-  lines.push('<b>ACTION:</b> Log as Inquiry in app within 15 min');
+  if (process.env.GAS_URL && process.env.API_SECRET) {
+    lines.push('<b>ACTION:</b> Inquiry auto-logged to app — reply on Messenger');
+  } else {
+    lines.push('<b>ACTION:</b> Log as Inquiry in app within 15 min');
+  }
   lines.push(`<a href="${MESSENGER_INBOX_URL}">Open Messenger inbox</a>`);
   return lines.join('\n');
 }

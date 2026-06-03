@@ -9,11 +9,12 @@ Single source of truth:
 | Confirmed booking, stock, delivery fee | **Rental app → Bookings** |
 | Marketing attribution | **GA4** + site UTM/ref (sessionStorage) |
 | Instant team alert (form only) | **Telegram** (notification only — not a CRM) |
+| Web form → app Inquiry | **Vercel `/api/contact` → GAS `logInquiry`** (when `GAS_URL` + `API_SECRET` set) |
 | Backup / BI | **Google Sheets** (synced from app — read-only for daily ops) |
 
 **Rules**
 
-1. Every Messenger or web-form lead → **Inquiry in app within 15 minutes** (status `Pending`).
+1. Every Messenger or web-form lead → **Inquiry in app within 15 minutes** (status `Pending`). Web form inquiries are **auto-logged** when Vercel has `GAS_URL` + `API_SECRET` configured (see [INTEGRATION.md](INTEGRATION.md)).
 2. Every deposit received → **Booking in app the same day** (check availability first).
 3. Telegram = buzzer. Messenger = where you sell. App = what you ship.
 
@@ -139,7 +140,7 @@ We'll coordinate setup/pickup on this thread. Salamat!
 ### Web contact form (secondary)
 
 1. Team gets **Telegram** alert (name, phone, message, attribution).
-2. **ACTION on alert:** log Inquiry in app within 15 min.
+2. **Inquiry auto-logged** to app sheet when GAS env vars are configured; otherwise **ACTION:** log Inquiry in app within 15 min.
 3. Call or message customer on **Messenger** (preferred) or phone — do not rely on Telegram thread for the sale.
 4. If customer used "Continue on Messenger" on the site, thread may already exist — merge into one Inquiry.
 
@@ -184,17 +185,15 @@ No new dashboard. Copy one row into Google Sheets or Notes:
 
 ---
 
-## Growth: Rental app → Telegram (optional, build later)
+## Growth: Rental app → Telegram (booking dispatch)
 
-Build only after Inquiry logging habit is stable for 2+ weeks.
+**Purpose:** Dispatch alert when a new booking is created or payment/status is recorded — not for marketing leads.
 
-**Purpose:** Dispatch alert when a booking is confirmed or payment recorded — not for marketing leads.
+**Implemented:** [`gas/telegram_dispatch.gs`](../rental_booking_system/gas/telegram_dispatch.gs) in the rental app GAS project.
 
-**Options (pick one in the rental app repo):**
-
-1. **Google Apps Script** on Sheets `onEdit` / timed trigger when a new booking row appears → `sendMessage` to Telegram Bot API.
-2. **Webhook** from app on sync when booking status = Confirmed.
-3. **Manual:** pin “Today’s schedule” from app each morning in Telegram (zero code).
+1. Add `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` to GAS Script Properties (same bot as landing page).
+2. Ensure `SPREADSHEET_ID` matches the app's **Rental Booking Data** sheet ([INTEGRATION.md](INTEGRATION.md)).
+3. For standalone GAS deployments, run `installBookingDispatchTrigger()` once in the Apps Script editor.
 
 **Telegram message example:**
 
@@ -213,6 +212,7 @@ Requires same env vars as the landing page: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT
 
 - CRM / pipeline tracking (use app Inquiry log)
 - Booking or inventory management (use app Bookings)
+- **Creating quotations or bookings via bot** (deferred — requires deposit + availability in app)
 - Logging every Messenger CTA click (GA4 only — avoids alert fatigue)
 
 ---
@@ -220,4 +220,5 @@ Requires same env vars as the landing page: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT
 ## Related technical docs
 
 - Telegram env setup: [VERCEL_SETUP.md](VERCEL_SETUP.md)
+- GAS ↔ app integration: [INTEGRATION.md](INTEGRATION.md)
 - Contact API: `POST /api/contact` → `api/_lib/handler.js`
