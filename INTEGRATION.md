@@ -2,29 +2,38 @@
 
 Web form submissions can auto-create **Inquiry** rows in the rental app's Google Sheet via the tenant GAS API. Booking dispatch alerts can fire from GAS when the **Bookings** tab changes.
 
-## Sheet alignment (required)
+## Sheet alignment (required, per tenant)
 
-The Flutter app syncs to a client-owned spreadsheet titled **"Rental Booking Data"** (`SheetSyncService`). GAS reads/writes **`SPREADSHEET_ID`** in Script Properties. **These must be the same spreadsheet** or web-form inquiries will not appear in the app.
+Each tenant gets their own spreadsheet **automatically** — you do not create it by hand for daily ops.
 
-### Verify alignment
+On first **Google Sign-In** in the rental app, `SheetSyncService` finds or creates **"Rental Booking Data"** in that tenant's Google Drive and stores the ID locally as `sync_sheet_id`. The URL looks like:
 
-1. **App sheet ID** — In the rental app: open backup/sync settings (or check Google Drive) and open **Rental Booking Data**. Copy the ID from the URL:
-   ```
-   https://docs.google.com/spreadsheets/d/{SYNC_SHEET_ID}/edit
-   ```
-   The app stores this as `sync_sheet_id` in SharedPreferences after Google Sign-In.
+```
+https://docs.google.com/spreadsheets/d/{SYNC_SHEET_ID}/edit
+```
 
-2. **GAS sheet ID** — In the spreadsheet bound to `Code.gs`: **Extensions → Apps Script → Project Settings → Script Properties**. Confirm `SPREADSHEET_ID` equals `{SYNC_SHEET_ID}` from step 1.
+That `{SYNC_SHEET_ID}` is **unique per tenant** (per Google account / business).
 
-3. **Tabs** — The sheet must include at least:
-   - `Bookings` — headers per [`gas/Code.gs`](../rental_booking_system/gas/Code.gs) `EXPECTED_HEADERS`
-   - `Inquiries` — 21 columns (A–U), including `Inquiry ID` in column U
+GAS reads/writes **`SPREADSHEET_ID`** in Script Properties (one GAS deployment per tenant). **It must equal that tenant's auto `{SYNC_SHEET_ID}`** or web-form inquiries will not appear in the app.
 
-4. **Smoke test** — Submit the contact form on `/contact.html`. Within one app sync, a new **Pending** inquiry with source **Website Form** should appear in Inquiry log.
+### One-time setup per tenant
 
-### If IDs differ
+1. **Activate the tenant** in the app and complete **Google Sign-In** once (creates or links **Rental Booking Data**).
+2. **Copy `{SYNC_SHEET_ID}`** from the sheet URL in Drive or from the app's sync/backup settings.
+3. **Set GAS Script Property** `SPREADSHEET_ID` = `{SYNC_SHEET_ID}` (Apps Script → Project Settings → Script Properties).
+4. **Tabs** — the app seeds `Bookings`, `Inquiries`, `Config`, etc. on first sync. If using GAS before the app has run once, ensure an **Inquiries** tab exists (21 columns A–U, `Inquiry ID` in column U).
 
-Update GAS Script Property `SPREADSHEET_ID` to the app's **Rental Booking Data** sheet ID, redeploy the Web App, and re-run the smoke test. Do not maintain two spreadsheets for daily ops.
+### Easy Rental landing page (single tenant)
+
+Vercel `GAS_URL` + `API_SECRET` point at **this tenant's** GAS Web App only. There is one `{SYNC_SHEET_ID}` for Easy Rental — not shared across other license holders.
+
+### Verify
+
+Submit the contact form on `/contact.html`. After the next app sync, a **Pending** inquiry with source **Website Form** should appear in Inquiry log.
+
+### If inquiries don't show in the app
+
+Update GAS `SPREADSHEET_ID` to the tenant's current **Rental Booking Data** `{SYNC_SHEET_ID}` (e.g. after re-sign-in or import). Do not maintain a separate manual spreadsheet for ops.
 
 ## Vercel environment variables
 
@@ -56,3 +65,20 @@ See [`rental_booking_system/gas/telegram_dispatch.gs`](../rental_booking_system/
 ## Deferred (by design)
 
 Full Telegram bot for creating quotations or bookings is **not** implemented. Bookings require deposit confirmation and availability checks in the Flutter app. See [OPERATIONS.md](OPERATIONS.md).
+
+## Messenger auto-inquiry (rental app GAS)
+
+Same sheet as web-form inquiries: customer messages the Facebook Page -> GAS webhook -> **Inquiries** tab -> app sync.
+
+Setup: see rental app DEPLOYMENT.md section 8. Log-only (no bot replies).
+
+### Meta app (Live mode)
+
+| Meta field | URL |
+|------------|-----|
+| Privacy Policy URL | `https://easyrentalph.vercel.app/privacy` |
+| User data deletion instructions (optional) | `https://easyrentalph.vercel.app/privacy#data-deletion` |
+| App domain | `easyrentalph.vercel.app` |
+
+Deploy the landing page after adding `privacy.html` so the URL is publicly reachable before switching the Meta app to Live.
+
