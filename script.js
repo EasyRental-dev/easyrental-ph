@@ -969,6 +969,12 @@ const LiveSite = (() => {
     return img;
   }
 
+  function prepareLiveCatalogImages() {
+    document.querySelectorAll('[data-live="image"], [data-live="packages-hub-flyer"]').forEach((el) => {
+      if (el.tagName === 'IMG') unwrapPictureForLiveImage(el);
+    });
+  }
+
   function hydrateLiveCatalogImage(el, item, slug) {
     if (!el || el.tagName !== 'IMG' || !item) return false;
     const src = resolveCatalogImageUrl(item, { allowFallback: false });
@@ -1553,6 +1559,7 @@ const LiveSite = (() => {
     if (!data) return;
 
     rebuildSlugMap();
+    prepareLiveCatalogImages();
     hydrateElements();
     hydrateCatalogLinks();
     hydrateRelatedCards();

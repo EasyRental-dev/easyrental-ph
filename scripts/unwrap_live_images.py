@@ -5,12 +5,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PATTERN = re.compile(
     r'<picture>\s*<source[^>]*>\s*'
-    r'(<img[^>]*data-live="(?:image|packages-hub-flyer)"[^>]*>)\s*'
-    r'</picture>',
+    r'(<img\b[^>]*\bdata-live="(?:image|packages-hub-flyer)"[^>]*>)'
+    r'\s*</picture>',
     re.I | re.S,
 )
 
-for path in ROOT.glob('*.html'):
+for path in sorted(ROOT.glob('*.html')):
     text = path.read_text(encoding='utf-8')
     new, count = PATTERN.subn(r'\1', text)
     if count:
