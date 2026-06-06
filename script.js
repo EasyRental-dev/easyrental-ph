@@ -887,6 +887,21 @@ const LiveSite = (() => {
     return item.name || '';
   }
 
+  /** Hero paragraph: Website Description field, then Card Subtitle if description blank. */
+  function catalogDescription(item) {
+    if (!item) return '';
+    const desc = String(item.websiteDescription || '').trim();
+    if (desc) return desc;
+    return String(item.cardSubtitle || '').trim();
+  }
+
+  function hydrateLiveCatalogAlt(el, item) {
+    if (!el || el.tagName !== 'IMG' || !item) return;
+    if (String(item.imageAltText || '').trim()) {
+      el.alt = catalogImageAlt(item);
+    }
+  }
+
   function extractDriveFileId(url) {
     if (!url) return null;
     const s = String(url);
@@ -959,9 +974,7 @@ const LiveSite = (() => {
     el.setAttribute('data-catalog-slug', slug || item.websiteSlug || '');
     applyFocalStyles(el, item);
     attachCatalogImageFallbacks(el.parentElement || document);
-    if (String(item.imageAltText || '').trim()) {
-      el.alt = catalogImageAlt(item);
-    }
+    hydrateLiveCatalogAlt(el, item);
     return true;
   }
 
@@ -1251,6 +1264,14 @@ const LiveSite = (() => {
     document.title = `${item.name}${suffix}`;
   }
 
+  function hydratePackageDetailMeta(item) {
+    if (!item) return;
+    const desc = catalogDescription(item);
+    if (!desc) return;
+    const meta = document.querySelector('meta[name="description"]');
+    if (meta) meta.setAttribute('content', desc);
+  }
+
   function hydratePackagePages() {
     const slug = getPageSlug();
     if (!slug) return;
@@ -1289,6 +1310,7 @@ const LiveSite = (() => {
     hydratePackageBreadcrumbs();
     updateMessengerPrefills(item);
     hydratePageTitle();
+    hydratePackageDetailMeta(item);
   }
 
   function hydrateProductPages() {
@@ -1404,7 +1426,8 @@ const LiveSite = (() => {
     document.querySelectorAll('[data-live="description"][data-catalog-slug]').forEach(el => {
       const slug = el.getAttribute('data-catalog-slug');
       const item = getCatalogItem(slug);
-      if (item?.websiteDescription) el.textContent = item.websiteDescription;
+      const desc = catalogDescription(item);
+      if (desc) el.textContent = desc;
     });
 
     document.querySelectorAll('[data-live="subtitle"][data-catalog-slug]').forEach(el => {
@@ -1417,6 +1440,7 @@ const LiveSite = (() => {
       const slug = el.getAttribute('data-catalog-slug');
       const item = getCatalogItem(slug);
       if (el.tagName !== 'IMG') return;
+      hydrateLiveCatalogAlt(el, item);
       hydrateLiveCatalogImage(el, item, slug);
     });
   }
@@ -1437,7 +1461,8 @@ const LiveSite = (() => {
             if (item) {
               data.offers.price = String(item.basePrice);
               if (item.name) data.name = item.name;
-              if (item.websiteDescription) data.description = item.websiteDescription;
+              const desc = catalogDescription(item);
+              if (desc) data.description = desc;
               const imageUrl = resolveCatalogImageUrl(item, { allowFallback: false });
               if (imageUrl) data.image = imageUrl;
               modified = true;
