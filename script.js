@@ -1582,6 +1582,82 @@ const LiveSite = (() => {
       .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0));
   }
 
+  /** Fixed Operational Proof cards — order matches static HTML in #proof-gallery-static. */
+  const PROOF_SLOTS = [
+    {
+      id: 'on-site-setup',
+      wide: true,
+      pill: 'On-site setup',
+      title: 'Outdoor canopy and seating setup',
+      body: 'Actual on-site arrangement showing canopy coverage, grouped seating, and event preparation in an open venue setup.',
+      img: 'assets/7fdb56b5-3317-4e4c-bfa6-6bdb0c446109.jpg',
+      webp: 'assets/7fdb56b5-3317-4e4c-bfa6-6bdb0c446109.webp',
+      alt: 'Easy Rental outdoor event setup — tan and black pop-up canopies with rows of white monobloc chairs and a white-covered table on open grassy field',
+    },
+    {
+      id: 'delivery',
+      pill: 'Delivery',
+      title: 'Loaded and ready for transport',
+      body: 'Tables, chairs, and tent frames secured on the vehicle before dispatch to the customer\'s venue.',
+      img: 'assets/2b76f07e-2432-4fdd-97ff-0c7f133114b1.jpg',
+      webp: 'assets/2b76f07e-2432-4fdd-97ff-0c7f133114b1.webp',
+      alt: 'Easy Rental delivery — blue pickup truck bed loaded with stacked white monobloc chairs and folded white tables tied with rope, plus tent frame poles',
+    },
+    {
+      id: 'setup',
+      pill: 'Setup',
+      title: 'Dressed tables and seating under canopy',
+      body: 'Formal courtyard setup with a yellow-beige pop-up tent, white chair covers, and draped tables ready for guests.',
+      img: 'assets/05e24548-d94e-4519-864f-64d4a9b26188.jpg',
+      webp: 'assets/05e24548-d94e-4519-864f-64d4a9b26188.webp',
+      alt: 'Easy Rental event setup — yellow-beige pop-up canopy with white chair slipcovers and draped tables on a tiled home courtyard',
+    },
+    {
+      id: 'inventory',
+      pill: 'Inventory',
+      title: 'Inventory prepared for dispatch',
+      body: 'Organized stacks of chairs and folded tables ready to be released for scheduled bookings.',
+      img: 'assets/3971cb7a-afed-44a3-806a-814ecbc77008.jpg',
+      webp: 'assets/3971cb7a-afed-44a3-806a-814ecbc77008.webp',
+      alt: 'Easy Rental inventory — four stacks of white monobloc chairs and folded white plastic tables staged against a navy wall before dispatch',
+    },
+  ];
+
+  function renderProofShot(def, liveItem) {
+    const wide = def.wide ? ' proof-shot--wide' : '';
+    const mediaWide = def.wide ? ' proof-shot__media--wide' : '';
+    const pill = def.pill;
+    const title = liveItem
+      ? (liveItem.caption || liveItem.altText || def.title)
+      : def.title;
+    const body = liveItem
+      ? (liveItem.altText && liveItem.altText !== liveItem.caption ? liveItem.altText : '')
+      : def.body;
+    const alt = liveItem
+      ? (liveItem.altText || liveItem.caption || def.alt)
+      : def.alt;
+
+    const mediaInner = liveItem
+      ? `<img src="${escapeHtml(liveItem.imageUrl)}" alt="${escapeHtml(alt)}" loading="lazy" decoding="async">`
+      : `<picture>
+            <source srcset="${escapeHtml(def.webp)}" type="image/webp">
+            <img src="${escapeHtml(def.img)}" alt="${escapeHtml(alt)}" loading="lazy" decoding="async">
+          </picture>`;
+
+    return `
+        <figure class="proof-shot${wide}">
+          <span class="proof-pill">${escapeHtml(pill)}</span>
+          <div class="proof-shot__media proof-shot__media--photo${mediaWide}">
+            ${mediaInner}
+          </div>
+          <figcaption class="proof-shot__body">
+            <strong>${escapeHtml(title)}</strong>
+            ${body ? `<p>${escapeHtml(body)}</p>` : ''}
+          </figcaption>
+        </figure>
+      `;
+  }
+
   function hydrateBranding() {
     const name = String(siteData?.businessName || '').trim();
     const short = String(siteData?.contact?.navBrandShort || '').trim()
@@ -1698,31 +1774,27 @@ const LiveSite = (() => {
   }
 
   function renderProofGallery() {
-    const items = galleryItemsForSection('proof');
+    const liveItems = galleryItemsForSection('proof');
     const container = document.getElementById('live-proof-gallery');
-    if (!container || !items.length) return;
-
-    container.innerHTML = items.map((item, index) => {
-      const title = item.caption || item.altText || 'Easy Rental setup';
-      const body = item.altText && item.altText !== item.caption ? item.altText : '';
-      const pill = item.caption ? item.caption.split('·')[0].trim().slice(0, 24) : 'On-site';
-      const wide = index === 0 ? ' proof-shot--wide' : '';
-      const mediaWide = index === 0 ? ' proof-shot__media--wide' : '';
-      return `
-        <figure class="proof-shot${wide}">
-          <span class="proof-pill">${escapeHtml(pill)}</span>
-          <div class="proof-shot__media proof-shot__media--photo${mediaWide}">
-            <img src="${escapeHtml(item.imageUrl)}" alt="${escapeHtml(item.altText || item.caption || 'Easy Rental event photo')}" loading="lazy" decoding="async">
-          </div>
-          <figcaption class="proof-shot__body">
-            <strong>${escapeHtml(title)}</strong>
-            ${body ? `<p>${escapeHtml(body)}</p>` : ''}
-          </figcaption>
-        </figure>
-      `;
-    }).join('');
-
     const staticBlock = document.getElementById('proof-gallery-static');
+    if (!container) return;
+
+    const slotted = liveItems.filter((item) => String(item.proofSlot || '').trim());
+    if (!slotted.length) {
+      container.innerHTML = '';
+      if (staticBlock) staticBlock.hidden = false;
+      return;
+    }
+
+    const bySlot = new Map();
+    slotted.forEach((item) => {
+      bySlot.set(String(item.proofSlot).trim(), item);
+    });
+
+    container.innerHTML = PROOF_SLOTS.map((def) =>
+      renderProofShot(def, bySlot.get(def.id) || null),
+    ).join('');
+
     if (staticBlock) staticBlock.hidden = true;
   }
 
