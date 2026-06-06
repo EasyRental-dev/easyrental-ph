@@ -1457,10 +1457,10 @@ img.brand-logo-footer {
 .footer-tagline { color: #94A3B8; font-size: 0.84rem; }
 .footer-copy { color: #64748B; font-size: 0.75rem; }
 
-/* Homepage / contact inline footer (SEO nav links) */
+/* Homepage / contact footer */
 .site-footer {
   background: #000;
-  padding: 36px 24px;
+  padding: 36px 24px 28px;
 }
 .site-footer__inner {
   max-width: 1200px;
@@ -1483,29 +1483,43 @@ img.brand-logo-footer {
   font-size: 0.84rem;
 }
 .site-footer__copy {
-  color: #94A3B8;
+  color: #64748B;
   font-size: 0.75rem;
 }
 .site-footer-nav {
   max-width: 1200px;
-  margin: 18px auto 0;
-  padding-top: 14px;
-  border-top: 1px solid #334155;
+  margin: 20px auto 0;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   flex-wrap: wrap;
-  gap: 10px 18px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px 20px;
 }
 .site-footer-nav a {
-  color: #E2E8F0;
-  font-size: 0.82rem;
+  color: #94A3B8;
+  font-size: 0.875rem;
   font-weight: 500;
   text-decoration: none;
-  line-height: 1.4;
+  line-height: 1.5;
+  white-space: nowrap;
 }
 .site-footer-nav a:hover,
 .site-footer-nav a:focus-visible {
-  color: #6EE7B7;
+  color: #fff;
   text-decoration: underline;
+  text-underline-offset: 3px;
+}
+@media (max-width: 768px) {
+  .site-footer__inner {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .site-footer__brand-tagline {
+    max-width: none;
+  }
 }
 .site-footer__link {
   color: #E2E8F0;
@@ -2375,5 +2389,51 @@ img.brand-logo-footer {
   .proof-shot__media--wide { aspect-ratio: 3 / 2; }
   .proof-shot__media:not(.proof-shot__media--photo) { padding: 18px; }
   .proof-card { padding: 20px; }
+}
+
+/* ── Live Gallery (hydrated from /api/site-data) ─────────────────────────── */
+.live-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.live-gallery__item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  margin: 0;
+}
+
+.live-gallery__item img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.live-gallery__item:hover img {
+  transform: scale(1.03);
+}
+
+.live-gallery__item figcaption {
+  padding: 12px 16px;
+  font-size: 0.88rem;
+  color: var(--muted);
+  line-height: 1.5;
+  background: #fff;
+}
+
+.live-gallery:empty {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .live-gallery {
+    grid-template-columns: 1fr;
+  }
 }
 

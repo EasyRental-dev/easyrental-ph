@@ -133,7 +133,7 @@ We'll coordinate setup/pickup on this thread. Salamat!
 
 1. Customer taps `m.me/EasyRental.ngani` (often with pre-filled event details).
 2. Reply within 5 minutes.
-3. Log **Inquiry** in app immediately (copy phone from thread).
+3. Inquiry is **auto-logged** from Messenger when GAS webhook is configured; otherwise log **Inquiry** in app immediately (copy phone from thread).
 4. Use **AI Chat Reply** for draft → **Quick Quote** for delivery → send on Messenger.
 5. Deposit → **Booking** same day.
 

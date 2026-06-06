@@ -727,4 +727,227 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
   });
+
+  LiveSite.init();
 });
+
+// ─────────────────────────────────────────────────────────────────────────────
+// LiveSite — live catalog/price hydration from /api/site-data
+// ─────────────────────────────────────────────────────────────────────────────
+
+const LiveSite = (() => {
+  const CACHE_KEY = 'er_site_data_v1';
+  const CACHE_TTL_MS = 60000;
+
+  let siteData = null;
+
+  function getCachedData() {
+    try {
+      const raw = sessionStorage.getItem(CACHE_KEY);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      if (Date.now() - parsed._cachedAt > CACHE_TTL_MS) {
+        sessionStorage.removeItem(CACHE_KEY);
+        return null;
+      }
+      return parsed.data;
+    } catch {
+      return null;
+    }
+  }
+
+  function setCachedData(data) {
+    try {
+      sessionStorage.setItem(CACHE_KEY, JSON.stringify({
+        _cachedAt: Date.now(),
+        data,
+      }));
+    } catch {
+      // sessionStorage might be full or unavailable
+    }
+  }
+
+  async function fetchSiteData() {
+    const cached = getCachedData();
+    if (cached) {
+      siteData = cached;
+      return cached;
+    }
+
+    try {
+      const response = await fetch('/api/site-data');
+      if (!response.ok) {
+        console.warn('[LiveSite] API error:', response.status);
+        return null;
+      }
+      const data = await response.json();
+      siteData = data;
+      setCachedData(data);
+      return data;
+    } catch (error) {
+      console.warn('[LiveSite] Fetch error:', error);
+      return null;
+    }
+  }
+
+  function getCatalogItem(slug) {
+    if (!siteData?.catalog) return null;
+    return siteData.catalog.find(item => item.websiteSlug === slug);
+  }
+
+  function formatPrice(price) {
+    if (typeof price !== 'number') return '';
+    return '₱' + price.toLocaleString('en-PH');
+  }
+
+  function hydrateElements() {
+    if (!siteData?.catalog) return;
+
+    document.querySelectorAll('[data-live="price"][data-catalog-slug]').forEach(el => {
+      const slug = el.getAttribute('data-catalog-slug');
+      const item = getCatalogItem(slug);
+      if (!item) return;
+
+      const useCover = el.hasAttribute('data-with-cover');
+      const price = useCover && item.hasCoverOption && item.coverPrice
+        ? item.coverPrice
+        : item.basePrice;
+
+      el.textContent = formatPrice(price);
+    });
+
+    document.querySelectorAll('[data-live="name"][data-catalog-slug]').forEach(el => {
+      const slug = el.getAttribute('data-catalog-slug');
+      const item = getCatalogItem(slug);
+      if (item) el.textContent = item.name;
+    });
+
+    document.querySelectorAll('[data-live="description"][data-catalog-slug]').forEach(el => {
+      const slug = el.getAttribute('data-catalog-slug');
+      const item = getCatalogItem(slug);
+      if (item?.websiteDescription) el.textContent = item.websiteDescription;
+    });
+
+    document.querySelectorAll('[data-live="image"][data-catalog-slug]').forEach(el => {
+      const slug = el.getAttribute('data-catalog-slug');
+      const item = getCatalogItem(slug);
+      if (item?.imageUrl && el.tagName === 'IMG') {
+        el.src = item.imageUrl;
+      }
+    });
+  }
+
+  function updateOfferLadder() {
+    if (!siteData?.catalog) return;
+
+    const slugToPrice = {};
+    siteData.catalog.forEach(item => {
+      if (item.websiteSlug) {
+        slugToPrice[item.websiteSlug] = item.basePrice;
+      }
+    });
+
+    const slugMap = {
+      'package-basic': 'Basic',
+      'package-standard': 'Standard',
+      'package-combo': 'Combo',
+      'package-premium': 'Premium',
+    };
+
+    OFFER_LADDER.forEach(row => {
+      const packageName = row.package;
+      for (const [slug, name] of Object.entries(slugMap)) {
+        if (name === packageName && slugToPrice[slug] !== undefined) {
+          row.price = formatPrice(slugToPrice[slug]);
+          break;
+        }
+      }
+    });
+  }
+
+  function updateJsonLd() {
+    if (!siteData?.catalog) return;
+
+    const scripts = document.querySelectorAll('script[type="application/ld+json"]');
+    scripts.forEach(script => {
+      try {
+        const data = JSON.parse(script.textContent);
+        let modified = false;
+
+        if (data['@type'] === 'Product' && data.offers?.price !== undefined) {
+          const slug = script.getAttribute('data-catalog-slug');
+          if (slug) {
+            const item = getCatalogItem(slug);
+            if (item) {
+              data.offers.price = String(item.basePrice);
+              modified = true;
+            }
+          }
+        }
+
+        if (Array.isArray(data.makesOffer)) {
+          data.makesOffer.forEach(offer => {
+            if (offer.price !== undefined) {
+              const priceSpec = offer.itemOffered?.['@id'];
+              if (priceSpec) {
+                const match = priceSpec.match(/#product-(.+)/);
+                if (match) {
+                  const slug = match[1];
+                  const item = getCatalogItem(slug);
+                  if (item) {
+                    offer.price = String(item.basePrice);
+                    modified = true;
+                  }
+                }
+              }
+            }
+          });
+        }
+
+        if (modified) {
+          script.textContent = JSON.stringify(data);
+        }
+      } catch {
+        // Invalid JSON-LD, skip
+      }
+    });
+  }
+
+  function renderGallery() {
+    if (!siteData?.gallery?.length) return;
+
+    const container = document.getElementById('live-gallery');
+    if (!container) return;
+
+    container.innerHTML = siteData.gallery
+      .filter(item => item.showOnWebsite !== false)
+      .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0))
+      .map(item => `
+        <figure class="live-gallery__item">
+          <img src="${item.imageUrl}" alt="${item.altText || item.caption || 'Gallery image'}" loading="lazy" decoding="async">
+          ${item.caption ? `<figcaption>${item.caption}</figcaption>` : ''}
+        </figure>
+      `)
+      .join('');
+  }
+
+  async function init() {
+    const data = await fetchSiteData();
+    if (!data) return;
+
+    hydrateElements();
+    updateOfferLadder();
+    updateJsonLd();
+    renderGallery();
+
+    document.dispatchEvent(new CustomEvent('livesiteready', { detail: data }));
+  }
+
+  return {
+    init,
+    getData: () => siteData,
+    getCatalogItem,
+    formatPrice,
+    refresh: fetchSiteData,
+  };
+})();

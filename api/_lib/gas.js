@@ -110,9 +110,20 @@ async function logWebsiteInquiry({ name, phone, message, meta = {} }) {
   });
 }
 
+/**
+ * Fetch public site data for landing page hydration.
+ * Returns catalog (filtered to showOnWebsite), gallery, published posts, business info.
+ */
+async function getPublicSiteData() {
+  return gasPost({
+    action: 'getPublicSiteData',
+  });
+}
+
 module.exports = {
   getGasConfig,
   gasPost,
   logWebsiteInquiry,
+  getPublicSiteData,
   DEFAULT_DEVICE_ID,
 };
