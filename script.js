@@ -988,7 +988,9 @@ const LiveSite = (() => {
     const fit = (item.imageFitMode || 'fit') === 'fit';
     const liveRole = el.getAttribute('data-live') || '';
     const isFlyer = liveRole === 'packages-hub-flyer';
-    const isHero = !!el.closest('.product-hero-frame, .package-hero-media');
+    const isHero = !!el.closest(
+      '.product-hero-frame, .package-hero-media, .unit-card-media, .content-figure, .related-card-promo, .pkg-hub-media'
+    );
 
     el.style.setProperty('--focal-x', `${item.imageFocalX ?? 50}%`);
     el.style.setProperty('--focal-y', `${item.imageFocalY ?? 50}%`);
@@ -1219,21 +1221,28 @@ const LiveSite = (() => {
 
     const img = document.querySelector('[data-live="packages-hub-flyer"]');
     const flyer = siteData?.packagesHubFlyer;
-    if (!img || !flyer?.imageUrl?.trim()) return;
-
-    const src = normalizeDriveImageUrl(flyer.imageUrl.trim());
-    if (!src) return;
+    if (!img || !flyer) return;
 
     unwrapPictureForLiveImage(img);
+
+    const alt = String(flyer.imageAltText || '').trim();
+    if (alt) {
+      img.alt = alt;
+      img.setAttribute('title', alt);
+    }
+
+    const rawUrl = String(flyer.imageUrl || '').trim();
+    if (!rawUrl) return;
+
+    const src = normalizeDriveImageUrl(rawUrl);
+    if (!src) return;
+
     img.src = src;
     applyFocalStyles(img, {
       imageFocalX: flyer.imageFocalX,
       imageFocalY: flyer.imageFocalY,
       imageFitMode: flyer.imageFitMode,
     });
-    if (String(flyer.imageAltText || '').trim()) {
-      img.alt = flyer.imageAltText.trim();
-    }
   }
 
   function hydratePackageBreadcrumbs() {
@@ -1281,10 +1290,10 @@ const LiveSite = (() => {
     if (meta) meta.setAttribute('content', desc);
   }
 
-  function hydratePackageHero(item, slug) {
+  function hydratePageCatalogImages(item, slug) {
     if (!item || !slug) return;
     document
-      .querySelectorAll(`.package-hero-media [data-live="image"][data-catalog-slug="${slug}"]`)
+      .querySelectorAll(`[data-live="image"][data-catalog-slug="${slug}"]`)
       .forEach((el) => {
         if (el.tagName !== 'IMG') return;
         hydrateLiveCatalogAlt(el, item);
@@ -1328,7 +1337,7 @@ const LiveSite = (() => {
 
     hydrateCompareNav();
     hydratePackageBreadcrumbs();
-    hydratePackageHero(item, slug);
+    hydratePageCatalogImages(item, slug);
     updateMessengerPrefills(item);
     hydratePageTitle();
     hydratePackageDetailMeta(item);
@@ -1341,8 +1350,10 @@ const LiveSite = (() => {
     const item = getCatalogItem(slug);
     if (!item || item.type !== 'single') return;
 
+    hydratePageCatalogImages(item, slug);
     updateMessengerPrefills(item);
     hydratePageTitle();
+    hydratePackageDetailMeta(item);
   }
 
   function hydrateCatalogLinks() {
