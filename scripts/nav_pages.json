@@ -1,0 +1,67 @@
+{
+  "index.html": {
+    "variant": "home",
+    "cta": "Check My Date",
+    "mobile_cta": "Check Date on Messenger",
+    "prefill": "Hi Easy Rental! I want to check date availability for my event. Event date: ____. Venue/barangay: ____. Items/package needed: ____."
+  },
+  "blog/index.html": {
+    "variant": "subpage",
+    "active": "blog"
+  },
+  "contact.html": {
+    "variant": "subpage",
+    "active": "contact"
+  },
+  "partner-referral.html": {
+    "variant": "subpage",
+    "prefill": "Hi Easy Rental! I want to join the partner/referral program. My name/business: ____. Typical events I refer: ____."
+  },
+  "privacy.html": {
+    "variant": "subpage"
+  },
+  "404.html": {
+    "variant": "subpage"
+  },
+  "wedding-event-package-lipa-batangas.html": {
+    "variant": "subpage",
+    "active": "packages",
+    "prefill": "Hi Easy Rental! I want to check package availability for my event. Event date: ____. Venue/barangay: ____. Preferred package: ____ (Basic/Standard/Premium/Combo)."
+  },
+  "wedding-package-basic-lipa-batangas.html": {
+    "variant": "subpage",
+    "active": "packages",
+    "prefill": "Hi Easy Rental! I want to book the Basic package (₱360). Event date: ____. Venue/barangay: ____. Preferred delivery time: ____."
+  },
+  "wedding-package-set-a-lipa-batangas.html": {
+    "variant": "subpage",
+    "active": "packages",
+    "prefill": "Hi Easy Rental! I want to book the Standard package (₱1,319). Event date: ____. Venue/barangay: ____. Preferred delivery time: ____."
+  },
+  "wedding-package-set-b-lipa-batangas.html": {
+    "variant": "subpage",
+    "active": "packages",
+    "prefill": "Hi Easy Rental! I want to book the Premium package (₱2,778). Event date: ____. Venue/barangay: ____. Preferred delivery time: ____."
+  },
+  "wedding-package-combo-lipa-batangas.html": {
+    "variant": "subpage",
+    "active": "packages",
+    "prefill": "Hi Easy Rental! I want to book the Combo package (₱1,698). Event date: ____. Venue/barangay: ____. Preferred delivery time: ____."
+  },
+  "tent-rental-lipa-batangas.html": {
+    "variant": "subpage",
+    "prefill": "Hi Easy Rental! I want to inquire about tent rental. Event date: ____. Venue/barangay: ____. Tent quantity needed: ____."
+  },
+  "table-rental-lipa-batangas.html": {
+    "variant": "subpage",
+    "prefill": "Hi Easy Rental! I want to inquire about 6ft table rental. Event date: ____. Venue/barangay: ____. Number of tables needed: ____."
+  },
+  "tables-chairs-rental-batangas.html": {
+    "variant": "subpage",
+    "prefill": "Hi Easy Rental! I want to inquire about tables and chairs rental. Event date: ____. Venue/barangay: ____. Quantity needed: ____ chairs, ____ tables."
+  },
+  "videoke-rental-lipa-batangas.html": {
+    "variant": "subpage",
+    "prefill": "Hi Easy Rental! I want to inquire about videoke rental. Event date: ____. Venue/barangay: ____. Is this add-on or standalone booking? ____."
+  }
+}

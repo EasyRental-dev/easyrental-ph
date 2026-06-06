@@ -52,8 +52,33 @@ function renderSiteHead({
   ${extraHead}`;
 }
 
+const NAV_ITEMS = [
+  { key: 'rentals', label: 'Rentals', href: '/#services' },
+  { key: 'rates', label: 'Rates', href: '/#units' },
+  { key: 'packages', label: 'Packages', href: '/wedding-event-package-lipa-batangas.html' },
+  { key: 'booking', label: 'Booking', href: '/#how-booking-works' },
+  { key: 'service-area', label: 'Service Area', href: '/#service-area' },
+  { key: 'reviews', label: 'Reviews', href: '/#testimonials' },
+  { key: 'faq', label: 'FAQ', href: '/#faq' },
+  { key: 'blog', label: 'Blog', href: '/blog' },
+  { key: 'contact', label: 'Contact', href: '/contact.html' },
+];
+
+const DEFAULT_PREFILL = 'Hi Easy Rental! I want to inquire for my event. Event date: ____. Venue/barangay: ____. Items/package needed: ____.';
+
+function navLinkAttrs(item, activePage) {
+  const current = activePage === item.key ? ' aria-current="page"' : '';
+  return ` href="${item.href}"${current}`;
+}
+
 function renderNavbar(activePage = '') {
-  const blogActive = activePage === 'blog' ? ' aria-current="page"' : '';
+  const desktopLinks = NAV_ITEMS.map(
+    (item) => `    <li><a${navLinkAttrs(item, activePage)}>${item.label}</a></li>`
+  ).join('\n');
+
+  const mobileLinks = NAV_ITEMS.map(
+    (item) => `    <li><a${navLinkAttrs(item, activePage)}>${item.label}</a></li>`
+  ).join('\n');
 
   return `<div id="progress"></div>
 
@@ -63,27 +88,15 @@ function renderNavbar(activePage = '') {
     <span class="display" style="font-weight:700;">Easy Rental Lipa</span>
   </a>
   <ul class="nav-links">
-    <li><a href="/#services">Rentals</a></li>
-    <li><a href="/#units">Rates</a></li>
-    <li><a href="/wedding-event-package-lipa-batangas.html">Packages</a></li>
-    <li><a href="/#how-booking-works">Booking</a></li>
-    <li><a href="/#faq">FAQ</a></li>
-    <li><a href="/blog"${blogActive}>Blog</a></li>
-    <li><a href="/contact.html">Contact</a></li>
+${desktopLinks}
   </ul>
-  <a href="https://m.me/EasyRental.ngani" class="btn btn-primary nav-cta" target="_blank" rel="noopener noreferrer" data-prefill-msg="Hi Easy Rental! I want to inquire for my event. Event date: ____. Venue/barangay: ____. Items/package needed: ____.">Message on Messenger</a>
+  <a href="https://m.me/EasyRental.ngani" class="btn btn-primary nav-cta" target="_blank" rel="noopener noreferrer" data-prefill-msg="${DEFAULT_PREFILL}">Message on Messenger</a>
   <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
 </nav>
 
 <div class="mobile-menu">
   <ul>
-    <li><a href="/#services">Rentals</a></li>
-    <li><a href="/#units">Rates</a></li>
-    <li><a href="/wedding-event-package-lipa-batangas.html">Packages</a></li>
-    <li><a href="/#how-booking-works">Booking</a></li>
-    <li><a href="/#faq">FAQ</a></li>
-    <li><a href="/blog">Blog</a></li>
-    <li><a href="/contact.html">Contact</a></li>
+${mobileLinks}
     <li><a href="https://m.me/EasyRental.ngani" target="_blank" rel="noopener noreferrer">Message on Messenger</a></li>
   </ul>
 </div>`;

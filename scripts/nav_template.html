@@ -1,0 +1,12 @@
+<!--
+  Canonical site nav reference (do not include this file in production).
+  Source of truth: scripts/sync_nav.py + scripts/nav_pages.json
+  Regenerate all pages: python scripts/sync_nav.py
+
+  9 links (same order everywhere):
+    Rentals | Rates | Packages | Booking | Service Area | Reviews | FAQ | Blog | Contact
+
+  Homepage (index.html): hash links + data-inpage-scroll, CTA "Check My Date"
+  All other pages: /#section root-relative links, CTA "Message on Messenger"
+  Active page: aria-current="page" on matching link
+-->

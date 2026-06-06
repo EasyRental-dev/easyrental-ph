@@ -85,7 +85,7 @@ function renderPost(post, siteData) {
 </head>
 <body>
 
-${renderNavbar()}
+${renderNavbar('blog')}
 
 ${renderBreadcrumb([
   { label: 'Home', href: '/' },
@@ -142,7 +142,7 @@ function render404() {
 </head>
 <body>
 
-${renderNavbar()}
+${renderNavbar('blog')}
 
 <main class="blog-not-found">
   <div class="blog-not-found__inner">

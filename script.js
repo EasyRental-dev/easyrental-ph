@@ -805,6 +805,18 @@ const LiveSite = (() => {
     Object.entries(DEFAULT_PAGE_PATHS).map(([slug, path]) => [path, slug])
   );
 
+  let activeSlugMap = { ...PAGE_SLUG_MAP };
+
+  function rebuildSlugMap() {
+    activeSlugMap = { ...PAGE_SLUG_MAP };
+    if (!siteData?.catalog) return;
+    siteData.catalog.forEach((item) => {
+      if (!item.websiteSlug || !item.websitePagePath) return;
+      const path = item.websitePagePath.replace(/^\//, '');
+      if (path) activeSlugMap[path] = item.websiteSlug;
+    });
+  }
+
   const CHECK_ICON = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
 
   function escapeHtml(text) {
@@ -841,7 +853,7 @@ const LiveSite = (() => {
 
   function getPageSlug() {
     const path = location.pathname.replace(/^\//, '');
-    return PAGE_SLUG_MAP[path] || document.body.getAttribute('data-catalog-slug') || null;
+    return activeSlugMap[path] || document.body.getAttribute('data-catalog-slug') || null;
   }
 
   function applyFocalStyles(el, item) {
@@ -865,9 +877,12 @@ const LiveSite = (() => {
   }
 
   function buildMessengerPrefill(item) {
-    const name = packageDisplayName(item) || item.name;
     const price = formatPrice(item.basePrice);
-    return `Hi Easy Rental! I want to book the ${name} (${price}). Event date: ____. Venue/barangay: ____. Preferred delivery time: ____.`;
+    if (item.type === 'package') {
+      const name = packageDisplayName(item) || item.name;
+      return `Hi Easy Rental! I want to book the ${name} (${price}). Event date: ____. Venue/barangay: ____. Preferred delivery time: ____.`;
+    }
+    return `Hi Easy Rental! I want to inquire about ${item.name} (${price}). Event date: ____. Venue/barangay: ____. Quantity needed: ____.`;
   }
 
   function buildHomepageSingleCard(item) {
@@ -1067,12 +1082,6 @@ const LiveSite = (() => {
     const item = getCatalogItem(slug);
     if (!item || item.type !== 'package') return;
 
-    const heroImg = document.querySelector('.package-hero-media img');
-    if (heroImg && item.imageUrl) {
-      heroImg.src = item.imageUrl;
-      applyFocalStyles(heroImg, item);
-    }
-
     const chipsContainer = document.getElementById('catalog-component-chips');
     if (chipsContainer && item.components?.length) {
       const isBreakdown = chipsContainer.classList.contains('breakdown-grid');
@@ -1111,13 +1120,19 @@ const LiveSite = (() => {
     const item = getCatalogItem(slug);
     if (!item || item.type !== 'single') return;
 
-    const heroImg = document.querySelector('.unit-card-media img, .package-hero-media img');
-    if (heroImg && item.imageUrl) {
-      heroImg.src = item.imageUrl;
-      applyFocalStyles(heroImg, item);
-    }
-
     updateMessengerPrefills(item);
+  }
+
+  function hydrateCatalogLinks() {
+    if (!siteData?.catalog) return;
+
+    document.querySelectorAll('a[data-catalog-slug]').forEach((link) => {
+      const slug = link.getAttribute('data-catalog-slug');
+      const item = getCatalogItem(slug);
+      if (!item) return;
+      const path = getPagePath(item);
+      if (path && path !== '#') link.setAttribute('href', path);
+    });
   }
 
   function hydrateCompareNav() {
@@ -1173,6 +1188,12 @@ const LiveSite = (() => {
       const slug = el.getAttribute('data-catalog-slug');
       const item = getCatalogItem(slug);
       if (item?.websiteDescription) el.textContent = item.websiteDescription;
+    });
+
+    document.querySelectorAll('[data-live="subtitle"][data-catalog-slug]').forEach(el => {
+      const slug = el.getAttribute('data-catalog-slug');
+      const item = getCatalogItem(slug);
+      if (item?.cardSubtitle) el.textContent = item.cardSubtitle;
     });
 
     document.querySelectorAll('[data-live="image"][data-catalog-slug]').forEach(el => {
@@ -1255,7 +1276,9 @@ const LiveSite = (() => {
     const data = await fetchSiteData();
     if (!data) return;
 
+    rebuildSlugMap();
     hydrateElements();
+    hydrateCatalogLinks();
     renderHomepageCatalog();
     renderOfferLadder();
     hydratePackagesHub();
