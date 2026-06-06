@@ -819,6 +819,18 @@ const LiveSite = (() => {
 
   let activeSlugMap = { ...PAGE_SLUG_MAP };
 
+  /** Map location.pathname to static HTML filename (Vercel cleanUrls drops .html). */
+  function normalizePathname(pathname) {
+    let path = String(pathname || '/').replace(/^\//, '').split('?')[0].split('#')[0];
+    if (!path || path === 'index.html') return path;
+    if (!/\.[a-z0-9]+$/i.test(path)) path = `${path}.html`;
+    return path;
+  }
+
+  function isPackagesHubPage() {
+    return normalizePathname(location.pathname) === 'wedding-event-package-lipa-batangas.html';
+  }
+
   function rebuildSlugMap() {
     activeSlugMap = { ...PAGE_SLUG_MAP };
     if (!siteData?.catalog) return;
@@ -864,7 +876,7 @@ const LiveSite = (() => {
   }
 
   function getPageSlug() {
-    const path = location.pathname.replace(/^\//, '');
+    const path = normalizePathname(location.pathname);
     return activeSlugMap[path] || document.body.getAttribute('data-catalog-slug') || null;
   }
 
@@ -1181,8 +1193,7 @@ const LiveSite = (() => {
   }
 
   function hydratePackagesHubFlyer() {
-    const path = location.pathname.replace(/^\//, '');
-    if (path !== 'wedding-event-package-lipa-batangas.html') return;
+    if (!isPackagesHubPage()) return;
 
     const img = document.querySelector('[data-live="packages-hub-flyer"]');
     const flyer = siteData?.packagesHubFlyer;
@@ -1213,8 +1224,7 @@ const LiveSite = (() => {
   }
 
   function hydratePackagesHub() {
-    const path = location.pathname.replace(/^\//, '');
-    if (path !== 'wedding-event-package-lipa-batangas.html') return;
+    if (!isPackagesHubPage()) return;
 
     const grid = document.getElementById('catalog-packages-grid');
     if (!grid) return;
