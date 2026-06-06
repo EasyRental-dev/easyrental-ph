@@ -616,9 +616,12 @@ function initOfferLadder() {
           <a href="${row.href}${qs}" class="offer-ladder__card${row.featured ? ' offer-ladder__card--featured' : ''}" data-offer-tier="${row.package.toLowerCase()}">
             ${row.featured ? '<span class="offer-ladder__badge">Most booked</span>' : ''}
             <span class="offer-ladder__tier-label">${row.label}</span>
-            <span class="offer-ladder__package">${row.package}</span>
-            <span class="offer-ladder__price">${row.price}</span>
-            <span class="offer-ladder__note">${row.note}</span>
+            <span class="offer-ladder__teaser offer-ladder__teaser--empty" aria-hidden="true"></span>
+            <div class="offer-ladder__foot">
+              <span class="offer-ladder__package">${row.package}</span>
+              <span class="offer-ladder__price">${row.price}</span>
+              <span class="offer-ladder__note">${row.note}</span>
+            </div>
           </a>
         `).join('')}
       </div>
@@ -897,9 +900,11 @@ const LiveSite = (() => {
 
   function hydrateLiveCatalogAlt(el, item) {
     if (!el || el.tagName !== 'IMG' || !item) return;
-    if (String(item.imageAltText || '').trim()) {
-      el.alt = catalogImageAlt(item);
-    }
+    const alt = catalogImageAlt(item);
+    if (!alt) return;
+    unwrapPictureForLiveImage(el);
+    el.alt = alt;
+    el.setAttribute('title', alt);
   }
 
   function extractDriveFileId(url) {
@@ -1173,9 +1178,10 @@ const LiveSite = (() => {
 
     grid.innerHTML = packages.map((item) => {
       const featured = item.featuredOnHomepage;
-      const tierLabel = escapeHtml(item.cardSubtitle || item.websiteDescription || item.name || packageDisplayName(item));
+      const shortLabel = escapeHtml(item.cardSubtitle || item.cardBadge || '');
+      const teaser = escapeHtml(catalogDescription(item));
       const pkgName = escapeHtml(item.name || packageDisplayName(item));
-      const note = escapeHtml(item.cardBadge || item.cardSubtitle || '');
+      const note = escapeHtml(item.cardBadge && item.cardSubtitle ? item.cardBadge : '');
       const href = escapeHtml(getPagePath(item));
       const price = formatPrice(item.basePrice);
       const badge = featured
@@ -1185,10 +1191,13 @@ const LiveSite = (() => {
       return `
         <a href="${href}${qs}" class="offer-ladder__card${featured ? ' offer-ladder__card--featured' : ''}" data-offer-tier="${escapeHtml(item.websiteSlug)}">
           ${badge}
-          <span class="offer-ladder__tier-label">${tierLabel}</span>
-          <span class="offer-ladder__package">${pkgName}</span>
-          <span class="offer-ladder__price">${price}</span>
-          <span class="offer-ladder__note">${note}</span>
+          ${shortLabel ? `<span class="offer-ladder__tier-label">${shortLabel}</span>` : ''}
+          ${teaser ? `<span class="offer-ladder__teaser">${teaser}</span>` : '<span class="offer-ladder__teaser offer-ladder__teaser--empty" aria-hidden="true"></span>'}
+          <div class="offer-ladder__foot">
+            <span class="offer-ladder__package">${pkgName}</span>
+            <span class="offer-ladder__price">${price}</span>
+            ${note ? `<span class="offer-ladder__note">${note}</span>` : ''}
+          </div>
         </a>
       `;
     }).join('');
@@ -1272,6 +1281,17 @@ const LiveSite = (() => {
     if (meta) meta.setAttribute('content', desc);
   }
 
+  function hydratePackageHero(item, slug) {
+    if (!item || !slug) return;
+    document
+      .querySelectorAll(`.package-hero-media [data-live="image"][data-catalog-slug="${slug}"]`)
+      .forEach((el) => {
+        if (el.tagName !== 'IMG') return;
+        hydrateLiveCatalogAlt(el, item);
+        hydrateLiveCatalogImage(el, item, slug);
+      });
+  }
+
   function hydratePackagePages() {
     const slug = getPageSlug();
     if (!slug) return;
@@ -1308,6 +1328,7 @@ const LiveSite = (() => {
 
     hydrateCompareNav();
     hydratePackageBreadcrumbs();
+    hydratePackageHero(item, slug);
     updateMessengerPrefills(item);
     hydratePageTitle();
     hydratePackageDetailMeta(item);
