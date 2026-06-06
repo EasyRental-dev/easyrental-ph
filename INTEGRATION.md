@@ -115,6 +115,33 @@ Add `data-live` and `data-catalog-slug` attributes to HTML elements:
 
 The hardcoded values act as SEO fallbacks.
 
+**SEO preservation:** Static `<meta>`, canonical URLs, and LocalBusiness / FAQ JSON-LD in `index.html` are never rewritten by LiveSite. JS updates visible body content and Product JSON-LD `offers.price` when `data-catalog-slug` is present.
+
+### Full catalog sync (LiveSite)
+
+When JS runs, LiveSite rebuilds:
+
+| Surface | Container / hook |
+|---------|------------------|
+| Homepage unit cards | `#catalog-units-grid` |
+| Homepage package promos | `#catalog-packages-grid` |
+| Offer ladder | `#offer-ladder .offer-ladder__grid` |
+| Packages hub | `#catalog-packages-grid` on `wedding-event-package-lipa-batangas.html` |
+| Package detail | `data-live` + `#catalog-component-chips` + compare nav `data-catalog-slug` |
+| Product pages | Path → slug map + hero image hydration |
+
+Package bullets are derived from `components[]` in the app (e.g. `20× Monobloc Chair`).
+
+### Card fields (app → site)
+
+| Field | Site use |
+|-------|----------|
+| `cardSubtitle` | Subtitle under title / offer-ladder tier label |
+| `cardBadge` | Badge pill on cards |
+| `featuredOnHomepage` | Featured card + offer-ladder highlight |
+| `homepageSortOrder` | Sort order on homepage, hub, ladder |
+| `imageFocalX/Y` | CSS `--focal-x` / `--focal-y` on `.catalog-card-img` |
+
 ### Catalog slug mapping
 
 Map `websiteSlug` in the app to HTML attributes:
@@ -150,9 +177,11 @@ The `LiveSite` module populates it from `/api/site-data`.
 ### Verify live sync
 
 1. In the app, edit an item's price and set `showOnWebsite: true` with a `websiteSlug`.
-2. Wait for sync (or force push via sync settings).
-3. Open the landing page → price should update within 60 seconds (cache TTL).
-4. Check `/api/site-data` directly to debug.
+2. Set card subtitle, badge, upload a 16:10 image, adjust focal point, and homepage sort order as needed.
+3. Wait for sync (or force push via sync settings).
+4. Open the landing page → cards, offer ladder, packages hub, and detail pages should update within 60 seconds (cache TTL).
+5. View page source on `index.html` — canonical, LocalBusiness, and FAQ blocks unchanged.
+6. Check `/api/site-data` directly to debug.
 
 ### Troubleshooting
 

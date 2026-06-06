@@ -1,16 +1,16 @@
 const { getPublicSiteData } = require('../_lib/gas');
 const { marked } = require('marked');
+const DOMPurify = require('isomorphic-dompurify');
+const {
+  escapeHtml,
+  renderSiteHead,
+  renderNavbar,
+  renderBreadcrumb,
+  renderChromeEnd,
+} = require('../_lib/blog-shell');
 
 const CACHE_MAX_AGE = 60;
 const STALE_WHILE_REVALIDATE = 300;
-
-function escapeHtml(text) {
-  return String(text || '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
 
 function formatDate(iso) {
   if (!iso) return '';
@@ -33,34 +33,12 @@ function renderPost(post, siteData) {
   const canonical = `https://easyrentalph.vercel.app/blog/${encodeURIComponent(post.slug)}`;
   const featuredImage = post.featuredImageUrl || 'https://easyrentalph.vercel.app/assets/easyrental_logo.png';
 
-  const bodyHtml = marked.parse(post.bodyMarkdown || '', { breaks: true, gfm: true });
+  const bodyHtml = DOMPurify.sanitize(
+    marked.parse(post.bodyMarkdown || '', { breaks: true, gfm: true })
+  );
   const publishedDate = formatDate(post.publishedAt);
 
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${title} | ${businessName} Blog</title>
-  <meta name="description" content="${description}">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="${canonical}">
-
-  <meta property="og:type" content="article">
-  <meta property="og:title" content="${title}">
-  <meta property="og:description" content="${description}">
-  <meta property="og:url" content="${canonical}">
-  <meta property="og:image" content="${escapeHtml(featuredImage)}">
-  <meta property="article:published_time" content="${escapeHtml(post.publishedAt || '')}">
-
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="${title}">
-  <meta name="twitter:description" content="${description}">
-  <meta name="twitter:image" content="${escapeHtml(featuredImage)}">
-
-  <link rel="stylesheet" href="/index.css">
-  <link rel="icon" type="image/png" href="/assets/easyrental_logo.png">
-
+  const jsonLd = `
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -88,83 +66,93 @@ function renderPost(post, siteData) {
     }
   }
   </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://easyrentalph.vercel.app"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://easyrentalph.vercel.app/blog"},{"@type":"ListItem","position":3,"name":${JSON.stringify(post.title)},"item":"${canonical}"}]}
+  </script>`;
+
+  return `<!DOCTYPE html>
+<html lang="en-PH">
+<head>
+  ${renderSiteHead({
+    title: `${title} | ${businessName} Blog`,
+    description,
+    canonical,
+    ogType: 'article',
+    ogImage: featuredImage,
+    extraHead: `${jsonLd}
+  <meta property="article:published_time" content="${escapeHtml(post.publishedAt || '')}">`,
+  })}
 </head>
 <body>
 
-<header class="site-header">
-  <nav class="container nav">
-    <a href="/" class="brand">
-      <img src="/assets/easyrental_logo.png" alt="${businessName}" width="36" height="36">
-      <span>${businessName}</span>
-    </a>
-    <ul class="nav-links">
-      <li><a href="/#packages">Packages</a></li>
-      <li><a href="/#delivery-zones">Delivery</a></li>
-      <li><a href="/blog">Blog</a></li>
-      <li><a href="/#faq">FAQ</a></li>
-    </ul>
-    <a href="https://m.me/EasyRental.ngani" class="btn btn-primary nav-cta" target="_blank" rel="noopener">Message on Messenger</a>
-    <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
-  </nav>
-</header>
+${renderNavbar()}
 
-<main style="padding-top: 80px;">
-  <article class="blog-post" style="max-width: 800px; margin: 0 auto; padding: 40px 24px;">
+${renderBreadcrumb([
+  { label: 'Home', href: '/' },
+  { label: 'Blog', href: '/blog' },
+  { label: post.title, href: canonical },
+])}
+
+<main class="blog-page blog-page--post">
+  <article class="blog-post">
     ${post.featuredImageUrl ? `
-    <figure style="margin: 0 0 32px; border-radius: 16px; overflow: hidden;">
-      <img src="${escapeHtml(post.featuredImageUrl)}" alt="${title}" style="width: 100%; height: auto; display: block;">
+    <figure class="blog-post__figure">
+      <img src="${escapeHtml(post.featuredImageUrl)}" alt="${title}" loading="lazy" decoding="async">
     </figure>
     ` : ''}
 
-    <header style="margin-bottom: 32px;">
-      <h1 style="font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 16px; color: var(--ink);">${escapeHtml(post.title)}</h1>
-      ${publishedDate ? `<time datetime="${escapeHtml(post.publishedAt)}" style="color: var(--muted); font-size: 0.9rem;">${publishedDate}</time>` : ''}
+    <header class="blog-post__header">
+      <h1 class="blog-post__title">${escapeHtml(post.title)}</h1>
+      ${publishedDate ? `<time class="blog-post__date" datetime="${escapeHtml(post.publishedAt)}">${publishedDate}</time>` : ''}
       ${post.tags?.length ? `
-      <div style="margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px;">
-        ${post.tags.map(tag => `<span style="background: var(--brand-light); color: var(--brand-dark); padding: 4px 12px; border-radius: 99px; font-size: 0.75rem; font-weight: 600;">${escapeHtml(tag)}</span>`).join('')}
+      <div class="blog-post__tags">
+        ${post.tags.map(tag => `<span class="blog-post__tag">${escapeHtml(tag)}</span>`).join('')}
       </div>
       ` : ''}
     </header>
 
-    <div class="blog-content" style="font-size: 1.05rem; line-height: 1.8; color: var(--ink);">
+    <div class="blog-content">
       ${bodyHtml}
     </div>
 
-    <footer style="margin-top: 48px; padding-top: 32px; border-top: 1px solid #E2E8F0;">
-      <a href="/blog" style="display: inline-flex; align-items: center; gap: 8px; color: var(--brand-dark); font-weight: 600; text-decoration: none;">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    <footer class="blog-post__footer">
+      <a href="/blog" class="blog-back-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
         Back to Blog
       </a>
     </footer>
   </article>
 </main>
 
-<footer class="site-footer">
-  <div class="container" style="padding: 48px 24px; text-align: center;">
-    <p style="color: var(--muted); font-size: 0.88rem;">&copy; ${new Date().getFullYear()} ${businessName}. Tables, chairs, tents, and videoke rental in Lipa City and Batangas.</p>
-  </div>
-</footer>
-
-<script src="/script.js"></script>
+${renderChromeEnd('Hi Easy Rental! I read your blog and want to inquire for my event. Event date: ____. Venue/barangay: ____. Items/package needed: ____.')}
 </body>
 </html>`;
 }
 
 function render404() {
   return `<!DOCTYPE html>
-<html lang="en">
+<html lang="en-PH">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Post Not Found | Easy Rental Blog</title>
-  <link rel="stylesheet" href="/index.css">
+  ${renderSiteHead({
+    title: 'Post Not Found | Easy Rental Blog',
+    description: 'The blog post you are looking for does not exist or has been removed.',
+    canonical: 'https://easyrentalph.vercel.app/blog',
+    ogType: 'website',
+  })}
 </head>
-<body style="display: flex; align-items: center; justify-content: center; min-height: 100vh; text-align: center; padding: 24px;">
-  <div>
-    <h1 style="font-size: 2rem; margin-bottom: 16px;">Post Not Found</h1>
-    <p style="color: var(--muted); margin-bottom: 24px;">The blog post you're looking for doesn't exist or has been removed.</p>
-    <a href="/blog" class="pill">Back to Blog</a>
+<body>
+
+${renderNavbar()}
+
+<main class="blog-not-found">
+  <div class="blog-not-found__inner">
+    <h1>Post Not Found</h1>
+    <p>The blog post you're looking for doesn't exist or has been removed.</p>
+    <a href="/blog" class="pill pill-lg">Back to Blog</a>
   </div>
+</main>
+
+${renderChromeEnd()}
 </body>
 </html>`;
 }

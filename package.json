@@ -8,6 +8,7 @@
     "cleanup:images": "python scripts/cleanup_images.py"
   },
   "dependencies": {
+    "isomorphic-dompurify": "^2.22.0",
     "marked": "^12.0.0"
   }
 }

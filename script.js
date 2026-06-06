@@ -790,14 +790,364 @@ const LiveSite = (() => {
     }
   }
 
+  const DEFAULT_PAGE_PATHS = {
+    'package-basic': 'wedding-package-basic-lipa-batangas.html',
+    'package-standard': 'wedding-package-set-a-lipa-batangas.html',
+    'package-premium': 'wedding-package-set-b-lipa-batangas.html',
+    'package-combo': 'wedding-package-combo-lipa-batangas.html',
+    'tent': 'tent-rental-lipa-batangas.html',
+    'table-6ft': 'table-rental-lipa-batangas.html',
+    'chair': 'tables-chairs-rental-batangas.html',
+    'videoke': 'videoke-rental-lipa-batangas.html',
+  };
+
+  const PAGE_SLUG_MAP = Object.fromEntries(
+    Object.entries(DEFAULT_PAGE_PATHS).map(([slug, path]) => [path, slug])
+  );
+
+  const CHECK_ICON = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
+
+  function escapeHtml(text) {
+    return String(text ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
   function getCatalogItem(slug) {
     if (!siteData?.catalog) return null;
     return siteData.catalog.find(item => item.websiteSlug === slug);
   }
 
+  function getSortedCatalog(filterFn) {
+    if (!siteData?.catalog) return [];
+    return siteData.catalog
+      .filter(filterFn)
+      .sort((a, b) => (a.homepageSortOrder || 0) - (b.homepageSortOrder || 0));
+  }
+
   function formatPrice(price) {
     if (typeof price !== 'number') return '';
     return '₱' + price.toLocaleString('en-PH');
+  }
+
+  function getPagePath(item) {
+    if (item.websitePagePath) {
+      return item.websitePagePath.replace(/^\//, '');
+    }
+    return DEFAULT_PAGE_PATHS[item.websiteSlug] || '#';
+  }
+
+  function getPageSlug() {
+    const path = location.pathname.replace(/^\//, '');
+    return PAGE_SLUG_MAP[path] || document.body.getAttribute('data-catalog-slug') || null;
+  }
+
+  function applyFocalStyles(el, item) {
+    if (!el || !item) return;
+    el.classList.add('catalog-card-img');
+    el.style.setProperty('--focal-x', `${item.imageFocalX ?? 50}%`);
+    el.style.setProperty('--focal-y', `${item.imageFocalY ?? 50}%`);
+  }
+
+  function deriveBullets(item) {
+    if (item.type !== 'package' || !item.components?.length) return [];
+    return item.components.map((c) => {
+      const qty = c.quantity || 1;
+      const cover = c.withCover ? ' with cover' : '';
+      return `${qty}× ${c.itemName}${cover}`;
+    });
+  }
+
+  function packageDisplayName(item) {
+    return (item.name || '').replace(/\s+package$/i, '').trim() || item.name || '';
+  }
+
+  function buildMessengerPrefill(item) {
+    const name = packageDisplayName(item) || item.name;
+    const price = formatPrice(item.basePrice);
+    return `Hi Easy Rental! I want to book the ${name} (${price}). Event date: ____. Venue/barangay: ____. Preferred delivery time: ____.`;
+  }
+
+  function buildHomepageSingleCard(item) {
+    const pagePath = getPagePath(item);
+    const title = escapeHtml(item.name);
+    const subtitle = escapeHtml(item.cardSubtitle || item.websiteDescription || '');
+    const imgAlt = escapeHtml(item.name);
+    const mediaClass = item.websiteSlug === 'videoke'
+      ? 'unit-card-media unit-card-media--videoke'
+      : 'unit-card-media';
+    const linkClass = item.websiteSlug === 'videoke' ? 'catalog-card-link catalog-card-link--videoke' : 'catalog-card-link';
+    const imgHtml = item.imageUrl
+      ? `<img src="${escapeHtml(item.imageUrl)}" alt="${imgAlt}" class="catalog-card-img" loading="lazy" decoding="async">`
+      : '';
+
+    return `
+      <div class="unit-card">
+        <div class="${mediaClass}">${imgHtml}</div>
+        <div class="catalog-card-body">
+          <div class="catalog-card-title">${title}</div>
+          ${subtitle ? `<div class="catalog-card-subtitle">${subtitle}</div>` : ''}
+          <a href="${escapeHtml(pagePath)}" class="${linkClass}">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            View Details &amp; Pricing
+          </a>
+        </div>
+      </div>
+    `;
+  }
+
+  function buildHomepagePackageCard(item) {
+    const pagePath = getPagePath(item);
+    const name = escapeHtml(packageDisplayName(item));
+    const subtitle = escapeHtml(item.cardSubtitle || '');
+    const badge = escapeHtml(item.cardBadge || '');
+    const price = formatPrice(item.basePrice);
+    const bullets = deriveBullets(item);
+    const featuredClass = item.featuredOnHomepage ? ' catalog-card--featured' : '';
+    const prefill = escapeHtml(buildMessengerPrefill(item));
+    const imgHtml = item.imageUrl
+      ? `<div class="package-promo-media"><img src="${escapeHtml(item.imageUrl)}" alt="${escapeHtml(item.name)}" class="catalog-card-img" loading="lazy" decoding="async"></div>`
+      : '';
+
+    const bulletHtml = bullets.map((b) =>
+      `<div class="catalog-card-bullet">${CHECK_ICON}<span>${escapeHtml(b)}</span></div>`
+    ).join('');
+
+    return `
+      <div class="unit-card catalog-card--package${featuredClass}">
+        ${imgHtml}
+        <div class="catalog-card-promo-header">
+          <div class="catalog-card-promo-header__main">
+            <div class="catalog-card-promo-name">${name}</div>
+            ${subtitle ? `<div class="catalog-card-promo-sub">${subtitle}</div>` : ''}
+          </div>
+          ${badge ? `<div class="catalog-card-promo-badge">${badge}</div>` : ''}
+        </div>
+        <div class="catalog-card-body catalog-card-body--package">
+          <div class="catalog-card-price">${price}</div>
+          ${bulletHtml ? `<div class="catalog-card-bullets">${bulletHtml}</div>` : ''}
+          <a href="${escapeHtml(pagePath)}" class="catalog-card-cta catalog-card-cta--view">View Package</a>
+          <a href="https://m.me/EasyRental.ngani" target="_blank" rel="noopener noreferrer" class="catalog-card-cta catalog-card-cta--book" data-prefill-msg="${prefill}">Book ${name} on Messenger</a>
+        </div>
+      </div>
+    `;
+  }
+
+  function buildHubPackageCard(item) {
+    const pagePath = getPagePath(item);
+    const name = escapeHtml(packageDisplayName(item));
+    const subtitle = escapeHtml(item.cardSubtitle || item.websiteDescription || '');
+    const badge = escapeHtml(item.cardBadge || '');
+    const price = formatPrice(item.basePrice);
+    const bullets = deriveBullets(item);
+    const featuredClass = item.featuredOnHomepage ? ' unit-card--featured' : '';
+    const badgeClass = item.featuredOnHomepage ? ' unit-badge--best' : '';
+    const imgHtml = item.imageUrl
+      ? `<img src="${escapeHtml(item.imageUrl)}" alt="${escapeHtml(item.name)}" class="catalog-card-img" loading="lazy" decoding="async">`
+      : '';
+
+    return `
+      <div class="unit-card${featuredClass}" id="pkg-${escapeHtml(item.websiteSlug)}">
+        ${badge ? `<div class="unit-badge${badgeClass}">${badge}</div>` : ''}
+        ${imgHtml}
+        <div class="unit-info">
+          <h3>${name}</h3>
+          ${subtitle ? `<p class="unit-subtitle">${subtitle}</p>` : ''}
+          <p class="unit-price">${price} <span class="price-note">· Delivery excl.</span></p>
+          ${bullets.length ? `<ul class="unit-features">${bullets.map((b) => `<li>${escapeHtml(b)}</li>`).join('')}</ul>` : ''}
+          <a href="${escapeHtml(pagePath)}" class="btn btn-secondary">View ${name}</a>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderHomepageCatalog() {
+    const path = location.pathname;
+    if (path !== '/' && path !== '/index.html') return;
+
+    const singlesGrid = document.getElementById('catalog-units-grid');
+    const packagesGrid = document.getElementById('catalog-packages-grid');
+    if (!singlesGrid && !packagesGrid) return;
+
+    const singles = getSortedCatalog((item) => item.type === 'single');
+    const packages = getSortedCatalog((item) => item.type === 'package');
+
+    if (singlesGrid && singles.length) {
+      singlesGrid.innerHTML = singles.map(buildHomepageSingleCard).join('');
+      singlesGrid.querySelectorAll('.catalog-card-img').forEach((img) => {
+        const card = img.closest('.unit-card');
+        const idx = [...singlesGrid.children].indexOf(card);
+        if (idx >= 0 && singles[idx]) applyFocalStyles(img, singles[idx]);
+      });
+    }
+
+    if (packagesGrid && packages.length) {
+      packagesGrid.innerHTML = packages.map(buildHomepagePackageCard).join('');
+      packagesGrid.querySelectorAll('.catalog-card-img').forEach((img) => {
+        const card = img.closest('.unit-card');
+        const idx = [...packagesGrid.children].indexOf(card);
+        if (idx >= 0 && packages[idx]) applyFocalStyles(img, packages[idx]);
+      });
+      packagesGrid.querySelectorAll('[data-prefill-msg]').forEach((el) => {
+        if (typeof bindPrefillMessengerLink === 'function') bindPrefillMessengerLink(el);
+      });
+    }
+  }
+
+  function renderOfferLadder() {
+    const path = location.pathname;
+    if (path !== '/' && path !== '/index.html') return;
+
+    const ladder = document.getElementById('offer-ladder');
+    if (!ladder) return;
+
+    const packages = getSortedCatalog((item) => item.type === 'package');
+    if (!packages.length) return;
+
+    const grid = ladder.querySelector('.offer-ladder__grid');
+    if (!grid) return;
+
+    const qs = typeof attributionQueryString === 'function' ? attributionQueryString() : '';
+
+    grid.innerHTML = packages.map((item) => {
+      const featured = item.featuredOnHomepage;
+      const tierLabel = escapeHtml(item.cardSubtitle || item.websiteDescription || packageDisplayName(item));
+      const pkgName = escapeHtml(packageDisplayName(item));
+      const note = escapeHtml(item.cardBadge || item.cardSubtitle || '');
+      const href = escapeHtml(getPagePath(item));
+      const price = formatPrice(item.basePrice);
+      const badge = featured
+        ? `<span class="offer-ladder__badge">${escapeHtml(item.cardBadge || 'Most booked')}</span>`
+        : '';
+
+      return `
+        <a href="${href}${qs}" class="offer-ladder__card${featured ? ' offer-ladder__card--featured' : ''}" data-offer-tier="${escapeHtml(item.websiteSlug)}">
+          ${badge}
+          <span class="offer-ladder__tier-label">${tierLabel}</span>
+          <span class="offer-ladder__package">${pkgName}</span>
+          <span class="offer-ladder__price">${price}</span>
+          <span class="offer-ladder__note">${note}</span>
+        </a>
+      `;
+    }).join('');
+
+    grid.querySelectorAll('.offer-ladder__card').forEach((card) => {
+      card.addEventListener('click', () => {
+        if (typeof trackGaEvent === 'function') {
+          trackGaEvent('offer_ladder_click', {
+            offer_tier: card.getAttribute('data-offer-tier'),
+            page_path: location.pathname,
+          });
+        }
+      });
+    });
+  }
+
+  function hydratePackagesHub() {
+    const path = location.pathname.replace(/^\//, '');
+    if (path !== 'wedding-event-package-lipa-batangas.html') return;
+
+    const grid = document.getElementById('catalog-packages-grid');
+    if (!grid) return;
+
+    const packages = getSortedCatalog((item) => item.type === 'package');
+    if (!packages.length) return;
+
+    grid.innerHTML = packages.map(buildHubPackageCard).join('');
+    grid.querySelectorAll('.catalog-card-img').forEach((img) => {
+      const card = img.closest('.unit-card');
+      const idx = [...grid.children].indexOf(card);
+      if (idx >= 0 && packages[idx]) applyFocalStyles(img, packages[idx]);
+    });
+  }
+
+  function hydratePackagePages() {
+    const slug = getPageSlug();
+    if (!slug) return;
+
+    const item = getCatalogItem(slug);
+    if (!item || item.type !== 'package') return;
+
+    const heroImg = document.querySelector('.package-hero-media img');
+    if (heroImg && item.imageUrl) {
+      heroImg.src = item.imageUrl;
+      applyFocalStyles(heroImg, item);
+    }
+
+    const chipsContainer = document.getElementById('catalog-component-chips');
+    if (chipsContainer && item.components?.length) {
+      const isBreakdown = chipsContainer.classList.contains('breakdown-grid');
+      chipsContainer.innerHTML = item.components.map((c) => {
+        const qty = escapeHtml(String(c.quantity || 1));
+        const name = escapeHtml(c.itemName);
+        if (isBreakdown) {
+          return `
+            <div class="breakdown-item">
+              <span class="breakdown-qty">${qty}</span>
+              <strong>${name}</strong>
+              ${c.withCover ? '<span>With cover</span>' : ''}
+            </div>
+          `;
+        }
+        return `
+          <div class="item-chip">
+            <div class="item-qty">${qty}</div>
+            <div>
+              <div class="item-label">${name}</div>
+              ${c.withCover ? '<div class="item-sub">With cover</div>' : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    hydrateCompareNav();
+    updateMessengerPrefills(item);
+  }
+
+  function hydrateProductPages() {
+    const slug = getPageSlug();
+    if (!slug) return;
+
+    const item = getCatalogItem(slug);
+    if (!item || item.type !== 'single') return;
+
+    const heroImg = document.querySelector('.unit-card-media img, .package-hero-media img');
+    if (heroImg && item.imageUrl) {
+      heroImg.src = item.imageUrl;
+      applyFocalStyles(heroImg, item);
+    }
+
+    updateMessengerPrefills(item);
+  }
+
+  function hydrateCompareNav() {
+    if (!siteData?.catalog) return;
+
+    document.querySelectorAll('a.nav-pkg[data-catalog-slug]').forEach((link) => {
+      const slug = link.getAttribute('data-catalog-slug');
+      const item = getCatalogItem(slug);
+      if (!item) return;
+      const name = packageDisplayName(item);
+      const svg = link.querySelector('svg');
+      const svgClone = svg ? svg.cloneNode(true) : null;
+      link.textContent = '';
+      if (svgClone) link.appendChild(svgClone);
+      link.append(` ${name} · ${formatPrice(item.basePrice)}`);
+    });
+  }
+
+  function updateMessengerPrefills(item) {
+    const prefill = buildMessengerPrefill(item);
+    document.querySelectorAll('[data-prefill-msg]').forEach((el) => {
+      const msg = el.getAttribute('data-prefill-msg') || '';
+      if (/book the|inquire about|want to book/i.test(msg)) {
+        el.setAttribute('data-prefill-msg', prefill);
+        if (typeof bindPrefillMessengerLink === 'function') bindPrefillMessengerLink(el);
+      }
+    });
   }
 
   function hydrateElements() {
@@ -833,34 +1183,7 @@ const LiveSite = (() => {
       const item = getCatalogItem(slug);
       if (item?.imageUrl && el.tagName === 'IMG') {
         el.src = item.imageUrl;
-      }
-    });
-  }
-
-  function updateOfferLadder() {
-    if (!siteData?.catalog) return;
-
-    const slugToPrice = {};
-    siteData.catalog.forEach(item => {
-      if (item.websiteSlug) {
-        slugToPrice[item.websiteSlug] = item.basePrice;
-      }
-    });
-
-    const slugMap = {
-      'package-basic': 'Basic',
-      'package-standard': 'Standard',
-      'package-combo': 'Combo',
-      'package-premium': 'Premium',
-    };
-
-    OFFER_LADDER.forEach(row => {
-      const packageName = row.package;
-      for (const [slug, name] of Object.entries(slugMap)) {
-        if (name === packageName && slugToPrice[slug] !== undefined) {
-          row.price = formatPrice(slugToPrice[slug]);
-          break;
-        }
+        applyFocalStyles(el, item);
       }
     });
   }
@@ -924,8 +1247,8 @@ const LiveSite = (() => {
       .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0))
       .map(item => `
         <figure class="live-gallery__item">
-          <img src="${item.imageUrl}" alt="${item.altText || item.caption || 'Gallery image'}" loading="lazy" decoding="async">
-          ${item.caption ? `<figcaption>${item.caption}</figcaption>` : ''}
+          <img src="${escapeHtml(item.imageUrl)}" alt="${escapeHtml(item.altText || item.caption || 'Gallery image')}" loading="lazy" decoding="async">
+          ${item.caption ? `<figcaption>${escapeHtml(item.caption)}</figcaption>` : ''}
         </figure>
       `)
       .join('');
@@ -936,9 +1259,17 @@ const LiveSite = (() => {
     if (!data) return;
 
     hydrateElements();
-    updateOfferLadder();
+    renderHomepageCatalog();
+    renderOfferLadder();
+    hydratePackagesHub();
+    hydratePackagePages();
+    hydrateProductPages();
     updateJsonLd();
     renderGallery();
+
+    if (typeof bindPrefillMessengerLink === 'function') {
+      document.querySelectorAll('[data-prefill-msg]').forEach(bindPrefillMessengerLink);
+    }
 
     document.dispatchEvent(new CustomEvent('livesiteready', { detail: data }));
   }
