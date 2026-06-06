@@ -928,6 +928,31 @@ const LiveSite = (() => {
     });
   }
 
+  /** Browsers prefer <source srcset> over img.src; unwrap so live Drive URLs apply. */
+  function unwrapPictureForLiveImage(img) {
+    const picture = img.closest('picture');
+    if (!picture || !picture.parentNode) return img;
+    picture.parentNode.insertBefore(img, picture);
+    picture.remove();
+    return img;
+  }
+
+  function hydrateLiveCatalogImage(el, item, slug) {
+    if (!el || el.tagName !== 'IMG' || !item) return false;
+    const src = resolveCatalogImageUrl(item, { allowFallback: false });
+    if (!src) return false;
+
+    unwrapPictureForLiveImage(el);
+    el.src = src;
+    el.setAttribute('data-catalog-slug', slug || item.websiteSlug || '');
+    applyFocalStyles(el, item);
+    attachCatalogImageFallbacks(el.parentElement || document);
+    if (String(item.imageAltText || '').trim()) {
+      el.alt = catalogImageAlt(item);
+    }
+    return true;
+  }
+
   function applyFocalStyles(el, item) {
     if (!el || !item) return;
     const fit = (item.imageFitMode || 'fit') === 'fit';
@@ -1160,21 +1185,21 @@ const LiveSite = (() => {
     if (path !== 'wedding-event-package-lipa-batangas.html') return;
 
     const img = document.querySelector('[data-live="packages-hub-flyer"]');
-    if (!img || !siteData?.catalog) return;
+    const flyer = siteData?.packagesHubFlyer;
+    if (!img || !flyer?.imageUrl?.trim()) return;
 
-    const flyerItem = siteData.catalog.find(
-      (i) => i.packagesHubFlyer && String(i.imageUrl || '').trim()
-    );
-    if (!flyerItem) return;
-
-    const src = resolveCatalogImageUrl(flyerItem, { allowFallback: false });
+    const src = normalizeDriveImageUrl(flyer.imageUrl.trim());
     if (!src) return;
 
+    unwrapPictureForLiveImage(img);
     img.src = src;
-    img.setAttribute('data-catalog-slug', flyerItem.websiteSlug || '');
-    applyFocalStyles(img, flyerItem);
-    if (String(flyerItem.imageAltText || '').trim()) {
-      img.alt = catalogImageAlt(flyerItem);
+    applyFocalStyles(img, {
+      imageFocalX: flyer.imageFocalX,
+      imageFocalY: flyer.imageFocalY,
+      imageFitMode: flyer.imageFitMode,
+    });
+    if (String(flyer.imageAltText || '').trim()) {
+      img.alt = flyer.imageAltText.trim();
     }
   }
 
@@ -1204,6 +1229,16 @@ const LiveSite = (() => {
       if (idx >= 0 && packages[idx]) applyFocalStyles(img, packages[idx]);
     });
     attachCatalogImageFallbacks(grid);
+  }
+
+  function hydratePageTitle() {
+    const slug = getPageSlug();
+    if (!slug) return;
+    const item = getCatalogItem(slug);
+    if (!item?.name) return;
+    const suffix = ' | Easy Rental';
+    if (!document.title.endsWith(suffix)) return;
+    document.title = `${item.name}${suffix}`;
   }
 
   function hydratePackagePages() {
@@ -1243,6 +1278,7 @@ const LiveSite = (() => {
     hydrateCompareNav();
     hydratePackageBreadcrumbs();
     updateMessengerPrefills(item);
+    hydratePageTitle();
   }
 
   function hydrateProductPages() {
@@ -1253,6 +1289,7 @@ const LiveSite = (() => {
     if (!item || item.type !== 'single') return;
 
     updateMessengerPrefills(item);
+    hydratePageTitle();
   }
 
   function hydrateCatalogLinks() {
@@ -1309,16 +1346,7 @@ const LiveSite = (() => {
 
       const img = link.querySelector('img');
       if (img) {
-        const src = resolveCatalogImageUrl(item, { allowFallback: false });
-        if (src) {
-          img.src = src;
-          img.setAttribute('data-catalog-slug', slug);
-          applyFocalStyles(img, item);
-          attachCatalogImageFallbacks(link);
-        }
-        if (String(item.imageAltText || '').trim()) {
-          img.alt = catalogImageAlt(item);
-        }
+        hydrateLiveCatalogImage(img, item, slug);
       }
 
       link.querySelectorAll('[data-live="name"][data-catalog-slug]').forEach((el) => {
@@ -1379,15 +1407,7 @@ const LiveSite = (() => {
       const slug = el.getAttribute('data-catalog-slug');
       const item = getCatalogItem(slug);
       if (el.tagName !== 'IMG') return;
-      const src = item ? resolveCatalogImageUrl(item, { allowFallback: false }) : '';
-      if (!src) return;
-      el.src = src;
-      el.setAttribute('data-catalog-slug', slug);
-      if (item) applyFocalStyles(el, item);
-      attachCatalogImageFallbacks(el.parentElement || document);
-      if (item && String(item.imageAltText || '').trim()) {
-        el.alt = catalogImageAlt(item);
-      }
+      hydrateLiveCatalogImage(el, item, slug);
     });
   }
 
@@ -1406,6 +1426,10 @@ const LiveSite = (() => {
             const item = getCatalogItem(slug);
             if (item) {
               data.offers.price = String(item.basePrice);
+              if (item.name) data.name = item.name;
+              if (item.websiteDescription) data.description = item.websiteDescription;
+              const imageUrl = resolveCatalogImageUrl(item, { allowFallback: false });
+              if (imageUrl) data.image = imageUrl;
               modified = true;
             }
           }
