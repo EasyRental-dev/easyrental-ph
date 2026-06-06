@@ -856,6 +856,13 @@ const LiveSite = (() => {
     return activeSlugMap[path] || document.body.getAttribute('data-catalog-slug') || null;
   }
 
+  function catalogImageAlt(item) {
+    if (!item) return '';
+    const custom = String(item.imageAltText || '').trim();
+    if (custom) return custom;
+    return item.name || '';
+  }
+
   function applyFocalStyles(el, item) {
     if (!el || !item) return;
     el.classList.add('catalog-card-img');
@@ -889,7 +896,7 @@ const LiveSite = (() => {
     const pagePath = getPagePath(item);
     const title = escapeHtml(item.name);
     const subtitle = escapeHtml(item.cardSubtitle || item.websiteDescription || '');
-    const imgAlt = escapeHtml(item.name);
+    const imgAlt = escapeHtml(catalogImageAlt(item));
     const mediaClass = item.websiteSlug === 'videoke'
       ? 'unit-card-media unit-card-media--videoke'
       : 'unit-card-media';
@@ -923,7 +930,7 @@ const LiveSite = (() => {
     const featuredClass = item.featuredOnHomepage ? ' catalog-card--featured' : '';
     const prefill = escapeHtml(buildMessengerPrefill(item));
     const imgHtml = item.imageUrl
-      ? `<div class="package-promo-media"><img src="${escapeHtml(item.imageUrl)}" alt="${escapeHtml(item.name)}" class="catalog-card-img" loading="lazy" decoding="async"></div>`
+      ? `<div class="package-promo-media"><img src="${escapeHtml(item.imageUrl)}" alt="${escapeHtml(catalogImageAlt(item))}" class="catalog-card-img" loading="lazy" decoding="async"></div>`
       : '';
 
     const bulletHtml = bullets.map((b) =>
@@ -960,19 +967,21 @@ const LiveSite = (() => {
     const featuredClass = item.featuredOnHomepage ? ' unit-card--featured' : '';
     const badgeClass = item.featuredOnHomepage ? ' unit-badge--best' : '';
     const imgHtml = item.imageUrl
-      ? `<img src="${escapeHtml(item.imageUrl)}" alt="${escapeHtml(item.name)}" class="catalog-card-img" loading="lazy" decoding="async">`
+      ? `<div class="pkg-hub-media"><img src="${escapeHtml(item.imageUrl)}" alt="${escapeHtml(catalogImageAlt(item))}" class="catalog-card-img" loading="lazy" decoding="async"></div>`
       : '';
 
     return `
-      <div class="unit-card${featuredClass}" id="pkg-${escapeHtml(item.websiteSlug)}">
+      <div class="unit-card pkg-hub-card${featuredClass}" id="pkg-${escapeHtml(item.websiteSlug)}">
         ${badge ? `<div class="unit-badge${badgeClass}">${badge}</div>` : ''}
         ${imgHtml}
         <div class="unit-info">
-          <h3>${name}</h3>
-          ${subtitle ? `<p class="unit-subtitle">${subtitle}</p>` : ''}
+          <div class="pkg-hub-head">
+            <h3>${name}</h3>
+            ${subtitle ? `<p class="unit-subtitle">${subtitle}</p>` : ''}
+          </div>
           <p class="unit-price">${price} <span class="price-note">· Delivery excl.</span></p>
           ${bullets.length ? `<ul class="unit-features">${bullets.map((b) => `<li>${escapeHtml(b)}</li>`).join('')}</ul>` : ''}
-          <a href="${escapeHtml(pagePath)}" class="btn btn-secondary">View ${name}</a>
+          <a href="${escapeHtml(pagePath)}" class="btn btn-secondary pkg-hub-cta">View ${name}</a>
         </div>
       </div>
     `;
@@ -1069,8 +1078,8 @@ const LiveSite = (() => {
 
     grid.innerHTML = packages.map(buildHubPackageCard).join('');
     grid.querySelectorAll('.catalog-card-img').forEach((img) => {
-      const card = img.closest('.unit-card');
-      const idx = [...grid.children].indexOf(card);
+      const card = img.closest('.pkg-hub-card');
+      const idx = card ? [...grid.children].indexOf(card) : -1;
       if (idx >= 0 && packages[idx]) applyFocalStyles(img, packages[idx]);
     });
   }
@@ -1202,6 +1211,10 @@ const LiveSite = (() => {
       if (item?.imageUrl && el.tagName === 'IMG') {
         el.src = item.imageUrl;
         applyFocalStyles(el, item);
+        const alt = catalogImageAlt(item);
+        if (String(item.imageAltText || '').trim()) {
+          el.alt = alt;
+        }
       }
     });
   }

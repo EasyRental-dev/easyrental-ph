@@ -1478,6 +1478,121 @@ section[id] { scroll-margin-top: 96px; }
 .unit-card--featured { border: 2px solid var(--brand); }
 .unit-card--featured .unit-badge { background: #F59E0B; }
 
+/* Packages hub — compact compare grid (wedding-event-package-lipa-batangas.html) */
+#catalog-packages-grid.units-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  align-items: stretch;
+}
+
+#catalog-packages-grid .pkg-hub-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+#catalog-packages-grid .pkg-hub-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  max-height: 148px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background:
+    radial-gradient(ellipse 92% 78% at 50% 68%, rgba(255, 255, 255, 0.72) 0%, transparent 58%),
+    linear-gradient(168deg, #f4f6f9 0%, #eceff4 38%, #e3e8ef 100%);
+}
+
+#catalog-packages-grid .pkg-hub-media picture,
+#catalog-packages-grid .pkg-hub-media img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+#catalog-packages-grid .pkg-hub-media img {
+  object-fit: cover;
+  object-position: var(--focal-x, 50%) var(--focal-y, 50%);
+}
+
+#catalog-packages-grid .unit-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  padding: 16px 18px 18px;
+}
+
+#catalog-packages-grid .pkg-hub-head {
+  margin-bottom: 6px;
+}
+
+#catalog-packages-grid .unit-info h3 {
+  font-size: 1.125rem;
+  margin-bottom: 2px;
+  line-height: 1.2;
+}
+
+#catalog-packages-grid .unit-subtitle {
+  font-size: 0.8125rem;
+  margin-bottom: 0;
+  line-height: 1.35;
+}
+
+#catalog-packages-grid .unit-price {
+  font-size: 1.35rem;
+  margin: 8px 0;
+}
+
+#catalog-packages-grid .unit-features {
+  font-size: 0.8125rem;
+  margin: 0 0 12px;
+  flex: 1 1 auto;
+}
+
+#catalog-packages-grid .unit-features li {
+  padding: 2px 0;
+  line-height: 1.35;
+}
+
+#catalog-packages-grid .pkg-hub-cta {
+  margin-top: auto;
+  width: 100%;
+  justify-content: center;
+  padding: 10px 16px;
+  font-size: 0.875rem;
+  box-sizing: border-box;
+}
+
+.pkg-hub-title {
+  font-size: clamp(1.25rem, 3vw, 1.6rem);
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-align: center;
+  letter-spacing: -0.02em;
+}
+
+@media (min-width: 1100px) {
+  #catalog-packages-grid.units-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  #catalog-packages-grid .pkg-hub-media {
+    max-height: 132px;
+  }
+}
+
+@media (max-width: 639px) {
+  #catalog-packages-grid.units-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  #catalog-packages-grid .pkg-hub-media {
+    max-height: 168px;
+  }
+}
+
 /* Breadcrumb */
 .breadcrumb {
   padding: 16px 0; font-size: 0.85rem; color: var(--muted);

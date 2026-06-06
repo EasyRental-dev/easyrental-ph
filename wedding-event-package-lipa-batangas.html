@@ -99,44 +99,38 @@
 </head>
 <body>
 
-<!-- er:site-nav -->
 <div id="progress"></div>
 
-<nav class="navbar" aria-label="Primary">
-  <a href="/" class="nav-logo" title="Easy Rental - Tables, Chairs &amp; Tent Rentals Lipa">
-    <img src="/assets/easyrental_logo.png" srcset="/assets/easyrental_logo_192.webp 192w, /assets/easyrental_logo_512.webp 512w" sizes="(max-width: 768px) 120px, 220px" alt="Easy Rental Lipa Batangas logo" title="Easy Rental Lipa" width="1024" height="1024" loading="lazy" decoding="async">
-    <span class="display" style="font-weight:700;">Easy Rental Lipa</span>
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <img src="assets/easyrental_logo.png" srcset="assets/easyrental_logo_192.webp 192w, assets/easyrental_logo_512.webp 512w" sizes="(max-width: 768px) 120px, 220px" alt="Easy Rental Lipa Batangas logo — event package tent, tables, and chairs" title="Easy Rental Lipa" width="1024" height="1024" loading="lazy" decoding="async">
+    Easy Rental
   </a>
   <ul class="nav-links">
-    <li><a href="/#services">Rentals</a></li>
-    <li><a href="/#units">Rates</a></li>
-    <li><a href="/wedding-event-package-lipa-batangas.html" aria-current="page">Packages</a></li>
-    <li><a href="/#how-booking-works">Booking</a></li>
-    <li><a href="/#service-area">Service Area</a></li>
-    <li><a href="/#testimonials">Reviews</a></li>
-    <li><a href="/#faq">FAQ</a></li>
-    <li><a href="/blog">Blog</a></li>
-    <li><a href="/contact.html">Contact</a></li>
+    <li><a href="index.html#services">Services</a></li>
+    <li><a href="index.html#units">Units</a></li>
+    <li><a href="index.html#how-booking-works">Booking</a></li>
+    <li><a href="index.html#testimonials">Reviews</a></li>
+    <li><a href="index.html#faq">FAQ</a></li>
+    <li><a href="contact.html">Contact</a></li>
   </ul>
-  <a href="https://m.me/EasyRental.ngani" class="btn btn-primary nav-cta" target="_blank" rel="noopener noreferrer" data-prefill-msg="Hi Easy Rental! I want to check package availability for my event. Event date: ____. Venue/barangay: ____. Preferred package: ____ (Basic/Standard/Premium/Combo).">Message on Messenger</a>
+  <a href="https://m.me/EasyRental.ngani" class="btn btn-primary nav-cta" target="_blank" rel="noopener" data-prefill-msg="Hi Easy Rental! I want to check package availability for my event. Event date: ____. Venue/barangay: ____. Preferred package: ____ (Basic/Standard/Premium/Combo).">Message on Messenger</a>
   <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
 </nav>
 
+<!-- MOBILE MENU -->
 <div class="mobile-menu">
   <ul>
-    <li><a href="/#services">Rentals</a></li>
-    <li><a href="/#units">Rates</a></li>
-    <li><a href="/wedding-event-package-lipa-batangas.html" aria-current="page">Packages</a></li>
-    <li><a href="/#how-booking-works">Booking</a></li>
-    <li><a href="/#service-area">Service Area</a></li>
-    <li><a href="/#testimonials">Reviews</a></li>
-    <li><a href="/#faq">FAQ</a></li>
-    <li><a href="/blog">Blog</a></li>
-    <li><a href="/contact.html">Contact</a></li>
-    <li><a href="https://m.me/EasyRental.ngani" target="_blank" rel="noopener noreferrer">Message on Messenger</a></li>
+    <li><a href="index.html#services">Services</a></li>
+    <li><a href="index.html#units">Units</a></li>
+    <li><a href="index.html#how-booking-works">Booking</a></li>
+    <li><a href="index.html#testimonials">Reviews</a></li>
+    <li><a href="index.html#faq">FAQ</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="https://m.me/EasyRental.ngani" target="_blank" rel="noopener">Message on Messenger</a></li>
   </ul>
 </div>
-<!-- /er:site-nav -->
 
 <!-- HERO -->
 <section class="page-hero">
@@ -164,55 +158,67 @@
 <!-- PACKAGES GRID -->
 <section class="units-section" id="packages">
   <div class="container">
-    <h2 class="display" style="font-size:clamp(1.25rem,3vw,1.6rem);font-weight:700;margin-bottom:24px;text-align:center;letter-spacing:-.02em;">Package bundles</h2>
+    <h2 class="display pkg-hub-title">Package bundles</h2>
     <div id="catalog-packages-grid" class="units-grid">
 
-      <div class="unit-card" id="pkg-basic">
+      <div class="unit-card pkg-hub-card" id="pkg-basic">
         <div class="unit-badge">Starter</div>
-        <picture>
+        <div class="pkg-hub-media">
+          <picture>
   <source srcset="assets/easyrental_table_showcase.webp" type="image/webp">
   <img src="assets/easyrental_table_showcase.png" alt="6ft foldable table and chairs — Easy Rental Basic package Lipa Batangas" title="Basic package table and chair rental Lipa Batangas" width="511" height="488" loading="lazy" decoding="async">
 </picture>
+        </div>
         <div class="unit-info">
-          <h3>Basic</h3>
-          <p class="unit-subtitle">Table &amp; chairs only</p>
+          <div class="pkg-hub-head">
+            <h3>Basic</h3>
+            <p class="unit-subtitle">Table &amp; chairs only</p>
+          </div>
           <p class="unit-price">₱360 <span class="price-note">· Delivery excl.</span></p>
           <ul class="unit-features">
             <li>1× 6ft foldable table</li>
             <li>10× chairs</li>
           </ul>
-          <a href="wedding-package-basic-lipa-batangas.html" class="btn btn-secondary">View Basic</a>
+          <a href="wedding-package-basic-lipa-batangas.html" class="btn btn-secondary pkg-hub-cta">View Basic</a>
         </div>
       </div>
 
-      <div class="unit-card" id="pkg-standard">
+      <div class="unit-card pkg-hub-card" id="pkg-standard">
         <div class="unit-badge">~20 Pax</div>
-        <picture>
+        <div class="pkg-hub-media">
+          <picture>
   <source srcset="assets/easyrental_tent_showcase.webp" type="image/webp">
   <img src="assets/easyrental_tent_showcase.png" alt="Pop-up tent with tables and chairs — Easy Rental Standard package Lipa Batangas" title="Standard package tent rental Lipa Batangas" width="500" height="500" loading="lazy" decoding="async">
 </picture>
+        </div>
         <div class="unit-info">
-          <h3>Standard</h3>
-          <p class="unit-subtitle">Tent + tables + chairs</p>
+          <div class="pkg-hub-head">
+            <h3>Standard</h3>
+            <p class="unit-subtitle">Tent + tables + chairs</p>
+          </div>
           <p class="unit-price">₱1,319 <span class="price-note">· Delivery excl.</span></p>
           <ul class="unit-features">
             <li>2× 6ft tables</li>
             <li>20× chairs</li>
             <li>1× tent (3×4.5m)</li>
           </ul>
-          <a href="wedding-package-set-a-lipa-batangas.html" class="btn btn-secondary">View Standard</a>
+          <a href="wedding-package-set-a-lipa-batangas.html" class="btn btn-secondary pkg-hub-cta">View Standard</a>
         </div>
       </div>
 
-      <div class="unit-card unit-card--featured" id="pkg-premium">
+      <div class="unit-card pkg-hub-card unit-card--featured" id="pkg-premium">
         <div class="unit-badge unit-badge--best">Full party</div>
-        <picture>
+        <div class="pkg-hub-media">
+          <picture>
   <source srcset="assets/easyrental_videoke_unit.webp" type="image/webp">
   <img src="assets/easyrental_videoke_unit.png" alt="Videoke system with tent package — Easy Rental Premium package Lipa Batangas" title="Premium package with videoke Lipa Batangas" width="433" height="577" loading="lazy" decoding="async">
 </picture>
+        </div>
         <div class="unit-info">
-          <h3>Premium</h3>
-          <p class="unit-subtitle">Tent + videoke + seating</p>
+          <div class="pkg-hub-head">
+            <h3>Premium</h3>
+            <p class="unit-subtitle">Tent + videoke + seating</p>
+          </div>
           <p class="unit-price">₱2,778 <span class="price-note">· Delivery excl.</span></p>
           <ul class="unit-features">
             <li>3× tables</li>
@@ -220,25 +226,29 @@
             <li>1× tent (3×4.5m)</li>
             <li>1× videoke system</li>
           </ul>
-          <a href="wedding-package-set-b-lipa-batangas.html" class="btn btn-secondary">View Premium</a>
+          <a href="wedding-package-set-b-lipa-batangas.html" class="btn btn-secondary pkg-hub-cta">View Premium</a>
         </div>
       </div>
 
-      <div class="unit-card" id="pkg-combo">
+      <div class="unit-card pkg-hub-card" id="pkg-combo">
         <div class="unit-badge">Entertainment</div>
-        <picture>
+        <div class="pkg-hub-media">
+          <picture>
   <source srcset="assets/easyrental_tent_showcase.webp" type="image/webp">
   <img src="assets/easyrental_tent_showcase.png" alt="Tent and videoke combo — Easy Rental Combo package Lipa Batangas" title="Combo tent and videoke package Lipa Batangas" width="500" height="500" loading="lazy" decoding="async">
 </picture>
+        </div>
         <div class="unit-info">
-          <h3>Combo</h3>
-          <p class="unit-subtitle">Tent + videoke</p>
+          <div class="pkg-hub-head">
+            <h3>Combo</h3>
+            <p class="unit-subtitle">Tent + videoke</p>
+          </div>
           <p class="unit-price">₱1,698 <span class="price-note">· Delivery excl.</span></p>
           <ul class="unit-features">
             <li>1× tent</li>
             <li>1× videoke system</li>
           </ul>
-          <a href="wedding-package-combo-lipa-batangas.html" class="btn btn-secondary">View Combo</a>
+          <a href="wedding-package-combo-lipa-batangas.html" class="btn btn-secondary pkg-hub-cta">View Combo</a>
         </div>
       </div>
 
