@@ -2788,6 +2788,14 @@ img.brand-logo-footer {
   display: none;
 }
 
+#live-proof-gallery:empty {
+  display: none;
+}
+
+#live-proof-gallery:not(:empty) {
+  display: grid;
+}
+
 @media (max-width: 640px) {
   .live-gallery {
     grid-template-columns: 1fr;
