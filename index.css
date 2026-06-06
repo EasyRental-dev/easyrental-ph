@@ -1234,13 +1234,13 @@ section[id] { scroll-margin-top: 96px; }
 
 .catalog-card-img--fit {
   object-fit: contain;
-  background: #fff;
+  background: transparent;
 }
 
 .catalog-hero-img {
   object-fit: contain;
   object-position: var(--focal-x, 50%) var(--focal-y, 50%);
-  background: #fff;
+  background: transparent;
 }
 
 .product-hero-frame .catalog-hero-img {
@@ -1418,7 +1418,9 @@ section[id] { scroll-margin-top: 96px; }
 }
 
 .product-hero-frame {
-  background: #fff;
+  background:
+    radial-gradient(ellipse 92% 78% at 50% 68%, rgba(255, 255, 255, 0.72) 0%, transparent 58%),
+    linear-gradient(168deg, #f4f6f9 0%, #eceff4 38%, #e3e8ef 100%);
   border-radius: 24px;
   overflow: hidden;
   box-shadow: 0 16px 56px -12px rgba(15, 23, 42, 0.12);
