@@ -801,6 +801,18 @@ const LiveSite = (() => {
     'videoke': 'videoke-rental-lipa-batangas.html',
   };
 
+  /** Static showcase images when catalog imageUrl is empty or fails to load. */
+  const DEFAULT_CATALOG_IMAGES = {
+    'tent': 'assets/easyrental_tent_showcase.png',
+    'table-6ft': 'assets/easyrental_table_showcase.png',
+    'chair': 'assets/easyrental_chair_showcase.png',
+    'videoke': 'assets/easyrental_videoke_unit.jpg',
+    'package-basic': 'assets/easyrental_table_showcase.png',
+    'package-standard': 'assets/easyrental_tent_showcase.png',
+    'package-premium': 'assets/easyrental_videoke_unit.png',
+    'package-combo': 'assets/easyrental_videoke_unit.png',
+  };
+
   const PAGE_SLUG_MAP = Object.fromEntries(
     Object.entries(DEFAULT_PAGE_PATHS).map(([slug, path]) => [path, slug])
   );
@@ -863,6 +875,54 @@ const LiveSite = (() => {
     return item.name || '';
   }
 
+  function extractDriveFileId(url) {
+    if (!url) return null;
+    const s = String(url);
+    let m = s.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+    if (m) return m[1];
+    m = s.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+    if (m) return m[1];
+    m = s.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if (m) return m[1];
+    return null;
+  }
+
+  /** Drive share links often fail in <img>; thumbnail endpoint is reliable. */
+  function normalizeDriveImageUrl(url) {
+    const id = extractDriveFileId(url);
+    if (id) return `https://drive.google.com/thumbnail?id=${id}&sz=w1600`;
+    return String(url || '').trim();
+  }
+
+  function resolveCatalogImageUrl(item) {
+    if (!item) return '';
+    const raw = String(item.imageUrl || '').trim();
+    if (raw) return normalizeDriveImageUrl(raw);
+    return DEFAULT_CATALOG_IMAGES[item.websiteSlug] || '';
+  }
+
+  function buildCatalogImgHtml(item) {
+    const src = resolveCatalogImageUrl(item);
+    if (!src) return '';
+    const slug = escapeHtml(item.websiteSlug || '');
+    const alt = escapeHtml(catalogImageAlt(item));
+    return `<img src="${escapeHtml(src)}" alt="${alt}" class="catalog-card-img" data-catalog-slug="${slug}" loading="lazy" decoding="async">`;
+  }
+
+  function attachCatalogImageFallbacks(root) {
+    if (!root) return;
+    root.querySelectorAll('img.catalog-card-img[data-catalog-slug]').forEach((img) => {
+      const slug = img.getAttribute('data-catalog-slug');
+      const fallback = DEFAULT_CATALOG_IMAGES[slug];
+      if (!fallback) return;
+      img.addEventListener('error', () => {
+        if (img.dataset.fallbackApplied === '1') return;
+        img.dataset.fallbackApplied = '1';
+        img.src = fallback;
+      }, { once: true });
+    });
+  }
+
   function applyFocalStyles(el, item) {
     if (!el || !item) return;
     const fit = (item.imageFitMode || 'fit') === 'fit';
@@ -907,14 +967,11 @@ const LiveSite = (() => {
     const pagePath = getPagePath(item);
     const title = escapeHtml(item.name);
     const subtitle = escapeHtml(item.cardSubtitle || item.websiteDescription || '');
-    const imgAlt = escapeHtml(catalogImageAlt(item));
     const mediaClass = item.websiteSlug === 'videoke'
       ? 'unit-card-media unit-card-media--videoke'
       : 'unit-card-media';
     const linkClass = item.websiteSlug === 'videoke' ? 'catalog-card-link catalog-card-link--videoke' : 'catalog-card-link';
-    const imgHtml = item.imageUrl
-      ? `<img src="${escapeHtml(item.imageUrl)}" alt="${imgAlt}" class="catalog-card-img" loading="lazy" decoding="async">`
-      : '';
+    const imgHtml = buildCatalogImgHtml(item);
 
     return `
       <div class="unit-card">
@@ -940,8 +997,9 @@ const LiveSite = (() => {
     const bullets = deriveBullets(item);
     const featuredClass = item.featuredOnHomepage ? ' catalog-card--featured' : '';
     const prefill = escapeHtml(buildMessengerPrefill(item));
-    const imgHtml = item.imageUrl
-      ? `<div class="package-promo-media"><img src="${escapeHtml(item.imageUrl)}" alt="${escapeHtml(catalogImageAlt(item))}" class="catalog-card-img" loading="lazy" decoding="async"></div>`
+    const promoImg = buildCatalogImgHtml(item);
+    const imgHtml = promoImg
+      ? `<div class="package-promo-media">${promoImg}</div>`
       : '';
 
     const bulletHtml = bullets.map((b) =>
@@ -977,8 +1035,9 @@ const LiveSite = (() => {
     const bullets = deriveBullets(item);
     const featuredClass = item.featuredOnHomepage ? ' unit-card--featured' : '';
     const badgeClass = item.featuredOnHomepage ? ' unit-badge--best' : '';
-    const imgHtml = item.imageUrl
-      ? `<div class="pkg-hub-media"><img src="${escapeHtml(item.imageUrl)}" alt="${escapeHtml(catalogImageAlt(item))}" class="catalog-card-img" loading="lazy" decoding="async"></div>`
+    const hubImg = buildCatalogImgHtml(item);
+    const imgHtml = hubImg
+      ? `<div class="pkg-hub-media">${hubImg}</div>`
       : '';
 
     return `
@@ -1022,6 +1081,8 @@ const LiveSite = (() => {
       const idx = [...grid.children].indexOf(card);
       if (idx >= 0 && cards[idx]) applyFocalStyles(img, cards[idx]);
     });
+
+    attachCatalogImageFallbacks(grid);
 
     grid.querySelectorAll('[data-prefill-msg]').forEach((el) => {
       if (typeof bindPrefillMessengerLink === 'function') bindPrefillMessengerLink(el);
@@ -1093,6 +1154,7 @@ const LiveSite = (() => {
       const idx = card ? [...grid.children].indexOf(card) : -1;
       if (idx >= 0 && packages[idx]) applyFocalStyles(img, packages[idx]);
     });
+    attachCatalogImageFallbacks(grid);
   }
 
   function hydratePackagePages() {
@@ -1194,9 +1256,14 @@ const LiveSite = (() => {
       if (path && path !== '#') link.setAttribute('href', path);
 
       const img = link.querySelector('img');
-      if (img && item.imageUrl) {
-        img.src = item.imageUrl;
-        applyFocalStyles(img, item);
+      if (img) {
+        const src = resolveCatalogImageUrl(item);
+        if (src) {
+          img.src = src;
+          img.setAttribute('data-catalog-slug', slug);
+          applyFocalStyles(img, item);
+          attachCatalogImageFallbacks(link);
+        }
         if (String(item.imageAltText || '').trim()) {
           img.alt = catalogImageAlt(item);
         }
@@ -1259,13 +1326,16 @@ const LiveSite = (() => {
     document.querySelectorAll('[data-live="image"][data-catalog-slug]').forEach(el => {
       const slug = el.getAttribute('data-catalog-slug');
       const item = getCatalogItem(slug);
-      if (item?.imageUrl && el.tagName === 'IMG') {
-        el.src = item.imageUrl;
-        applyFocalStyles(el, item);
-        const alt = catalogImageAlt(item);
-        if (String(item.imageAltText || '').trim()) {
-          el.alt = alt;
-        }
+      if (el.tagName !== 'IMG') return;
+      const src = resolveCatalogImageUrl(item);
+      if (!src) return;
+      el.src = src;
+      el.setAttribute('data-catalog-slug', slug);
+      if (item) applyFocalStyles(el, item);
+      attachCatalogImageFallbacks(el.parentElement || document);
+      const alt = catalogImageAlt(item);
+      if (item && String(item.imageAltText || '').trim()) {
+        el.alt = alt;
       }
     });
   }
