@@ -50,7 +50,7 @@
     .breadcrumb{display:flex;align-items:center;gap:6px;font-size:.82rem;color:var(--muted);padding:14px 24px;max-width:1200px;margin:0 auto;}
     .breadcrumb a{color:var(--muted);text-decoration:none;}
     .breadcrumb a:hover{color:var(--ink);}
-    .product-hero-img{width:100%;height:auto;display:block;}
+    .product-hero-img{width:100%;height:100%;display:block;object-fit:contain;object-position:center;}
   </style>
 
 <!-- er:breadcrumb-schema -->
@@ -60,44 +60,40 @@
 <!-- /er:breadcrumb-schema -->
 </head>
 <body data-catalog-slug="chair">
-<!-- er:site-nav -->
 <div id="progress"></div>
 
-<nav class="navbar" aria-label="Primary">
-  <a href="/" class="nav-logo" title="Easy Rental - Tables, Chairs &amp; Tent Rentals Lipa">
-    <img src="/assets/easyrental_logo.png" srcset="/assets/easyrental_logo_192.webp 192w, /assets/easyrental_logo_512.webp 512w" sizes="(max-width: 768px) 120px, 220px" alt="Easy Rental Lipa Batangas logo" title="Easy Rental Lipa" width="1024" height="1024" loading="lazy" decoding="async">
-    <span class="display" style="font-weight:700;">Easy Rental Lipa</span>
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <img src="assets/easyrental_logo.png" srcset="assets/easyrental_logo_192.webp 192w, assets/easyrental_logo_512.webp 512w" sizes="(max-width: 768px) 120px, 220px" alt="Easy Rental Lipa Batangas logo — monobloc chairs and table rental" title="Easy Rental Lipa" width="1024" height="1024" loading="lazy" decoding="async">
+    Easy Rental
   </a>
   <ul class="nav-links">
-    <li><a href="/#services">Rentals</a></li>
-    <li><a href="/#units">Rates</a></li>
-    <li><a href="/wedding-event-package-lipa-batangas.html">Packages</a></li>
-    <li><a href="/#how-booking-works">Booking</a></li>
-    <li><a href="/#service-area">Service Area</a></li>
-    <li><a href="/#testimonials">Reviews</a></li>
-    <li><a href="/#faq">FAQ</a></li>
-    <li><a href="/blog">Blog</a></li>
-    <li><a href="/contact.html">Contact</a></li>
+    <li><a href="index.html#services">Services</a></li>
+    <li><a href="index.html#units">Units</a></li>
+    <li><a href="wedding-event-package-lipa-batangas.html">Packages</a></li>
+    <li><a href="index.html#how-booking-works">Booking</a></li>
+    <li><a href="index.html#testimonials">Reviews</a></li>
+    <li><a href="index.html#faq">FAQ</a></li>
+    <li><a href="contact.html">Contact</a></li>
   </ul>
-  <a href="https://m.me/EasyRental.ngani" class="btn btn-primary nav-cta" target="_blank" rel="noopener noreferrer" data-prefill-msg="Hi Easy Rental! I want to inquire about tables and chairs rental. Event date: ____. Venue/barangay: ____. Quantity needed: ____ chairs, ____ tables.">Message on Messenger</a>
+  <a href="https://m.me/EasyRental.ngani" class="btn btn-primary nav-cta" target="_blank" rel="noopener" data-prefill-msg="Hi Easy Rental! I want to inquire about tables and chairs rental. Event date: ____. Venue/barangay: ____. Quantity needed: ____ chairs, ____ tables.">Message on Messenger</a>
   <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
 </nav>
 
+<!-- MOBILE MENU -->
 <div class="mobile-menu">
   <ul>
-    <li><a href="/#services">Rentals</a></li>
-    <li><a href="/#units">Rates</a></li>
-    <li><a href="/wedding-event-package-lipa-batangas.html">Packages</a></li>
-    <li><a href="/#how-booking-works">Booking</a></li>
-    <li><a href="/#service-area">Service Area</a></li>
-    <li><a href="/#testimonials">Reviews</a></li>
-    <li><a href="/#faq">FAQ</a></li>
-    <li><a href="/blog">Blog</a></li>
-    <li><a href="/contact.html">Contact</a></li>
-    <li><a href="https://m.me/EasyRental.ngani" target="_blank" rel="noopener noreferrer">Message on Messenger</a></li>
+    <li><a href="index.html#services">Services</a></li>
+    <li><a href="index.html#units">Units</a></li>
+    <li><a href="wedding-event-package-lipa-batangas.html">Packages</a></li>
+    <li><a href="index.html#how-booking-works">Booking</a></li>
+    <li><a href="index.html#testimonials">Reviews</a></li>
+    <li><a href="index.html#faq">FAQ</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="https://m.me/EasyRental.ngani" target="_blank" rel="noopener">Message on Messenger</a></li>
   </ul>
 </div>
-<!-- /er:site-nav -->
 
 <!-- BREADCRUMB -->
 <div style="background:#fff;border-bottom:1px solid #F1F5F9;">
@@ -220,12 +216,12 @@
         <div class="unit-card-media unit-card-media--compact">
           <picture>
   <source srcset="assets/easyrental_table_showcase.webp" type="image/webp">
-  <img src="assets/easyrental_table_showcase.png" alt="White rectangular folding table rental Lipa Batangas — 6ft event table with black metal legs" title="6ft table rental Lipa Batangas" width="511" height="488" loading="lazy" decoding="async">
+  <img src="assets/easyrental_table_showcase.png" alt="White rectangular folding table rental Lipa Batangas — 6ft event table with black metal legs" title="6ft table rental Lipa Batangas" width="511" height="488" loading="lazy" decoding="async" data-live="image" data-catalog-slug="table-6ft">
 </picture>
         </div>
         <div style="padding:18px;">
-          <div style="font-weight:700;margin-bottom:4px;">6ft Foldable Table</div>
-          <div style="font-size:.82rem;color:var(--muted);margin-bottom:10px;">Rectangular · Seats 6–8</div>
+          <div style="font-weight:700;margin-bottom:4px;" data-live="name" data-catalog-slug="table-6ft">6ft Foldable Table</div>
+          <div style="font-size:.82rem;color:var(--muted);margin-bottom:10px;" data-live="subtitle" data-catalog-slug="table-6ft">Rectangular · Seats 6–8</div>
           <span style="font-size:.78rem;color:var(--brand-dark);font-weight:600;">View Details →</span>
         </div>
       </a>
@@ -233,12 +229,12 @@
         <div class="unit-card-media unit-card-media--compact">
           <picture>
   <source srcset="assets/easyrental_tent_showcase.webp" type="image/webp">
-  <img src="assets/easyrental_tent_showcase.png" alt="Cream beige pop-up canopy tent rental Lipa Batangas — silver metal frame for outdoor events" title="Tent rental Batangas" width="500" height="500" loading="lazy" decoding="async">
+  <img src="assets/easyrental_tent_showcase.png" alt="Cream beige pop-up canopy tent rental Lipa Batangas — silver metal frame for outdoor events" title="Tent rental Batangas" width="500" height="500" loading="lazy" decoding="async" data-live="image" data-catalog-slug="tent">
 </picture>
         </div>
         <div style="padding:18px;">
-          <div style="font-weight:700;margin-bottom:4px;">Tent &amp; Canopy Rental</div>
-          <div style="font-size:.82rem;color:var(--muted);margin-bottom:10px;">3×4.5m Retractable · Black or beige/khaki</div>
+          <div style="font-weight:700;margin-bottom:4px;" data-live="name" data-catalog-slug="tent">Tent &amp; Canopy Rental</div>
+          <div style="font-size:.82rem;color:var(--muted);margin-bottom:10px;" data-live="subtitle" data-catalog-slug="tent">3×4.5m Retractable · Black or beige/khaki</div>
           <span style="font-size:.78rem;color:var(--brand-dark);font-weight:600;">View Details →</span>
         </div>
       </a>

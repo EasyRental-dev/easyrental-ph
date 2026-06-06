@@ -865,9 +865,20 @@ const LiveSite = (() => {
 
   function applyFocalStyles(el, item) {
     if (!el || !item) return;
-    el.classList.add('catalog-card-img');
+    const fit = (item.imageFitMode || 'fit') === 'fit';
+    const isHero = !!el.closest('.product-hero-frame');
+
     el.style.setProperty('--focal-x', `${item.imageFocalX ?? 50}%`);
     el.style.setProperty('--focal-y', `${item.imageFocalY ?? 50}%`);
+
+    if (isHero) {
+      el.classList.add('catalog-hero-img');
+      return;
+    }
+
+    el.classList.add('catalog-card-img');
+    el.classList.toggle('catalog-card-img--fit', fit);
+    el.classList.toggle('catalog-card-img--crop', !fit);
   }
 
   function deriveBullets(item) {
@@ -1171,6 +1182,46 @@ const LiveSite = (() => {
     });
   }
 
+  function hydrateRelatedCards() {
+    if (!siteData?.catalog) return;
+
+    document.querySelectorAll('.related-card[data-catalog-slug]').forEach((link) => {
+      const slug = link.getAttribute('data-catalog-slug');
+      const item = getCatalogItem(slug);
+      if (!item) return;
+
+      const path = getPagePath(item);
+      if (path && path !== '#') link.setAttribute('href', path);
+
+      const img = link.querySelector('img');
+      if (img && item.imageUrl) {
+        img.src = item.imageUrl;
+        applyFocalStyles(img, item);
+        if (String(item.imageAltText || '').trim()) {
+          img.alt = catalogImageAlt(item);
+        }
+      }
+
+      link.querySelectorAll('[data-live="name"][data-catalog-slug]').forEach((el) => {
+        if (el.getAttribute('data-catalog-slug') === slug && item.name) {
+          el.textContent = item.name;
+        }
+      });
+
+      link.querySelectorAll('[data-live="subtitle"][data-catalog-slug]').forEach((el) => {
+        if (el.getAttribute('data-catalog-slug') === slug && item.cardSubtitle) {
+          el.textContent = item.cardSubtitle;
+        }
+      });
+
+      link.querySelectorAll('[data-live="price"][data-catalog-slug]').forEach((el) => {
+        if (el.getAttribute('data-catalog-slug') === slug) {
+          el.textContent = formatPrice(item.basePrice);
+        }
+      });
+    });
+  }
+
   function hydrateElements() {
     if (!siteData?.catalog) return;
 
@@ -1292,6 +1343,7 @@ const LiveSite = (() => {
     rebuildSlugMap();
     hydrateElements();
     hydrateCatalogLinks();
+    hydrateRelatedCards();
     renderHomepageCatalog();
     renderOfferLadder();
     hydratePackagesHub();
