@@ -894,15 +894,18 @@ const LiveSite = (() => {
     return String(url || '').trim();
   }
 
-  function resolveCatalogImageUrl(item) {
+  function resolveCatalogImageUrl(item, options = {}) {
     if (!item) return '';
+    const allowFallback = options.allowFallback !== false;
     const raw = String(item.imageUrl || '').trim();
     if (raw) return normalizeDriveImageUrl(raw);
-    return DEFAULT_CATALOG_IMAGES[item.websiteSlug] || '';
+    if (allowFallback) return DEFAULT_CATALOG_IMAGES[item.websiteSlug] || '';
+    return '';
   }
 
-  function buildCatalogImgHtml(item) {
-    const src = resolveCatalogImageUrl(item);
+  function buildCatalogImgHtml(item, options = {}) {
+    const liveOpts = { allowFallback: false, ...options };
+    const src = resolveCatalogImageUrl(item, liveOpts);
     if (!src) return '';
     const slug = escapeHtml(item.websiteSlug || '');
     const alt = escapeHtml(catalogImageAlt(item));
@@ -913,10 +916,12 @@ const LiveSite = (() => {
     if (!root) return;
     root.querySelectorAll('img.catalog-card-img[data-catalog-slug]').forEach((img) => {
       const slug = img.getAttribute('data-catalog-slug');
+      const item = getCatalogItem(slug);
       const fallback = DEFAULT_CATALOG_IMAGES[slug];
       if (!fallback) return;
       img.addEventListener('error', () => {
         if (img.dataset.fallbackApplied === '1') return;
+        if (item?.imageUrl?.trim()) return;
         img.dataset.fallbackApplied = '1';
         img.src = fallback;
       }, { once: true });
@@ -926,10 +931,19 @@ const LiveSite = (() => {
   function applyFocalStyles(el, item) {
     if (!el || !item) return;
     const fit = (item.imageFitMode || 'fit') === 'fit';
-    const isHero = !!el.closest('.product-hero-frame');
+    const liveRole = el.getAttribute('data-live') || '';
+    const isFlyer = liveRole === 'packages-hub-flyer';
+    const isHero = !!el.closest('.product-hero-frame, .package-hero-media');
 
     el.style.setProperty('--focal-x', `${item.imageFocalX ?? 50}%`);
     el.style.setProperty('--focal-y', `${item.imageFocalY ?? 50}%`);
+
+    if (isFlyer) {
+      el.style.objectFit = 'contain';
+      el.style.width = '100%';
+      el.style.height = 'auto';
+      return;
+    }
 
     if (isHero) {
       el.classList.add('catalog-hero-img');
@@ -956,11 +970,11 @@ const LiveSite = (() => {
 
   function buildMessengerPrefill(item) {
     const price = formatPrice(item.basePrice);
+    const label = item.name || packageDisplayName(item);
     if (item.type === 'package') {
-      const name = packageDisplayName(item) || item.name;
-      return `Hi Easy Rental! I want to book the ${name} (${price}). Event date: ____. Venue/barangay: ____. Preferred delivery time: ____.`;
+      return `Hi Easy Rental! I want to book the ${label} (${price}). Event date: ____. Venue/barangay: ____. Preferred delivery time: ____.`;
     }
-    return `Hi Easy Rental! I want to inquire about ${item.name} (${price}). Event date: ____. Venue/barangay: ____. Quantity needed: ____.`;
+    return `Hi Easy Rental! I want to inquire about ${label} (${price}). Event date: ____. Venue/barangay: ____. Quantity needed: ____.`;
   }
 
   function buildHomepageSingleCard(item) {
@@ -990,7 +1004,7 @@ const LiveSite = (() => {
 
   function buildHomepagePackageCard(item) {
     const pagePath = getPagePath(item);
-    const name = escapeHtml(packageDisplayName(item));
+    const name = escapeHtml(item.name || packageDisplayName(item));
     const subtitle = escapeHtml(item.cardSubtitle || '');
     const badge = escapeHtml(item.cardBadge || '');
     const price = formatPrice(item.basePrice);
@@ -1028,7 +1042,7 @@ const LiveSite = (() => {
 
   function buildHubPackageCard(item) {
     const pagePath = getPagePath(item);
-    const name = escapeHtml(packageDisplayName(item));
+    const name = escapeHtml(item.name || packageDisplayName(item));
     const subtitle = escapeHtml(item.cardSubtitle || item.websiteDescription || '');
     const badge = escapeHtml(item.cardBadge || '');
     const price = formatPrice(item.basePrice);
@@ -1038,11 +1052,14 @@ const LiveSite = (() => {
     const hubImg = buildCatalogImgHtml(item);
     const imgHtml = hubImg
       ? `<div class="pkg-hub-media">${hubImg}</div>`
+      : '<div class="pkg-hub-media pkg-hub-media--empty"></div>';
+    const badgeHtml = badge
+      ? `<div class="unit-badge${badgeClass}">${badge}</div>`
       : '';
 
     return `
       <div class="unit-card pkg-hub-card${featuredClass}" id="pkg-${escapeHtml(item.websiteSlug)}">
-        ${badge ? `<div class="unit-badge${badgeClass}">${badge}</div>` : ''}
+        ${badgeHtml}
         ${imgHtml}
         <div class="unit-info">
           <div class="pkg-hub-head">
@@ -1106,8 +1123,8 @@ const LiveSite = (() => {
 
     grid.innerHTML = packages.map((item) => {
       const featured = item.featuredOnHomepage;
-      const tierLabel = escapeHtml(item.cardSubtitle || item.websiteDescription || packageDisplayName(item));
-      const pkgName = escapeHtml(packageDisplayName(item));
+      const tierLabel = escapeHtml(item.cardSubtitle || item.websiteDescription || item.name || packageDisplayName(item));
+      const pkgName = escapeHtml(item.name || packageDisplayName(item));
       const note = escapeHtml(item.cardBadge || item.cardSubtitle || '');
       const href = escapeHtml(getPagePath(item));
       const price = formatPrice(item.basePrice);
@@ -1135,6 +1152,38 @@ const LiveSite = (() => {
           });
         }
       });
+    });
+  }
+
+  function hydratePackagesHubFlyer() {
+    const path = location.pathname.replace(/^\//, '');
+    if (path !== 'wedding-event-package-lipa-batangas.html') return;
+
+    const img = document.querySelector('[data-live="packages-hub-flyer"]');
+    if (!img || !siteData?.catalog) return;
+
+    const flyerItem = siteData.catalog.find(
+      (i) => i.packagesHubFlyer && String(i.imageUrl || '').trim()
+    );
+    if (!flyerItem) return;
+
+    const src = resolveCatalogImageUrl(flyerItem, { allowFallback: false });
+    if (!src) return;
+
+    img.src = src;
+    img.setAttribute('data-catalog-slug', flyerItem.websiteSlug || '');
+    applyFocalStyles(img, flyerItem);
+    if (String(flyerItem.imageAltText || '').trim()) {
+      img.alt = catalogImageAlt(flyerItem);
+    }
+  }
+
+  function hydratePackageBreadcrumbs() {
+    if (!siteData?.catalog) return;
+    document.querySelectorAll('[data-live="breadcrumb"][data-catalog-slug]').forEach((el) => {
+      const slug = el.getAttribute('data-catalog-slug');
+      const item = getCatalogItem(slug);
+      if (item?.name) el.textContent = item.name;
     });
   }
 
@@ -1192,6 +1241,7 @@ const LiveSite = (() => {
     }
 
     hydrateCompareNav();
+    hydratePackageBreadcrumbs();
     updateMessengerPrefills(item);
   }
 
@@ -1224,7 +1274,9 @@ const LiveSite = (() => {
       const slug = link.getAttribute('data-catalog-slug');
       const item = getCatalogItem(slug);
       if (!item) return;
-      const name = packageDisplayName(item);
+      const path = getPagePath(item);
+      if (path && path !== '#') link.setAttribute('href', path);
+      const name = item.name || packageDisplayName(item);
       const svg = link.querySelector('svg');
       const svgClone = svg ? svg.cloneNode(true) : null;
       link.textContent = '';
@@ -1257,7 +1309,7 @@ const LiveSite = (() => {
 
       const img = link.querySelector('img');
       if (img) {
-        const src = resolveCatalogImageUrl(item);
+        const src = resolveCatalogImageUrl(item, { allowFallback: false });
         if (src) {
           img.src = src;
           img.setAttribute('data-catalog-slug', slug);
@@ -1327,15 +1379,14 @@ const LiveSite = (() => {
       const slug = el.getAttribute('data-catalog-slug');
       const item = getCatalogItem(slug);
       if (el.tagName !== 'IMG') return;
-      const src = resolveCatalogImageUrl(item);
+      const src = item ? resolveCatalogImageUrl(item, { allowFallback: false }) : '';
       if (!src) return;
       el.src = src;
       el.setAttribute('data-catalog-slug', slug);
       if (item) applyFocalStyles(el, item);
       attachCatalogImageFallbacks(el.parentElement || document);
-      const alt = catalogImageAlt(item);
       if (item && String(item.imageAltText || '').trim()) {
-        el.alt = alt;
+        el.alt = catalogImageAlt(item);
       }
     });
   }
@@ -1414,9 +1465,12 @@ const LiveSite = (() => {
     hydrateElements();
     hydrateCatalogLinks();
     hydrateRelatedCards();
+    hydrateCompareNav();
+    hydratePackageBreadcrumbs();
     renderHomepageCatalog();
     renderOfferLadder();
     hydratePackagesHub();
+    hydratePackagesHubFlyer();
     hydratePackagePages();
     hydrateProductPages();
     updateJsonLd();
