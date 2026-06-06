@@ -123,8 +123,7 @@ When JS runs, LiveSite rebuilds:
 
 | Surface | Container / hook |
 |---------|------------------|
-| Homepage unit cards | `#catalog-units-grid` |
-| Homepage package promos | `#catalog-packages-grid` |
+| Homepage catalog (units + packages) | `#catalog-home-grid` |
 | Offer ladder | `#offer-ladder .offer-ladder__grid` |
 | Packages hub | `#catalog-packages-grid` on `wedding-event-package-lipa-batangas.html` |
 | Package detail | `data-live` + `#catalog-component-chips` + compare nav `data-catalog-slug` |

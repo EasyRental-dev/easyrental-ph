@@ -967,33 +967,30 @@ const LiveSite = (() => {
     const path = location.pathname;
     if (path !== '/' && path !== '/index.html') return;
 
-    const singlesGrid = document.getElementById('catalog-units-grid');
-    const packagesGrid = document.getElementById('catalog-packages-grid');
-    if (!singlesGrid && !packagesGrid) return;
+    const grid = document.getElementById('catalog-home-grid');
+    if (!grid) return;
 
     const singles = getSortedCatalog((item) => item.type === 'single');
     const packages = getSortedCatalog((item) => item.type === 'package');
+    const cards = [...singles, ...packages];
 
-    if (singlesGrid && singles.length) {
-      singlesGrid.innerHTML = singles.map(buildHomepageSingleCard).join('');
-      singlesGrid.querySelectorAll('.catalog-card-img').forEach((img) => {
-        const card = img.closest('.unit-card');
-        const idx = [...singlesGrid.children].indexOf(card);
-        if (idx >= 0 && singles[idx]) applyFocalStyles(img, singles[idx]);
-      });
-    }
+    if (!cards.length) return;
 
-    if (packagesGrid && packages.length) {
-      packagesGrid.innerHTML = packages.map(buildHomepagePackageCard).join('');
-      packagesGrid.querySelectorAll('.catalog-card-img').forEach((img) => {
-        const card = img.closest('.unit-card');
-        const idx = [...packagesGrid.children].indexOf(card);
-        if (idx >= 0 && packages[idx]) applyFocalStyles(img, packages[idx]);
-      });
-      packagesGrid.querySelectorAll('[data-prefill-msg]').forEach((el) => {
-        if (typeof bindPrefillMessengerLink === 'function') bindPrefillMessengerLink(el);
-      });
-    }
+    grid.innerHTML = cards.map((item) =>
+      item.type === 'package'
+        ? buildHomepagePackageCard(item)
+        : buildHomepageSingleCard(item)
+    ).join('');
+
+    grid.querySelectorAll('.catalog-card-img').forEach((img) => {
+      const card = img.closest('.unit-card');
+      const idx = [...grid.children].indexOf(card);
+      if (idx >= 0 && cards[idx]) applyFocalStyles(img, cards[idx]);
+    });
+
+    grid.querySelectorAll('[data-prefill-msg]').forEach((el) => {
+      if (typeof bindPrefillMessengerLink === 'function') bindPrefillMessengerLink(el);
+    });
   }
 
   function renderOfferLadder() {
