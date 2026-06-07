@@ -1,3 +1,14 @@
+// GitHub Pages project site: easyrental-dev.github.io/easyrental-ph/
+const SITE_BASE = (() => {
+  const m = location.pathname.match(/^(\/easyrental-ph)(?=\/|$)/);
+  return m ? m[1] : '';
+})();
+
+function siteUrl(path) {
+  const p = path.startsWith('/') ? path : `/${path}`;
+  return `${SITE_BASE}${p}`;
+}
+
 // Progress Bar
 window.addEventListener('scroll', () => {
   const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -265,7 +276,7 @@ function initLeadTracking() {
       });
 
       try {
-        const response = await fetch('/api/contact', {
+        const response = await fetch(siteUrl('/api/contact'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(withAttribution({
@@ -813,7 +824,7 @@ const LiveSite = (() => {
     }
 
     try {
-      const response = await fetch('/api/site-data');
+      const response = await fetch(siteUrl('/api/site-data'));
       if (!response.ok) {
         console.warn('[LiveSite] API error:', response.status);
         return null;
