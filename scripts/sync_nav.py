@@ -94,7 +94,7 @@ def build_nav_block(cfg: dict) -> str:
 <nav class="navbar" aria-label="Primary">
   <a href="{logo_href}" class="nav-logo" title="Easy Rental - Tables, Chairs &amp; Tent Rentals Lipa">
     <img src="{asset_prefix}assets/easyrental_logo.png" srcset="{asset_prefix}assets/easyrental_logo_192.webp 192w, {asset_prefix}assets/easyrental_logo_512.webp 512w" sizes="(max-width: 768px) 120px, 220px" alt="Easy Rental Lipa Batangas logo" title="Easy Rental Lipa" width="1024" height="1024" loading="lazy" decoding="async">
-    <span class="display" style="font-weight:700;">Easy Rental Lipa</span>
+    <span class="display{' live-brand-short' if is_home else ''}" style="font-weight:700;">Easy Rental Lipa</span>
   </a>
   <ul class="nav-links">
 {desktop_ul}
