@@ -11,9 +11,14 @@ Use this during the 30–60 day overlap while GitHub Pages (`easyrental-dev.gith
    - URL: `https://easyrentalph.vercel.app`
    - Verify via HTML file upload (add verification file to repo root, push, remove after verified) or DNS TXT if using a custom domain later
 
-2. **Submit sitemap**
-   - URL: `https://easyrentalph.vercel.app/sitemap-index.xml`
-   - GSC → Sitemaps → Add new sitemap
+2. **Submit sitemap** (on the **Vercel** property only — not the GitHub Pages property)
+   - GSC → Sitemaps → Add new sitemap → enter: `sitemap.xml`
+   - Full URL: `https://easyrentalph.vercel.app/sitemap.xml`
+   - If GSC still shows **Couldn't fetch** / **Unknown** from an old attempt:
+     1. Delete the failed sitemap entry in GSC
+     2. Wait 5 minutes, then submit a cache-busted path: `sitemap.xml?v=20260607`
+     3. In **URL Inspection**, paste `https://easyrentalph.vercel.app/sitemap.xml` → **Test live URL** → confirm **Page fetch: Successful**
+   - Optional later: also submit `image-sitemap.xml` or `sitemap-index.xml` after `sitemap.xml` succeeds
 
 3. **Enable GitHub Pages (repo settings)**
    - Settings → Pages → Build and deployment → Source: **GitHub Actions**
@@ -44,5 +49,6 @@ Use this during the 30–60 day overlap while GitHub Pages (`easyrental-dev.gith
 ## Reference
 
 - Canonical URLs and sitemaps target Vercel (`site-base-url.txt`)
-- `robots.txt` Host and Sitemap point to Vercel
+- `robots.txt` Sitemap points to `sitemap.xml` (plain XML, no CSP headers)
+- Sitemap XML files are excluded from Content-Security-Policy in `vercel.json`
 - GitHub Pages deploy injects subpath `<base>` via `scripts/prepare_gh_pages.py`
